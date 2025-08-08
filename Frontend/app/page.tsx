@@ -335,7 +335,7 @@ export default function FacultyDashboard() {
             {!selectedYear && (
               <div className="space-y-8 animate-in fade-in-50 duration-500 mt-16">
                 <div className="text-center">
-                  <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                     Select Academic Year
                   </h2>
                   <p className="text-slate-600 dark:text-slate-300 text-lg">Choose the academic year to manage your courses and students</p>
