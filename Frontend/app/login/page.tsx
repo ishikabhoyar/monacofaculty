@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Eye, Mail } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import Bg from '../../public/BG-login(2).jpg';
 import logo from '../../public/KJSCE.png';
 import logo1 from '../../public/university.png';
@@ -16,13 +17,18 @@ export default function Login() {
     rememberMe: false
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
   };
 
   return (
-    <div className="min-h-screen flex relative dark">
+    <div className="min-h-screen flex relative">
+      {/* Theme Toggle - Top Right */}
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
+
       {/* Left Side - Background Image */}
       <div className="w-1/2 relative">
         <Image 

@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,12 +16,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" style={{
-      colorScheme: "dark"
-    }}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <style>{`
-          :root.dark {
+          :root {
+            /* Light theme variables */
+            --background: #ffffff;
+            --foreground: #0a0a0a;
+            --card: #ffffff;
+            --card-foreground: #0a0a0a;
+            --popover: #ffffff;
+            --popover-foreground: #0a0a0a;
+            --primary: #0f172a;
+            --primary-foreground: #f8fafc;
+            --secondary: #f1f5f9;
+            --secondary-foreground: #0f172a;
+            --muted: #f1f5f9;
+            --muted-foreground: #64748b;
+            --accent: #f1f5f9;
+            --accent-foreground: #0f172a;
+            --destructive: #dc2626;
+            --destructive-foreground: #ffffff;
+            --border: #e2e8f0;
+            --input: #e2e8f0;
+            --ring: #94a3b8;
+          }
+
+          .dark {
+            /* Dark theme variables */
             --background: #000000;
             --foreground: #ffffff;
             --card: #0a0a0a;
@@ -42,29 +65,51 @@ export default function RootLayout({
             --ring: #525252;
           }
 
-          /* Force black backgrounds for specific elements */
+          /* Global styles */
+          * {
+            border-color: hsl(var(--border));
+          }
+
           body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+          }
+
+          /* Light theme specific overrides */
+          :root .bg-slate-50, :root .bg-slate-100 {
+            background-color: #f8fafc !important;
+          }
+          
+          :root .bg-white {
+            background-color: #ffffff !important;
+          }
+
+          /* Dark theme specific overrides */
+          .dark body {
             background-color: #000000 !important;
           }
           
-          .bg-slate-50, .bg-slate-800, .bg-slate-900, .dark\\:bg-slate-800, .dark\\:bg-slate-900 {
+          .dark .bg-slate-50, .dark .bg-slate-800, .dark .bg-slate-900, 
+          .dark .dark\\:bg-slate-800, .dark .dark\\:bg-slate-900 {
             background-color: #000000 !important;
           }
           
-          /* Cards and sidebars - darker than background but still very dark */
-          .bg-white, .dark\\:bg-slate-800, .card, [class*="Card"] {
+          .dark .bg-white, .dark .dark\\:bg-slate-800, .dark .card, .dark [class*="Card"] {
             background-color: #0a0a0a !important;
           }
           
-          /* Override any blue-specific colors */
-          [class*="blue"], [class*="indigo"], [class*="sky"] {
+          .dark [class*="blue"], .dark [class*="indigo"], .dark [class*="sky"] {
             background-color: #1a1a1a !important;
             color: #ffffff !important;
             border-color: rgba(255, 255, 255, 0.1) !important;
           }
         `}</style>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

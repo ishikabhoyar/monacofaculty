@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle, FileText, Settings } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // Dummy data based on your schema
 const dummyTests = [
@@ -77,7 +78,7 @@ export default function FacultyDashboard() {
   const router = useRouter();
   
   // Format date for display
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
       month: 'short',
@@ -137,7 +138,8 @@ export default function FacultyDashboard() {
       <div className="flex-1 overflow-auto p-6">
         <header className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Faculty Dashboard</h1>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <ThemeToggle />
             <Button variant="outline" size="sm">
               <Settings className="mr-2 h-4 w-4" />
               Settings
