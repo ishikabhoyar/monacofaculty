@@ -285,93 +285,36 @@ export default function FacultyDashboard() {
           
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            {/* Breadcrumb Navigation */}
-            {/* <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 mb-8 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm"> */}
-              {/* <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={resetToYear}
-                className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
-              >
-                Dashboard
-              </Button> */}
-              {selectedYear && (
-                <>
-                  <ArrowRight className="h-4 w-4 text-slate-400" />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={resetToSemester}
-                    className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
-                  >
-                    {getCurrentYear()?.name}
-                  </Button>
-                </>
-              )}
-              {selectedSemester && (
-                <>
-                  <ArrowRight className="h-4 w-4 text-slate-400" />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={resetToBatch}
-                    className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
-                  >
-                    {getCurrentSemester()?.name}
-                  </Button>
-                </>
-              )}
-              {selectedBatch && (
-                <>
-                  <ArrowRight className="h-4 w-4 text-slate-400" />
-                  <span className="font-medium text-slate-900 dark:text-white px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-full">
-                    {getCurrentBatch()?.name}
-                  </span>
-                </>
-              )}
-            {/* </div> */}
 
             {/* Year Selection */}
             {!selectedYear && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500 mt-16">
-                <div className="text-center">
-                  <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-3">
                     Select Academic Year
                   </h2>
-                  <p className="text-slate-600 dark:text-slate-300 text-lg">Choose the academic year to manage your courses and students</p>
+                  <p className="text-slate-500 dark:text-slate-400">Choose the academic year to begin managing your courses</p>
                 </div>
-                <div className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+                <div className="grid gap-6 md:grid-cols-2">
                   {academicData.years.map((year, index) => (
                     <Card 
                       key={year.id} 
-                      className="cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 border-transparent hover:border-blue-200 dark:hover:border-blue-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm group animate-in fade-in-50 slide-in-from-bottom-4"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
                       onClick={() => setSelectedYear(year.id)}
                     >
-                      <CardHeader className="text-center pb-6">
-                        <div className="mx-auto mb-6 p-6 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-2xl w-20 h-20 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                          <BookOpen className="h-10 w-10 text-white" />
-                        </div>
-                        <CardTitle className="text-3xl font-bold text-slate-800 dark:text-slate-100">{year.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="text-center">
-                        <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg">
-                          {year.semesters.length} Semesters Available
-                        </p>
-                        <div className="flex justify-center gap-8">
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                              {year.semesters.reduce((total, sem) => total + sem.batches.length, 0)}
+                      <CardContent className="p-8">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                              {year.name}
+                            </h3>
+                            <div className="space-y-1 text-sm text-slate-500 dark:text-slate-400">
+                              <p>{year.semesters.length} semesters</p>
+                              <p>{year.semesters.reduce((total, sem) => total + sem.batches.length, 0)} batches total</p>
                             </div>
-                            <div className="text-sm text-slate-500 font-medium">Total Batches</div>
                           </div>
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-                              {year.semesters.reduce((total, sem) => 
-                                total + sem.batches.reduce((bTotal, batch) => bTotal + batch.students, 0), 0
-                              )}
-                            </div>
-                            <div className="text-sm text-slate-500 font-medium">Total Students</div>
+                          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                            <BookOpen className="h-6 w-6 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                           </div>
                         </div>
                       </CardContent>
@@ -383,54 +326,45 @@ export default function FacultyDashboard() {
 
             {/* Semester Selection */}
             {selectedYear && !selectedSemester && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500">
-                <div className="flex items-center gap-6 mb-8">
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center gap-4 mb-8">
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={resetToYear}
-                    className="shadow-sm hover:shadow-md transition-all duration-200"
+                    className="text-slate-600 dark:text-slate-300"
                   >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Back to Years
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Back
                   </Button>
+                  <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
                   <div>
-                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                      {getCurrentYear()?.name} - Select Semester
+                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
+                      {getCurrentYear()?.name} Semesters
                     </h2>
-                    <p className="text-slate-600 dark:text-slate-300 text-lg">Choose the semester to manage your courses</p>
+                    <p className="text-slate-500 dark:text-slate-400">Select a semester to view batches</p>
                   </div>
                 </div>
-                <div className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+                <div className="grid gap-4 md:grid-cols-2">
                   {getCurrentYear()?.semesters.map((semester, index) => (
                     <Card 
                       key={semester.id} 
-                      className="cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 border-transparent hover:border-green-200 dark:hover:border-green-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm group animate-in fade-in-50 slide-in-from-bottom-4"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
                       onClick={() => setSelectedSemester(semester.id)}
                     >
-                      <CardHeader className="text-center pb-6">
-                        <div className="mx-auto mb-6 p-6 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 rounded-2xl w-20 h-20 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                          <Calendar className="h-10 w-10 text-white" />
-                        </div>
-                        <CardTitle className="text-3xl font-bold text-slate-800 dark:text-slate-100">{semester.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="text-center">
-                        <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg">
-                          {semester.batches.length} Batches Available
-                        </p>
-                        <div className="flex justify-center gap-8">
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-                              {semester.batches.reduce((total, batch) => total + batch.students, 0)}
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                              {semester.name}
+                            </h3>
+                            <div className="space-y-1 text-sm text-slate-500 dark:text-slate-400">
+                              <p>{semester.batches.length} batches</p>
+                              <p>{semester.batches.reduce((total, batch) => total + batch.students, 0)} students</p>
                             </div>
-                            <div className="text-sm text-slate-500 font-medium">Total Students</div>
                           </div>
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                              {semester.batches[0]?.courses.length || 0}
-                            </div>
-                            <div className="text-sm text-slate-500 font-medium">Courses</div>
+                          <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                            <Calendar className="h-5 w-5 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                           </div>
                         </div>
                       </CardContent>
@@ -442,65 +376,62 @@ export default function FacultyDashboard() {
 
             {/* Batch Selection */}
             {selectedSemester && !selectedBatch && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500">
-                <div className="flex items-center gap-6 mb-8">
+              <div className="max-w-5xl mx-auto">
+                <div className="flex items-center gap-4 mb-8">
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={resetToSemester}
-                    className="shadow-sm hover:shadow-md transition-all duration-200"
+                    className="text-slate-600 dark:text-slate-300"
                   >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Back to Semesters
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Back
                   </Button>
+                  <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
                   <div>
-                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
-                      {getCurrentSemester()?.name} - Select Batch
+                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
+                      {getCurrentSemester()?.name} Batches
                     </h2>
-                    <p className="text-slate-600 dark:text-slate-300 text-lg">Choose the batch to manage and create tests</p>
+                    <p className="text-slate-500 dark:text-slate-400">Select a batch to manage tests and students</p>
                   </div>
                 </div>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {getCurrentSemester()?.batches.map((batch, index) => (
                     <Card 
                       key={batch.id} 
-                      className="cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 border-transparent hover:border-purple-200 dark:hover:border-purple-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm group animate-in fade-in-50 slide-in-from-bottom-4"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
                       onClick={() => setSelectedBatch(batch.id)}
                     >
-                      <CardHeader className="text-center pb-4">
-                        <div className="mx-auto mb-4 p-4 bg-gradient-to-br from-purple-400 via-pink-500 to-indigo-600 rounded-2xl w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                          <Users className="h-8 w-8 text-white" />
-                        </div>
-                        <CardTitle className="text-2xl font-bold text-slate-800 dark:text-slate-100">{batch.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="text-center">
-                        <div className="space-y-4">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
                           <div>
-                            <div className="text-4xl font-bold text-purple-600 dark:text-purple-400">
-                              {batch.students}
-                            </div>
-                            <div className="text-sm text-slate-500 font-medium">Students Enrolled</div>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                              {batch.name}
+                            </h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              {batch.students} students
+                            </p>
                           </div>
-                          <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
-                            <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
-                              Active Courses:
-                            </div>
-                            <div className="flex flex-wrap gap-2 justify-center">
-                              {batch.courses.slice(0, 3).map((course) => (
-                                <span 
-                                  key={course} 
-                                  className="px-3 py-1 bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-xs font-medium rounded-full border border-slate-300 dark:border-slate-600"
-                                >
-                                  {course}
-                                </span>
-                              ))}
-                              {batch.courses.length > 3 && (
-                                <span className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-xs font-medium rounded-full border border-slate-300 dark:border-slate-600">
-                                  +{batch.courses.length - 3} more
-                                </span>
-                              )}
-                            </div>
+                          <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                            <Users className="h-5 w-5 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Courses</p>
+                          <div className="flex flex-wrap gap-1">
+                            {batch.courses.slice(0, 3).map((course) => (
+                              <span 
+                                key={course} 
+                                className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs text-slate-600 dark:text-slate-400 rounded"
+                              >
+                                {course}
+                              </span>
+                            ))}
+                            {batch.courses.length > 3 && (
+                              <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs text-slate-600 dark:text-slate-400 rounded">
+                                +{batch.courses.length - 3}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </CardContent>
