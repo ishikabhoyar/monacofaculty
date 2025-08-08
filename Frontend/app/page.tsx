@@ -173,9 +173,9 @@ export default function FacultyDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-black dark:via-gray-950 dark:to-slate-950">
       {/* Sidebar */}
-      <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-slate-900/90 border-r border-slate-200/60 dark:border-slate-700/60 p-6 md:flex shadow-xl">
+      <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-black/95 border-r border-slate-200/60 dark:border-gray-800/80 p-6 md:flex shadow-xl">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
             <GraduationCap className="h-6 w-6 text-white" />
@@ -184,37 +184,37 @@ export default function FacultyDashboard() {
             <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Faculty Portal
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Monaco Institute</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400">Monaco Institute</p>
           </div>
         </div>
         
         <nav className="space-y-2">
           <Button 
             variant={activeTab === "overview" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md" 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
             onClick={() => setActiveTab("overview")}
           >
-            <div className="mr-3 p-1.5 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+            <div className="mr-3 p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
               <BarChart3 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
             Overview
           </Button>
           <Button 
             variant={activeTab === "tests" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md" 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
             onClick={() => setActiveTab("tests")}
           >
-            <div className="mr-3 p-1.5 bg-green-100 dark:bg-green-900/50 rounded-lg">
+            <div className="mr-3 p-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
               <FileText className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
             Manage Tests
           </Button>
           <Button 
             variant={activeTab === "questions" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md" 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
             onClick={() => setActiveTab("questions")}
           >
-            <div className="mr-3 p-1.5 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+            <div className="mr-3 p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
               <svg className="h-4 w-4 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -223,24 +223,24 @@ export default function FacultyDashboard() {
           </Button>
           <Button 
             variant={activeTab === "submissions" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md" 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
             onClick={() => setActiveTab("submissions")}
           >
-            <div className="mr-3 p-1.5 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
+            <div className="mr-3 p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
               <TrendingUp className="h-4 w-4 text-orange-600 dark:text-orange-400" />
             </div>
             Student Submissions
           </Button>
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-slate-200 dark:border-slate-700">
+        <div className="mt-auto pt-6 border-t border-slate-200 dark:border-gray-700">
           <Button 
             variant="ghost" 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md" 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
             onClick={() => setActiveTab("settings")}
           >
-            <div className="mr-3 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Settings className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            <div className="mr-3 p-1.5 bg-slate-100 dark:bg-gray-800 rounded-lg">
+              <Settings className="h-4 w-4 text-slate-600 dark:text-gray-400" />
             </div>
             Settings
           </Button>
@@ -251,10 +251,10 @@ export default function FacultyDashboard() {
       <div className="flex-1 overflow-auto p-8">
         <header className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
               Faculty Dashboard
             </h1>
-            <p className="text-slate-600 dark:text-slate-400 mt-1">
+            <p className="text-slate-600 dark:text-gray-400 mt-1">
               Welcome back! Manage your academic content with ease.
             </p>
           </div>
@@ -290,31 +290,31 @@ export default function FacultyDashboard() {
             {!selectedYear && (
               <div className="max-w-4xl mx-auto mt-25">
                 <div className="text-center mb-12">
-                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3">
                     Select Academic Year
                   </h2>
-                  <p className="text-slate-500 dark:text-slate-400">Choose the academic year to begin managing your courses</p>
+                  <p className="text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
                   {academicData.years.map((year, index) => (
                     <Card 
                       key={year.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
+                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50 backdrop-blur-sm"
                       onClick={() => setSelectedYear(year.id)}
                     >
                       <CardContent className="p-8">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                            <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-2">
                               {year.name}
                             </h3>
-                            <div className="space-y-1 text-sm text-slate-500 dark:text-slate-400">
+                            <div className="space-y-1 text-sm text-slate-500 dark:text-gray-400">
                               <p>{year.semesters.length} semesters</p>
                               <p>{year.semesters.reduce((total, sem) => total + sem.batches.length, 0)} batches total</p>
                             </div>
                           </div>
-                          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
-                            <BookOpen className="h-6 w-6 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                          <div className="w-12 h-12 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
+                            <BookOpen className="h-6 w-6 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                           </div>
                         </div>
                       </CardContent>
@@ -332,39 +332,39 @@ export default function FacultyDashboard() {
                     variant="outline" 
                     size="sm" 
                     onClick={resetToYear}
-                    className="text-slate-600 dark:text-slate-300"
+                    className="text-slate-600 dark:text-gray-300 border-slate-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800"
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" />
                     Back
                   </Button>
-                  <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+                  <div className="h-6 w-px bg-slate-200 dark:bg-gray-700"></div>
                   <div>
-                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
+                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-white">
                       {getCurrentYear()?.name} Semesters
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400">Select a semester to view batches</p>
+                    <p className="text-slate-500 dark:text-gray-400">Select a semester to view batches</p>
                   </div>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {getCurrentYear()?.semesters.map((semester, index) => (
                     <Card 
                       key={semester.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
+                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
                       onClick={() => setSelectedSemester(semester.id)}
                     >
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2">
                               {semester.name}
                             </h3>
-                            <div className="space-y-1 text-sm text-slate-500 dark:text-slate-400">
+                            <div className="space-y-1 text-sm text-slate-500 dark:text-gray-400">
                               <p>{semester.batches.length} batches</p>
                               <p>{semester.batches.reduce((total, batch) => total + batch.students, 0)} students</p>
                             </div>
                           </div>
-                          <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
-                            <Calendar className="h-5 w-5 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                          <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
+                            <Calendar className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                           </div>
                         </div>
                       </CardContent>
@@ -382,53 +382,53 @@ export default function FacultyDashboard() {
                     variant="outline" 
                     size="sm" 
                     onClick={resetToSemester}
-                    className="text-slate-600 dark:text-slate-300"
+                    className="text-slate-600 dark:text-gray-300 border-slate-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800"
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" />
                     Back
                   </Button>
-                  <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+                  <div className="h-6 w-px bg-slate-200 dark:bg-gray-700"></div>
                   <div>
-                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
+                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-white">
                       {getCurrentSemester()?.name} Batches
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400">Select a batch to manage tests and students</p>
+                    <p className="text-slate-500 dark:text-gray-400">Select a batch to manage tests and students</p>
                   </div>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {getCurrentSemester()?.batches.map((batch, index) => (
                     <Card 
                       key={batch.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 hover:shadow-lg bg-white dark:bg-slate-800"
+                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
                       onClick={() => setSelectedBatch(batch.id)}
                     >
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
                               {batch.name}
                             </h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                            <p className="text-sm text-slate-500 dark:text-gray-400">
                               {batch.students} students
                             </p>
                           </div>
-                          <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
-                            <Users className="h-5 w-5 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                          <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
+                            <Users className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Courses</p>
+                          <p className="text-xs font-medium text-slate-600 dark:text-gray-400 uppercase tracking-wide">Courses</p>
                           <div className="flex flex-wrap gap-1">
                             {batch.courses.slice(0, 3).map((course) => (
                               <span 
                                 key={course} 
-                                className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs text-slate-600 dark:text-slate-400 rounded"
+                                className="px-2 py-1 bg-slate-100 dark:bg-gray-800 text-xs text-slate-600 dark:text-gray-300 rounded"
                               >
                                 {course}
                               </span>
                             ))}
                             {batch.courses.length > 3 && (
-                              <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs text-slate-600 dark:text-slate-400 rounded">
+                              <span className="px-2 py-1 bg-slate-100 dark:bg-gray-800 text-xs text-slate-600 dark:text-gray-300 rounded">
                                 +{batch.courses.length - 3}
                               </span>
                             )}
@@ -455,10 +455,10 @@ export default function FacultyDashboard() {
                     Back to Batches
                   </Button>
                   <div className="flex-1">
-                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
                       {getCurrentBatch()?.name} Dashboard
                     </h2>
-                    <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+                    <div className="flex items-center gap-2 text-slate-600 dark:text-gray-300">
                       <span className="text-lg">{getCurrentYear()?.name}</span>
                       <span>•</span>
                       <span className="text-lg">{getCurrentSemester()?.name}</span>
@@ -544,9 +544,9 @@ export default function FacultyDashboard() {
                 </div>
 
                 {/* Courses List */}
-                <Card className="shadow-lg border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+                <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">
                       Courses for {getCurrentBatch()?.name}
                     </CardTitle>
                   </CardHeader>
@@ -555,11 +555,11 @@ export default function FacultyDashboard() {
                       {getCurrentBatch()?.courses.map((course, index) => (
                         <div 
                           key={course} 
-                          className="p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 dark:hover:from-slate-800 dark:hover:to-slate-700 transition-all duration-300 hover:shadow-md hover:scale-105 animate-in fade-in-50"
+                          className="p-4 border border-slate-200 dark:border-gray-800 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition-all duration-300 hover:shadow-md hover:scale-105 animate-in fade-in-50"
                           style={{ animationDelay: `${index * 50}ms` }}
                         >
-                          <div className="font-semibold text-slate-800 dark:text-slate-100 text-lg">{course}</div>
-                          <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                          <div className="font-semibold text-slate-800 dark:text-white text-lg">{course}</div>
+                          <div className="text-sm text-slate-500 dark:text-gray-400 mt-1">
                             {dummyTests.filter(test => test.course === course && test.batch === selectedBatch).length} tests created
                           </div>
                         </div>
@@ -569,9 +569,9 @@ export default function FacultyDashboard() {
                 </Card>
 
                 {/* Recent Tests for this Batch */}
-                <Card className="shadow-lg border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+                <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">
                       Recent Tests - {getCurrentBatch()?.name}
                     </CardTitle>
                   </CardHeader>
@@ -583,12 +583,12 @@ export default function FacultyDashboard() {
                         .map((test, index) => (
                           <div 
                             key={test.id} 
-                            className="flex items-center justify-between p-6 border border-slate-200 dark:border-slate-700 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] bg-white/50 dark:bg-slate-800/50 animate-in fade-in-50"
+                            className="flex items-center justify-between p-6 border border-slate-200 dark:border-gray-800 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] bg-white/50 dark:bg-gray-900/30 animate-in fade-in-50"
                             style={{ animationDelay: `${index * 100}ms` }}
                           >
                             <div>
-                              <p className="font-semibold text-lg text-slate-800 dark:text-slate-100">{test.title}</p>
-                              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                              <p className="font-semibold text-lg text-slate-800 dark:text-white">{test.title}</p>
+                              <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
                                 {test.course} • {test.questions} questions • {test.duration} minutes
                               </p>
                             </div>
@@ -602,17 +602,17 @@ export default function FacultyDashboard() {
                               }`}>
                                 {test.status}
                               </div>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">{formatDate(test.startTime)}</p>
+                              <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">{formatDate(test.startTime)}</p>
                             </div>
                           </div>
                         ))}
                       {dummyTests.filter(test => test.batch === selectedBatch).length === 0 && (
                         <div className="text-center py-12">
-                          <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
-                            <FileText className="w-12 h-12 text-slate-400" />
+                          <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                            <FileText className="w-12 h-12 text-slate-400 dark:text-gray-500" />
                           </div>
-                          <p className="text-slate-500 dark:text-slate-400 text-lg">No tests found for this batch</p>
-                          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Create your first test to get started</p>
+                          <p className="text-slate-500 dark:text-gray-400 text-lg">No tests found for this batch</p>
+                          <p className="text-slate-400 dark:text-gray-500 text-sm mt-1">Create your first test to get started</p>
                         </div>
                       )}
                     </div>
@@ -626,8 +626,8 @@ export default function FacultyDashboard() {
           <TabsContent value="tests" className="space-y-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Manage Tests</h2>
-                <p className="text-slate-600 dark:text-slate-400 mt-1">Create, edit, and manage all your tests</p>
+                <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Manage Tests</h2>
+                <p className="text-slate-600 dark:text-gray-400 mt-1">Create, edit, and manage all your tests</p>
               </div>
               <Button 
                 onClick={() => router.push("/create-test")}
@@ -638,7 +638,7 @@ export default function FacultyDashboard() {
               </Button>
             </div>
             
-            <Card className="shadow-lg border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
               <CardContent className="pt-6">
                 <Table>
                   <TableHeader>
