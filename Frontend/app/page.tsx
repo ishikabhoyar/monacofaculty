@@ -276,25 +276,25 @@ export default function FacultyDashboard() {
         </header>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 md:w-auto md:grid-cols-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-lg">
+          {/* <TabsList className="grid w-full grid-cols-4 md:w-auto md:grid-cols-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-lg">
             <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Overview</TabsTrigger>
             <TabsTrigger value="tests" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Tests</TabsTrigger>
             <TabsTrigger value="questions" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Questions</TabsTrigger>
             <TabsTrigger value="submissions" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Submissions</TabsTrigger>
-          </TabsList>
+          </TabsList> */}
           
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 mb-8 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-              <Button 
+            {/* <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 mb-8 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm"> */}
+              {/* <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={resetToYear}
                 className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
               >
                 Dashboard
-              </Button>
+              </Button> */}
               {selectedYear && (
                 <>
                   <ArrowRight className="h-4 w-4 text-slate-400" />
@@ -329,11 +329,11 @@ export default function FacultyDashboard() {
                   </span>
                 </>
               )}
-            </div>
+            {/* </div> */}
 
             {/* Year Selection */}
             {!selectedYear && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500">
+              <div className="space-y-8 animate-in fade-in-50 duration-500 mt-16">
                 <div className="text-center">
                   <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                     Select Academic Year
