@@ -288,9 +288,9 @@ export default function FacultyDashboard() {
 
             {/* Year Selection */}
             {!selectedYear && (
-              <div className="max-w-4xl mx-auto">
+              <div className="max-w-4xl mx-auto mt-25">
                 <div className="text-center mb-12">
-                  <h2 className="text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-slate-100 mb-3">
                     Select Academic Year
                   </h2>
                   <p className="text-slate-500 dark:text-slate-400">Choose the academic year to begin managing your courses</p>
@@ -326,7 +326,7 @@ export default function FacultyDashboard() {
 
             {/* Semester Selection */}
             {selectedYear && !selectedSemester && (
-              <div className="max-w-4xl mx-auto">
+              <div className="max-w-4xl mx-auto mt-25">
                 <div className="flex items-center gap-4 mb-8">
                   <Button 
                     variant="outline" 
@@ -376,7 +376,7 @@ export default function FacultyDashboard() {
 
             {/* Batch Selection */}
             {selectedSemester && !selectedBatch && (
-              <div className="max-w-5xl mx-auto">
+              <div className="max-w-5xl mx-auto mt-25">
                 <div className="flex items-center gap-4 mb-8">
                   <Button 
                     variant="outline" 
@@ -443,7 +443,7 @@ export default function FacultyDashboard() {
 
             {/* Batch Dashboard */}
             {selectedBatch && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500">
+              <div className="space-y-8 animate-in fade-in-50 duration-500 mt-20">
                 <div className="flex items-center gap-6 mb-8">
                   <Button 
                     variant="outline" 
