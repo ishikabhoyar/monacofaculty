@@ -46,10 +46,10 @@ export default function RootLayout({
             /* Dark theme variables */
             --background: #000000;
             --foreground: #ffffff;
-            --card: #0a0a0a;
-            --card-foreground: #ffffff;
-            --popover: #0a0a0a;
-            --popover-foreground: #ffffff;
+            
+            --card-foreground: #e5e5e5;
+            --popover: #1a1a1a;
+            --popover-foreground: #e5e5e5;
             --primary: #262626;
             --primary-foreground: #ffffff;
             --secondary: #1a1a1a;
@@ -95,7 +95,7 @@ export default function RootLayout({
           }
           
           .dark .bg-white, .dark .dark\\:bg-slate-800, .dark .card, .dark [class*="Card"] {
-            background-color: #0a0a0a !important;
+            background-color: #1a1a1a !important;
           }
           
           .dark [class*="blue"], .dark [class*="indigo"], .dark [class*="sky"] {
