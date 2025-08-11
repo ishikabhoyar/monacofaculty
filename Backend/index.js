@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const batchRoutes = require('./routes/batchRoutes');
+const fileUploadRoutes = require('./routes/fileUploadRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tests', testRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/batches', batchRoutes);
+app.use('/api/upload', fileUploadRoutes);
 
 // Root route
 app.get('/', (req, res) => {

@@ -83,12 +83,18 @@ export default function CreateBatchPage() {
   };
 
   const downloadTemplate = () => {
-    // Create a sample CSV template
-    const csvContent = "data:text/csv;charset=utf-8,Roll Number,Student Name,Email,Phone Number\nCS001,John Doe,john.doe@example.com,+1234567890\nCS002,Jane Smith,jane.smith@example.com,+1234567891\nCS003,Mike Johnson,mike.johnson@example.com,+1234567892";
+    // Create a comprehensive CSV template with sample data
+    const csvContent = `data:text/csv;charset=utf-8,Roll Number,Student Name,Email,Phone Number
+CS2024001,John Doe,john.doe@example.com,+1234567890
+CS2024002,Jane Smith,jane.smith@example.com,+1234567891
+CS2024003,Mike Johnson,mike.johnson@example.com,+1234567892
+CS2024004,Sarah Wilson,sarah.wilson@example.com,+1234567893
+CS2024005,David Brown,david.brown@example.com,+1234567894`;
+    
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "batch_template.csv");
+    link.setAttribute("download", "student_batch_template.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -103,58 +109,77 @@ export default function CreateBatchPage() {
     setErrors([]);
 
     try {
-      const text = await file.text();
-      const rows = text.split('\n').filter(row => row.trim());
-      const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
-      
-      // Validate headers
-      const requiredHeaders = ['roll number', 'student name', 'email'];
-      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
-      
-      if (missingHeaders.length > 0) {
-        setErrors([`Missing required columns: ${missingHeaders.join(', ')}`]);
-        setIsProcessing(false);
-        return;
-      }
-
-      const parsedStudents: Student[] = [];
+      let parsedStudents: Student[] = [];
       const validationErrors: string[] = [];
 
-      for (let i = 1; i < rows.length; i++) {
-        const values = rows[i].split(',').map(v => v.trim());
+      if (file.name.endsWith('.csv')) {
+        // Handle CSV files
+        const text = await file.text();
+        const rows = text.split('\n').filter(row => row.trim());
+        const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
         
-        if (values.length < 3) continue; // Skip empty rows
+        // Validate headers
+        const requiredHeaders = ['roll number', 'student name', 'email'];
+        const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
         
-        const rollNumberIndex = headers.indexOf('roll number');
-        const nameIndex = headers.indexOf('student name');
-        const emailIndex = headers.indexOf('email');
-        const phoneIndex = headers.indexOf('phone number');
-
-        const rollNumber = values[rollNumberIndex];
-        const name = values[nameIndex];
-        const email = values[emailIndex];
-        const phoneNumber = phoneIndex >= 0 ? values[phoneIndex] : '';
-
-        // Validate required fields
-        if (!rollNumber || !name || !email) {
-          validationErrors.push(`Row ${i + 1}: Missing required information`);
-          continue;
+        if (missingHeaders.length > 0) {
+          setErrors([`Missing required columns: ${missingHeaders.join(', ')}`]);
+          setIsProcessing(false);
+          return;
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          validationErrors.push(`Row ${i + 1}: Invalid email format`);
-          continue;
-        }
+        for (let i = 1; i < rows.length; i++) {
+          const values = rows[i].split(',').map(v => v.trim());
+          
+          if (values.length < 3) continue; // Skip empty rows
+          
+          const rollNumberIndex = headers.indexOf('roll number');
+          const nameIndex = headers.indexOf('student name');
+          const emailIndex = headers.indexOf('email');
+          const phoneIndex = headers.indexOf('phone number');
 
-        parsedStudents.push({
-          id: `student_${i}`,
-          rollNumber,
-          name,
-          email,
-          phoneNumber,
-        });
+          const rollNumber = values[rollNumberIndex];
+          const name = values[nameIndex];
+          const email = values[emailIndex];
+          const phoneNumber = phoneIndex >= 0 ? values[phoneIndex] : '';
+
+          // Validate required fields
+          if (!rollNumber || !name || !email) {
+            validationErrors.push(`Row ${i + 1}: Missing required information`);
+            continue;
+          }
+
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            validationErrors.push(`Row ${i + 1}: Invalid email format`);
+            continue;
+          }
+
+          parsedStudents.push({
+            id: `student_${i}`,
+            rollNumber,
+            name,
+            email,
+            phoneNumber,
+          });
+        }
+      } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+        // Handle Excel files using FileReader
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // We'll simulate Excel parsing since we can't import xlsx in browser
+        // In a real implementation, you'd either:
+        // 1. Send the file to backend for processing, or
+        // 2. Use a client-side Excel parsing library
+        
+        // For now, show instructions to use CSV format
+        setErrors([
+          'Excel files are not fully supported yet. Please convert your Excel file to CSV format.',
+          'Steps: Open Excel → File → Save As → Choose CSV (Comma delimited) format'
+        ]);
+        setIsProcessing(false);
+        return;
       }
 
       if (validationErrors.length > 0) {
