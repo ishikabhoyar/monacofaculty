@@ -1,13 +1,13 @@
 import "./globals.css";
-import { Inter, Noto_Serif } from "next/font/google";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
-const notoSerif = Noto_Serif({ 
+const ibmPlexMono = IBM_Plex_Mono({ 
   subsets: ["latin"],
-  variable: "--font-noto-serif",
-  weight: ["400", "500", "600", "700"]
+  variable: "--font-ibm-plex-mono",
+  weight: ["400"]
 });
 
 export const metadata: Metadata = {
@@ -110,9 +110,16 @@ export default function RootLayout({
           }
         `}</style>
       </head>
-      <body className={`${inter.className} ${notoSerif.variable}`}>
+      <body className={`${inter.className} ${ibmPlexMono.variable} relative min-h-screen`}>
         <ThemeProvider>
           {children}
+          <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/60 dark:border-gray-800/30 bg-white/90 backdrop-blur-sm dark:bg-[#070c1f]/95">
+            <div className="flex items-center justify-center h-8">
+              <span className="text-xs text-slate-600 dark:text-gray-400 flex items-center">
+                Copyright © 2025. Made with <span className="text-red-500 mx-1">❤️</span> by Ishika and Arnab.
+              </span>
+            </div>
+          </footer>
         </ThemeProvider>
       </body>
     </html>

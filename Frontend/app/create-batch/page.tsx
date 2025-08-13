@@ -248,7 +248,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-black dark:via-gray-950 dark:to-slate-950 p-4">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-black dark:via-gray-950 dark:to-slate-950 p-4 pb-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 max-w-6xl mx-auto w-full">
         <Button

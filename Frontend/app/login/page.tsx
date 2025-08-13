@@ -161,12 +161,6 @@ export default function Login() {
         </div>
       </div>
       
-      {/* Footer */}
-      <div className="absolute bottom-2 right-2 text-sm text-muted-foreground">
-        ~ by Arnab Bhowmik 
-        <br />
-        & Ishika Bhoyar
-      </div>
     </div>
   );
 }

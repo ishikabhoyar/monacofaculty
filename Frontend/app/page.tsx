@@ -173,7 +173,7 @@ export default function FacultyDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20]">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-10">
       {/* Sidebar */}
       <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/60 dark:border-gray-800/30 p-6 md:flex shadow-xl">
         <div className="flex items-center gap-3 mb-8">
@@ -302,7 +302,7 @@ export default function FacultyDashboard() {
             {!selectedYear && (
               <div className="max-w-4xl mx-auto mt-25">
                 <div className="text-center mb-12">
-                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3" style={{ fontFamily: 'var(--font-noto-serif)' }}>
+                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
                     Select Academic Year
                   </h2>
                   <p className="text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
