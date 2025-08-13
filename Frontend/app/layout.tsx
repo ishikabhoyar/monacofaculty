@@ -46,7 +46,7 @@ export default function RootLayout({
             /* Dark theme variables */
             --background: #000000;
             --foreground: #ffffff;
-            
+            --card: #1a1a1a;
             --card-foreground: #e5e5e5;
             --popover: #1a1a1a;
             --popover-foreground: #e5e5e5;

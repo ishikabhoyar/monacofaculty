@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // Sample course data - in a real app, this would come from your API
 const courses = [
@@ -50,16 +51,16 @@ export default function CreateTestPage() {
     latePenaltyPercent: "0",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setTestData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = (name: string, value: string) => {
     setTestData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Form validation
@@ -112,25 +113,27 @@ export default function CreateTestPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-slate-50 dark:bg-slate-900 p-4">
+    <div className="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-gray-900 dark:to-black p-4">
       <div className="w-full max-w-4xl">
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/")}
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Button>
+        <div className="flex justify-between items-center mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+          <ThemeToggle />
+        </div>
 
-        <Card className="w-full shadow-md">
-          <CardHeader className="border-b">
+        <Card className="w-full shadow-md dark:bg-gray-900 dark:border-gray-800">
+          <CardHeader className="border-b dark:border-gray-800">
             <CardTitle>Create New Test</CardTitle>
             <CardDescription>
               Fill in the details to create a new test for your students.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 dark:bg-gray-900">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 {/* Basic Information */}
@@ -147,6 +150,7 @@ export default function CreateTestPage() {
                       value={testData.title}
                       onChange={handleChange}
                       placeholder="e.g., Midterm Exam"
+                      className="dark:bg-gray-800 dark:border-gray-700"
                       required
                     />
                   </div>
@@ -163,7 +167,7 @@ export default function CreateTestPage() {
                       }
                       required
                     >
-                      <SelectTrigger id="courseId">
+                      <SelectTrigger id="courseId" className="dark:bg-gray-800 dark:border-gray-700">
                         <SelectValue placeholder="Select a course" />
                       </SelectTrigger>
                       <SelectContent>
@@ -184,6 +188,7 @@ export default function CreateTestPage() {
                       value={testData.description}
                       onChange={handleChange}
                       placeholder="Provide a brief description of the test"
+                      className="dark:bg-gray-800 dark:border-gray-700"
                       rows={3}
                     />
                   </div>
@@ -196,6 +201,7 @@ export default function CreateTestPage() {
                       value={testData.instructions}
                       onChange={handleChange}
                       placeholder="Instructions for students taking the test"
+                      className="dark:bg-gray-800 dark:border-gray-700"
                       rows={4}
                     />
                   </div>
@@ -216,6 +222,7 @@ export default function CreateTestPage() {
                         type="datetime-local"
                         value={testData.startTime}
                         onChange={handleChange}
+                        className="dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                         required
                       />
                     </div>
@@ -230,6 +237,7 @@ export default function CreateTestPage() {
                         type="datetime-local"
                         value={testData.endTime}
                         onChange={handleChange}
+                        className="dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                         required
                       />
                     </div>
@@ -245,6 +253,7 @@ export default function CreateTestPage() {
                         value={testData.durationMinutes}
                         onChange={handleChange}
                         placeholder="e.g., 90"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                       />
                     </div>
@@ -258,6 +267,7 @@ export default function CreateTestPage() {
                         value={testData.maxAttempts}
                         onChange={handleChange}
                         placeholder="e.g., 1"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                       />
                     </div>
@@ -269,6 +279,7 @@ export default function CreateTestPage() {
                       id="passwordProtected"
                       checked={isPasswordProtected}
                       onCheckedChange={(checked) => setIsPasswordProtected(checked === true)}
+                      className="border-gray-400 dark:border-gray-600"
                     />
                     <Label htmlFor="passwordProtected">Password Protection</Label>
                   </div>
@@ -283,6 +294,7 @@ export default function CreateTestPage() {
                         value={testData.password}
                         onChange={handleChange}
                         placeholder="Enter a password for the test"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                       />
                     </div>
                   )}
@@ -293,6 +305,7 @@ export default function CreateTestPage() {
                       id="allowLateSubmission"
                       checked={allowLateSubmission}
                       onCheckedChange={(checked) => setAllowLateSubmission(checked === true)}
+                      className="border-gray-400 dark:border-gray-600"
                     />
                     <Label htmlFor="allowLateSubmission">Allow Late Submissions</Label>
                   </div>
@@ -307,6 +320,7 @@ export default function CreateTestPage() {
                         value={testData.latePenaltyPercent}
                         onChange={handleChange}
                         placeholder="e.g., 10"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="0"
                         max="100"
                       />
@@ -316,15 +330,20 @@ export default function CreateTestPage() {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-between border-t pt-6">
+          <CardFooter className="flex justify-between border-t pt-6 dark:border-gray-800 dark:bg-gray-900">
             <Button
               variant="outline"
               type="button"
               onClick={() => router.push("/")}
+              className="dark:border-gray-700 dark:hover:bg-gray-800"
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmit} type="submit">
+            <Button 
+              onClick={handleSubmit} 
+              type="submit"
+              className="dark:bg-blue-900 dark:hover:bg-blue-800"
+            >
               Create Test
             </Button>
           </CardFooter>
