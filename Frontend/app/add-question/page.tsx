@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   Select,
   SelectContent,
@@ -114,23 +115,25 @@ export default function AddQuestionPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-slate-50 dark:bg-slate-900 p-4">
+    <div className="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-gray-900 dark:to-black p-4">
       <div className="w-full max-w-4xl">
-        <Button 
-          variant="ghost" 
-          onClick={() => router.push("/")} 
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Button>
+        <div className="flex justify-between items-center mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => router.push("/")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+          <ThemeToggle />
+        </div>
         
-        <Card className="w-full shadow-md">
-          <CardHeader className="border-b">
+        <Card className="w-full shadow-md dark:bg-gray-900 dark:border-gray-800">
+          <CardHeader className="border-b dark:border-gray-800">
             <CardTitle>Add New Question</CardTitle>
             <CardDescription>Create a new question for your test using Markdown formatting.</CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 dark:bg-gray-900">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 {/* Question Information */}
@@ -146,7 +149,7 @@ export default function AddQuestionPage() {
                         onValueChange={(value) => handleSelectChange("testId", value)}
                         required
                       >
-                        <SelectTrigger id="testId">
+                        <SelectTrigger id="testId" className="dark:bg-gray-800 dark:border-gray-700">
                           <SelectValue placeholder="Select a test" />
                         </SelectTrigger>
                         <SelectContent>
@@ -168,6 +171,7 @@ export default function AddQuestionPage() {
                         value={questionData.questionNumber}
                         onChange={handleChange}
                         placeholder="e.g., 1"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                         required
                       />
@@ -182,6 +186,7 @@ export default function AddQuestionPage() {
                       value={questionData.title}
                       onChange={handleChange}
                       placeholder="e.g., Array Sum Algorithm"
+                      className="dark:bg-gray-800 dark:border-gray-700"
                       required
                     />
                   </div>
@@ -196,6 +201,7 @@ export default function AddQuestionPage() {
                         value={questionData.maxScore}
                         onChange={handleChange}
                         placeholder="e.g., 10"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                       />
                     </div>
@@ -209,6 +215,7 @@ export default function AddQuestionPage() {
                         value={questionData.timeLimitSeconds}
                         onChange={handleChange}
                         placeholder="e.g., 30"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                       />
                     </div>
@@ -222,6 +229,7 @@ export default function AddQuestionPage() {
                         value={questionData.memoryLimitMb}
                         onChange={handleChange}
                         placeholder="e.g., 128"
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         min="1"
                       />
                     </div>
@@ -233,9 +241,9 @@ export default function AddQuestionPage() {
                   <h3 className="text-lg font-medium">Problem Statement (Markdown)</h3>
                   
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="edit">Edit</TabsTrigger>
-                      <TabsTrigger value="preview">Preview</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 dark:bg-gray-800">
+                      <TabsTrigger value="edit" className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700">Edit</TabsTrigger>
+                      <TabsTrigger value="preview" className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700">Preview</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="edit" className="mt-2">
@@ -244,14 +252,14 @@ export default function AddQuestionPage() {
                         name="problemStatement"
                         value={questionData.problemStatement}
                         onChange={handleChange}
-                        className="min-h-[300px] font-mono"
+                        className="min-h-[300px] font-mono dark:bg-gray-800 dark:border-gray-700"
                         placeholder="Write your question in Markdown format..."
                         required
                       />
                     </TabsContent>
                     
                     <TabsContent value="preview" className="mt-2">
-                      <Card className="border p-4 min-h-[300px] prose dark:prose-invert max-w-none">
+                      <Card className="border p-4 min-h-[300px] prose dark:prose-invert max-w-none dark:bg-gray-800 dark:border-gray-700">
                         {/* In a real app, render markdown here */}
                         <div dangerouslySetInnerHTML={{ 
                           __html: "This is a preview placeholder. In a real application, the Markdown would be rendered here." 
@@ -269,6 +277,7 @@ export default function AddQuestionPage() {
                         value={questionData.sampleInput}
                         onChange={handleChange}
                         placeholder="Enter sample input..."
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         rows={3}
                       />
                     </div>
@@ -281,6 +290,7 @@ export default function AddQuestionPage() {
                         value={questionData.sampleOutput}
                         onChange={handleChange}
                         placeholder="Enter expected output..."
+                        className="dark:bg-gray-800 dark:border-gray-700"
                         rows={3}
                       />
                     </div>
@@ -294,6 +304,7 @@ export default function AddQuestionPage() {
                       value={questionData.constraintsInfo}
                       onChange={handleChange}
                       placeholder="Time/space complexity constraints, input ranges, etc."
+                      className="dark:bg-gray-800 dark:border-gray-700"
                       rows={2}
                     />
                   </div>
@@ -307,7 +318,7 @@ export default function AddQuestionPage() {
                     <Label>Allowed Programming Languages</Label>
                     <div className="flex flex-wrap gap-3">
                       {programmingLanguages.map(lang => (
-                        <div key={lang.id} className="flex items-center space-x-2 border rounded-md p-2">
+                        <div key={lang.id} className="flex items-center space-x-2 border rounded-md p-2 dark:border-gray-700 dark:bg-gray-800">
                           <Switch 
                             id={`lang-${lang.id}`}
                             checked={selectedLanguages.includes(lang.id)}
@@ -326,7 +337,7 @@ export default function AddQuestionPage() {
                         value={starterCodeLanguage}
                         onValueChange={setStarterCodeLanguage}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[180px] dark:bg-gray-800 dark:border-gray-700">
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -344,9 +355,9 @@ export default function AddQuestionPage() {
                     
                     {selectedLanguages.includes(starterCodeLanguage) && (
                       <Textarea
-                        value={questionData.starterCode[starterCodeLanguage] || ''}
+                        value={questionData.starterCode[starterCodeLanguage as keyof typeof questionData.starterCode] || ''}
                         onChange={(e) => handleStarterCodeChange(starterCodeLanguage, e.target.value)}
-                        className="font-mono"
+                        className="font-mono dark:bg-gray-800 dark:border-gray-700"
                         placeholder={`Add starter code for ${starterCodeLanguage}...`}
                         rows={8}
                       />
@@ -356,11 +367,20 @@ export default function AddQuestionPage() {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-between border-t pt-6">
-            <Button variant="outline" type="button" onClick={() => router.push("/")}>
+          <CardFooter className="flex justify-between border-t pt-6 dark:border-gray-800 dark:bg-gray-900">
+            <Button 
+              variant="outline" 
+              type="button" 
+              onClick={() => router.push("/")}
+              className="dark:border-gray-700 dark:hover:bg-gray-800"
+            >
               Cancel
             </Button>
-            <Button onClick={handleSubmit} type="submit">
+            <Button 
+              onClick={handleSubmit} 
+              type="submit"
+              className="dark:bg-blue-900 dark:hover:bg-blue-800"
+            >
               Add Question
             </Button>
           </CardFooter>

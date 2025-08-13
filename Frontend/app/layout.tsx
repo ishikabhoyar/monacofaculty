@@ -1,9 +1,14 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Serif } from "next/font/google";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
+const notoSerif = Noto_Serif({ 
+  subsets: ["latin"],
+  variable: "--font-noto-serif",
+  weight: ["400", "500", "600", "700"]
+});
 
 export const metadata: Metadata = {
   title: "Monaco Faculty Portal",
@@ -105,7 +110,7 @@ export default function RootLayout({
           }
         `}</style>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${notoSerif.variable}`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

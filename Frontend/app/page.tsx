@@ -173,9 +173,9 @@ export default function FacultyDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-black dark:via-gray-950 dark:to-slate-950">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20]">
       {/* Sidebar */}
-      <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-black/95 border-r border-slate-200/60 dark:border-gray-800/80 p-6 md:flex shadow-xl">
+      <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/60 dark:border-gray-800/30 p-6 md:flex shadow-xl">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
             <GraduationCap className="h-6 w-6 text-white" />
@@ -184,7 +184,6 @@ export default function FacultyDashboard() {
             <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Faculty Portal
             </h2>
-            <p className="text-xs text-slate-500 dark:text-gray-400">Monaco Institute</p>
           </div>
         </div>
         
@@ -260,7 +259,12 @@ export default function FacultyDashboard() {
           </div>
           <div className="flex gap-3 items-center">
             <ThemeToggle />
-            <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-all duration-200">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="shadow-sm hover:shadow-md transition-all duration-200"
+              onClick={() => setActiveTab("settings")}
+            >
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </Button>
@@ -298,7 +302,7 @@ export default function FacultyDashboard() {
             {!selectedYear && (
               <div className="max-w-4xl mx-auto mt-25">
                 <div className="text-center mb-12">
-                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3">
+                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3" style={{ fontFamily: 'var(--font-noto-serif)' }}>
                     Select Academic Year
                   </h2>
                   <p className="text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
@@ -639,7 +643,7 @@ export default function FacultyDashboard() {
               </div>
               <Button 
                 onClick={() => router.push("/create-test")}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
+                // className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Create Test
@@ -724,17 +728,20 @@ export default function FacultyDashboard() {
           
           {/* Questions Tab */}
           <TabsContent value="questions">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Questions Bank</h2>
-              <Button onClick={() => router.push("/add-question")}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Questions Bank</h2>
+              <Button 
+                onClick={() => router.push("/add-question")}
+                // className="bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
               </Button>
             </div>
             
-            <Card>
+            <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
               <CardContent className="pt-6">
-                <p className="text-slate-500 text-center py-8">
+                <p className="text-slate-500 dark:text-gray-400 text-center py-8">
                   Questions bank functionality will be implemented here. <br/>
                   This will allow you to create, edit and manage questions that can be added to tests.
                 </p>
@@ -744,37 +751,41 @@ export default function FacultyDashboard() {
           
           {/* Submissions Tab */}
           <TabsContent value="submissions">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Student Submissions</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2>
               <div className="flex gap-2">
-                <Button variant="outline">Filter</Button>
-                <Button variant="outline">Export</Button>
+                <Button variant="outline" className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700">Filter</Button>
+                <Button variant="outline" className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700">Export</Button>
               </div>
             </div>
             
-            <Card>
+            <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
               <CardContent className="pt-6">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Submission ID</TableHead>
-                      <TableHead>Student Name</TableHead>
-                      <TableHead>Test</TableHead>
-                      <TableHead>Submission Time</TableHead>
-                      <TableHead>Score</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="dark:border-gray-800/40">
+                      <TableHead className="text-slate-600 dark:text-gray-400">Submission ID</TableHead>
+                      <TableHead className="text-slate-600 dark:text-gray-400">Student Name</TableHead>
+                      <TableHead className="text-slate-600 dark:text-gray-400">Test</TableHead>
+                      <TableHead className="text-slate-600 dark:text-gray-400">Submission Time</TableHead>
+                      <TableHead className="text-slate-600 dark:text-gray-400">Score</TableHead>
+                      <TableHead className="text-right text-slate-600 dark:text-gray-400">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {recentSubmissions.map((submission) => (
-                      <TableRow key={submission.id}>
-                        <TableCell className="font-medium">{submission.id}</TableCell>
-                        <TableCell>{submission.student}</TableCell>
-                        <TableCell>{submission.test}</TableCell>
-                        <TableCell>{submission.time}</TableCell>
-                        <TableCell>{submission.score}</TableCell>
+                      <TableRow key={submission.id} className="dark:border-gray-800/40 dark:hover:bg-[#0a1029]">
+                        <TableCell className="font-medium text-slate-800 dark:text-gray-300">{submission.id}</TableCell>
+                        <TableCell className="dark:text-gray-300">{submission.student}</TableCell>
+                        <TableCell className="dark:text-gray-300">{submission.test}</TableCell>
+                        <TableCell className="dark:text-gray-400">{submission.time}</TableCell>
+                        <TableCell className="dark:text-gray-300">{submission.score}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="dark:text-blue-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-300"
+                          >
                             View Details
                           </Button>
                         </TableCell>
@@ -784,6 +795,126 @@ export default function FacultyDashboard() {
                 </Table>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Faculty Settings</h2>
+              <Button 
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                Save Changes
+              </Button>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Account Settings */}
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardHeader>
+                  <CardTitle className="text-xl text-slate-800 dark:text-white">Account Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                      Name
+                    </label>
+                    <input 
+                      type="text" 
+                      placeholder="Dr. John Doe"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                      Email Address
+                    </label>
+                    <input 
+                      type="email" 
+                      placeholder="john.doe@somaiya.edu"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                      Department
+                    </label>
+                    <input 
+                      type="text" 
+                      placeholder="Computer Engineering"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                      Faculty ID
+                    </label>
+                    <input 
+                      type="text" 
+                      placeholder="FAC12345"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      disabled
+                    />
+                    <p className="text-xs text-slate-500 dark:text-gray-400">Faculty ID cannot be changed</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Password Settings */}
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardHeader>
+                  <CardTitle className="text-xl text-slate-800 dark:text-white">Change Password</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                        Current Password
+                      </label>
+                      <input 
+                        type="password" 
+                        placeholder="••••••••••••"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                        New Password
+                      </label>
+                      <input 
+                        type="password" 
+                        placeholder="••••••••••••"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+                        Confirm New Password
+                      </label>
+                      <input 
+                        type="password" 
+                        placeholder="••••••••••••"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    
+                    <div className="pt-4">
+                      <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
+                      <Button 
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      >
+                        Update Password
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
