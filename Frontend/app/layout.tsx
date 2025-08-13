@@ -113,10 +113,10 @@ export default function RootLayout({
       <body className={`${inter.className} ${ibmPlexMono.variable} relative min-h-screen`}>
         <ThemeProvider>
           {children}
-          <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/60 dark:border-gray-800/30 bg-white/90 backdrop-blur-sm dark:bg-[#070c1f]/95">
-            <div className="flex items-center justify-center h-8">
-              <span className="text-xs text-slate-600 dark:text-gray-400 flex items-center">
-                Copyright © 2025. Made with <span className="text-red-500 mx-1">❤️</span> by Ishika and Arnab.
+          <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/40 dark:border-gray-800/20 bg-white/80 backdrop-blur-md dark:bg-[#070c1f]/80">
+            <div className="flex items-center justify-center h-7">
+              <span className="text-xs text-slate-500 dark:text-gray-500 flex items-center">
+                Copyright © 2025. Made with <span className="text-red-400 dark:text-red-500 mx-0.5">❤️</span> by Ishika and Arnab.
               </span>
             </div>
           </footer>

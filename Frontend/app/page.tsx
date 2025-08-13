@@ -173,9 +173,9 @@ export default function FacultyDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-10">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-8">
       {/* Sidebar */}
-      <div className="hidden w-72 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/60 dark:border-gray-800/30 p-6 md:flex shadow-xl">
+      <div className="hidden w-64 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/40 dark:border-gray-800/20 p-5 md:flex shadow-md">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
             <GraduationCap className="h-6 w-6 text-white" />
@@ -232,14 +232,14 @@ export default function FacultyDashboard() {
           </Button>
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-slate-200 dark:border-gray-700">
+        <div className="mt-auto pt-4 border-t border-slate-200/60 dark:border-gray-800/30">
           <Button 
             variant="ghost" 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className="w-full justify-start h-10 text-left font-normal text-sm transition-colors hover:bg-slate-100/60 dark:hover:bg-gray-800/30" 
             onClick={() => setActiveTab("settings")}
           >
-            <div className="mr-3 p-1.5 bg-slate-100 dark:bg-gray-800 rounded-lg">
-              <Settings className="h-4 w-4 text-slate-600 dark:text-gray-400" />
+            <div className="mr-3 p-1 rounded-md">
+              <Settings className="h-4 w-4 text-slate-500 dark:text-gray-400" />
             </div>
             Settings
           </Button>
@@ -301,11 +301,11 @@ export default function FacultyDashboard() {
             {/* Year Selection */}
             {!selectedYear && (
               <div className="max-w-4xl mx-auto mt-25">
-                <div className="text-center mb-12">
-                  <h2 className="text-5xl font-semibold text-slate-800 dark:text-white mb-3" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
+                <div className="text-center mb-10">
+                  <h2 className="text-4xl font-medium text-slate-800 dark:text-white mb-2" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
                     Select Academic Year
                   </h2>
-                  <p className="text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
+                  <p className="text-sm text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
                   {academicData.years.map((year, index) => (

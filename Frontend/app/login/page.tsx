@@ -36,7 +36,7 @@ export default function Login() {
           alt="Login Background"
           fill
           priority
-          className="object-cover"
+          className="object-cover brightness-[0.95] dark:brightness-[0.85]"
         />
       </div>
 
@@ -50,15 +50,15 @@ export default function Login() {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-bold text-center text-foreground mb-2">
+          <h1 className="text-xl font-semibold text-center text-foreground mb-2" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
             Welcome To Monaco Editor
           </h1>
-          <p className="text-center text-muted-foreground mb-8">
+          <p className="text-center text-sm text-muted-foreground mb-8">
             Please enter your SVV Net ID & password to Login.
           </p>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card p-8 rounded-lg shadow-xl border border-border">
+          <form onSubmit={handleSubmit} className="bg-card p-7 rounded-lg shadow-md border border-border/50">
             <div className="space-y-6">
               {/* SVV Net ID */}
               <div>
@@ -122,7 +122,7 @@ export default function Login() {
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-primary-foreground bg-blue-600 hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Login
               </button>
@@ -140,7 +140,7 @@ export default function Login() {
               {/* Email Login Button */}
               <button
                 type="button"
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-input rounded-md shadow-sm text-sm font-medium text-card-foreground bg-card hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-input/50 rounded-md text-sm font-medium text-card-foreground bg-card hover:bg-accent/50 transition-colors focus:outline-none"
               >
                 <Mail className="h-5 w-5" />
                 Login with Somaiya Email ID
