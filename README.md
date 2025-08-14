@@ -27,7 +27,7 @@ npm install
 
 ```bash
 # In the Frontend directory
-npm start
+npm run dev
 ```
 
 ## Project Structure
@@ -75,4 +75,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-Last updated: 2025-08-14
+Last updated: 2025-08-14 07:07:22 UTC
