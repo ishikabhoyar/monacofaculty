@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
-const ibmPlexMono = IBM_Plex_Mono({ 
+const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex-mono",
   weight: ["400"]
@@ -116,7 +116,8 @@ export default function RootLayout({
           <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/40 dark:border-gray-800/20 bg-white/80 backdrop-blur-md dark:bg-[#070c1f]/80">
             <div className="flex items-center justify-center h-7">
               <span className="text-xs text-slate-500 dark:text-gray-500 flex items-center">
-                Copyright © 2025. Made with <span className="text-red-400 dark:text-red-500 mx-0.5">❤️</span> by Ishika and Arnab.
+                Copyright © 2025. Made with
+                ♡ by Ishika and Arnab.
               </span>
             </div>
           </footer>
