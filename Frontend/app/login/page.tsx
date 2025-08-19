@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { Eye, Mail } from 'lucide-react';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import Bg from '../../public/BG-login(2).jpg';
 import logo from '../../public/KJSCE.png';
@@ -10,16 +11,38 @@ import logo1 from '../../public/university.png';
 import Bottom from '../../public/Bottom.png';
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    svvNetId: '',
-    password: '',
-    rememberMe: false
-  });
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
+  const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    if (credentialResponse.credential) {
+      try {
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${credentialResponse.credential}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Store the token or user data in local storage or context
+          // For now, just redirect to the dashboard
+          router.push('/');
+        } else {
+          console.error('Login failed:', await response.text());
+          alert('Login failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        alert('An error occurred during login. Please try again.');
+      }
+    }
+  };
+
+  const handleLoginError = () => {
+    console.error('Login failed');
+    alert('Login failed. Please try again.');
   };
 
   return (
@@ -31,7 +54,7 @@ export default function Login() {
 
       {/* Left Side - Background Image */}
       <div className="w-1/2 relative">
-        <Image 
+        <Image
           src={Bg}
           alt="Login Background"
           fill
@@ -51,108 +74,26 @@ export default function Login() {
 
           {/* Title */}
           <h1 className="text-xl font-semibold text-center text-foreground mb-2" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
-            Welcome To Monaco Editor
+            Welcome To Monaco Faculty
           </h1>
           <p className="text-center text-sm text-muted-foreground mb-8">
-            Please enter your SVV Net ID & password to Login.
+            Please sign in with your Google account to continue.
           </p>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card p-7 rounded-lg shadow-md border border-border/50">
-            <div className="space-y-6">
-              {/* SVV Net ID */}
-              <div>
-                <label htmlFor="svvNetId" className="block text-sm font-medium text-card-foreground">
-                  SVV Net ID <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="svvNetId"
-                  className="mt-1 block w-full px-3 py-2 border border-input rounded-md shadow-sm bg-card text-card-foreground focus:outline-none focus:ring-primary focus:border-primary"
-                  value={formData.svvNetId}
-                  onChange={(e) => setFormData({...formData, svvNetId: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Password */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-card-foreground">
-                  Password <span className="text-destructive">*</span>
-                </label>
-                <div className="mt-1 relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    className="block w-full px-3 py-2 border border-input rounded-md shadow-sm bg-card text-card-foreground focus:outline-none focus:ring-primary focus:border-primary"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    <Eye className="h-5 w-5 text-muted-foreground" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-primary focus:ring-primary border-input rounded bg-background"
-                    checked={formData.rememberMe}
-                    onChange={(e) => setFormData({...formData, rememberMe: e.target.checked})}
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground">
-                    Remember Me
-                  </label>
-                </div>
-                <a href="#" className="text-sm font-medium text-primary hover:text-primary/80">
-                  Forgot Password?
-                </a>
-              </div>
-
-              {/* Login Button */}
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-primary-foreground bg-blue-600 hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Login
-              </button>
-
-              {/* OR Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-input"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card text-muted-foreground">OR</span>
-                </div>
-              </div>
-
-              {/* Email Login Button */}
-              <button
-                type="button"
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-input/50 rounded-md text-sm font-medium text-card-foreground bg-card hover:bg-accent/50 transition-colors focus:outline-none"
-              >
-                <Mail className="h-5 w-5" />
-                Login with Somaiya Email ID
-              </button>
-            </div>
-          </form>
+          {/* Google Login Button */}
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={handleLoginError}
+              useOneTap
+            />
+          </div>
 
           {/* Trust Logo */}
           <div className="mt-8 flex justify-end">
-            <Image 
-              src={Bottom} 
-              alt="Somaiya Trust" 
+            <Image
+              src={Bottom}
+              alt="Somaiya Trust"
               width={96}
               height={32}
               className="h-8 w-auto"
@@ -160,7 +101,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

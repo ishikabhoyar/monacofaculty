@@ -1,11 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for Monaco Faculty project",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,16 +11,11 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@supabase/supabase-js": "^2.52.1",
-    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "multer": "^2.0.2",
-    "pg": "^8.16.3",
-    "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
+    "google-auth-library": "^10.2.1",
+    "mysql2": "^3.14.3",
+    "pg": "^8.16.3"
   }
 }

@@ -138,12 +138,12 @@ export default function FacultyDashboard() {
   const [selectedBatch, setSelectedBatch] = useState<string | null>(null);
   const router = useRouter();
   
-  // Get current selection data
+  //Get current selection data
   const getCurrentYear = () => academicData.years.find(year => year.id === selectedYear);
   const getCurrentSemester = () => getCurrentYear()?.semesters.find(sem => sem.id === selectedSemester);
   const getCurrentBatch = () => getCurrentSemester()?.batches.find(batch => batch.id === selectedBatch);
   
-  // Reset selections when going back
+  //Reset selections when going back
   const resetToYear = () => {
     setSelectedYear(null);
     setSelectedSemester(null);
@@ -159,7 +159,7 @@ export default function FacultyDashboard() {
     setSelectedBatch(null);
   };
   
-  // Format date for display
+  //Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
