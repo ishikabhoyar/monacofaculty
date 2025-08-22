@@ -111,6 +111,7 @@ export default function RootLayout({
           }
         `}</style>
       </head>
+      {/* Hello */}
       <body className={`${inter.className} ${ibmPlexMono.variable} relative min-h-screen`}>
         <GoogleOAuthProvider clientId="586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com">
           <ThemeProvider>
