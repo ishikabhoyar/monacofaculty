@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,14 @@ import Bottom from '../../public/Bottom.png';
 export default function Login() {
   const router = useRouter();
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/');
+    }
+  }, [router]);
+
   const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     if (credentialResponse.credential) {
       try {
@@ -24,14 +32,18 @@ export default function Login() {
           },
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          // Store the token or user data in local storage or context
-          // For now, just redirect to the dashboard
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          // Store the session token returned from the server
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('facultyId', data.facultyId);
+          localStorage.setItem('userName', data.user.name || '');
+          localStorage.setItem('userEmail', data.user.email || '');
           router.push('/');
         } else {
-          console.error('Login failed:', await response.text());
-          alert('Login failed. Please try again.');
+          console.error('Login failed:', data.message);
+          alert(data.message || 'Login failed. Please try again.');
         }
       } catch (error) {
         console.error('Error during login:', error);
@@ -54,11 +66,12 @@ export default function Login() {
 
       {/* Left Side - Background Image */}
       <div className="w-1/2 relative">
+        {/* Background image */}
         <Image
           src={Bg}
           alt="Login Background"
           fill
-          priority
+          sizes="100vw"
           className="object-cover brightness-[0.95] dark:brightness-[0.85]"
         />
       </div>
@@ -68,8 +81,22 @@ export default function Login() {
         <div className="w-full max-w-md">
           {/* Logos */}
           <div className="flex justify-center gap-4 mb-8">
-            <Image src={logo1} alt="KJSCE" height={48} width={48} className="h-12 w-auto" />
-            <Image src={logo} alt="Somaiya Vidyavihar" height={48} width={48} className="h-12 w-auto" />
+            {/* Logo images with correct height and width properties */}
+            <Image 
+              src={logo1} 
+              alt="KJSCE" 
+              width={48} 
+              height={48} 
+              className="h-12 w-auto" 
+            />
+
+            <Image 
+              src={logo} 
+              alt="Somaiya Vidyavihar" 
+              width={48} 
+              height={48} 
+              className="h-12 w-auto" 
+            />
           </div>
 
           {/* Title */}
@@ -91,6 +118,7 @@ export default function Login() {
 
           {/* Trust Logo */}
           <div className="mt-8 flex justify-end">
+            {/* Bottom image with correct properties */}
             <Image
               src={Bottom}
               alt="Somaiya Trust"

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +19,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PlusCircle, FileText, Settings, Users, Calendar, BookOpen, ArrowRight, ChevronLeft, GraduationCap, TrendingUp, Clock, BarChart3 } from "lucide-react";
+import { 
+  MoreHorizontal, 
+  PlusCircle, 
+  FileText, 
+  Settings, 
+  Users, 
+  Calendar, 
+  BookOpen, 
+  ArrowRight, 
+  ChevronLeft, 
+  GraduationCap, 
+  TrendingUp, 
+  Clock, 
+  BarChart3,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
+  Upload,
+  Code,
+  HelpCircle
+} from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import BatchesTab from "@/components/BatchesTab";
+import TestsTab from "@/components/TestsTab";
 
 // Academic data structure
 const academicData = {
@@ -76,54 +99,6 @@ const academicData = {
   ]
 };
 
-// Dummy data based on your schema
-const dummyTests = [
-  {
-    id: "T001",
-    title: "Calculus I Midterm",
-    course: "MATH101",
-    duration: 90,
-    questions: 20,
-    startTime: "2025-07-25T10:00:00",
-    endTime: "2025-07-25T12:00:00",
-    status: "Draft",
-    batch: "A1"
-  },
-  {
-    id: "T002",
-    title: "Physics II Final",
-    course: "PHYS202",
-    duration: 120,
-    questions: 30,
-    startTime: "2025-08-01T14:00:00",
-    endTime: "2025-08-01T16:00:00",
-    status: "Published",
-    batch: "C1"
-  },
-  {
-    id: "T003",
-    title: "Data Structures Quiz",
-    course: "DS201",
-    duration: 45,
-    questions: 10,
-    startTime: "2025-07-28T09:00:00",
-    endTime: "2025-07-28T10:00:00",
-    status: "Archived",
-    batch: "C2"
-  },
-  {
-    id: "T004",
-    title: "Web Development Test",
-    course: "WEB201",
-    duration: 60,
-    questions: 15,
-    startTime: "2025-08-05T13:00:00",
-    endTime: "2025-08-05T14:30:00",
-    status: "Draft",
-    batch: "D1"
-  }
-];
-
 const recentSubmissions = [
   { id: "S001", student: "Alice Johnson", test: "Calculus I Midterm", time: "2 hours ago", score: "85/100" },
   { id: "S002", student: "Bob Smith", test: "Physics II Final", time: "5 hours ago", score: "92/100" },
@@ -133,45 +108,150 @@ const recentSubmissions = [
 
 export default function FacultyDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
-  const [selectedBatch, setSelectedBatch] = useState<string | null>(null);
+  const [batches, setBatches] = useState<any[]>([]);
+  const [loadingBatches, setLoadingBatches] = useState(true);
+  const [batchError, setBatchError] = useState<string | null>(null);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [questionsError, setQuestionsError] = useState<string | null>(null);
+  const [tests, setTests] = useState<any[]>([]);
+  const [loadingTests, setLoadingTests] = useState(true);
+  const [testsError, setTestsError] = useState<string | null>(null);
   const router = useRouter();
-  
-  //Get current selection data
-  const getCurrentYear = () => academicData.years.find(year => year.id === selectedYear);
-  const getCurrentSemester = () => getCurrentYear()?.semesters.find(sem => sem.id === selectedSemester);
-  const getCurrentBatch = () => getCurrentSemester()?.batches.find(batch => batch.id === selectedBatch);
-  
-  //Reset selections when going back
-  const resetToYear = () => {
-    setSelectedYear(null);
-    setSelectedSemester(null);
-    setSelectedBatch(null);
-  };
-  
-  const resetToSemester = () => {
-    setSelectedSemester(null);
-    setSelectedBatch(null);
-  };
-  
-  const resetToBatch = () => {
-    setSelectedBatch(null);
-  };
-  
-  //Format date for display
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric', 
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+
+  // Fetch batches from backend
+  const fetchBatches = async () => {
+    try {
+      setLoadingBatches(true);
+      setBatchError(null);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/batches', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setBatches(data.batches || []);
+      } else {
+        setBatchError(data.message || 'Failed to fetch batches');
+      }
+    } catch (error) {
+      console.error('Error fetching batches:', error);
+      setBatchError('Network error. Please try again.');
+    } finally {
+      setLoadingBatches(false);
+    }
   };
 
+  // Fetch tests from backend
+  const fetchTests = async () => {
+    try {
+      setLoadingTests(true);
+      setTestsError(null);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/tests', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setTests(data.tests || []);
+      } else {
+        setTestsError(data.message || 'Failed to fetch tests');
+      }
+    } catch (error) {
+      console.error('Error fetching tests:', error);
+      setTestsError('Network error. Please try again.');
+    } finally {
+      setLoadingTests(false);
+    }
+  };
+
+  // Fetch questions from backend
+  const fetchQuestions = async () => {
+    try {
+      setLoadingQuestions(true);
+      setQuestionsError(null);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      // For now, we'll fetch questions from all tests. In a real implementation,
+      // you might want to create a dedicated endpoint for all questions
+      const allQuestions: any[] = [];
+      
+      // Get all tests first to fetch questions from each
+      const testsResponse = await fetch('http://localhost:5000/api/tests', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      const testsData = await testsResponse.json();
+      
+      if (testsResponse.ok && testsData.success) {
+        // Fetch questions for each test
+        for (const test of testsData.tests || []) {
+          try {
+            const questionsResponse = await fetch(`http://localhost:5000/api/questions/test/${test.id}`, {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
+            
+            const questionsData = await questionsResponse.json();
+            
+            if (questionsResponse.ok && questionsData.success) {
+              // Add test info to each question
+              const questionsWithTest = (questionsData.questions || []).map((q: any) => ({
+                ...q,
+                test_title: test.title,
+                test_batch_name: test.batch_name
+              }));
+              allQuestions.push(...questionsWithTest);
+            }
+          } catch (questionError) {
+            console.error(`Error fetching questions for test ${test.id}:`, questionError);
+          }
+        }
+      }
+
+      setQuestions(allQuestions);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      setQuestionsError('Network error. Please try again.');
+    } finally {
+      setLoadingQuestions(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBatches();
+    fetchTests();
+    fetchQuestions();
+  }, []);
+  
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-8">
       {/* Sidebar */}
@@ -198,6 +278,18 @@ export default function FacultyDashboard() {
             </div>
             Overview
           </Button>
+
+          <Button 
+            variant={activeTab === "batches" ? "default" : "ghost"} 
+            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            onClick={() => setActiveTab("batches")}
+          >
+            <div className="mr-3 p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+              <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            Manage Batches
+          </Button>
+
           <Button 
             variant={activeTab === "tests" ? "default" : "ghost"} 
             className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
@@ -208,6 +300,7 @@ export default function FacultyDashboard() {
             </div>
             Manage Tests
           </Button>
+          
           <Button 
             variant={activeTab === "questions" ? "default" : "ghost"} 
             className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
@@ -220,6 +313,7 @@ export default function FacultyDashboard() {
             </div>
             Questions Bank
           </Button>
+          
           <Button 
             variant={activeTab === "submissions" ? "default" : "ghost"} 
             className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
@@ -236,12 +330,12 @@ export default function FacultyDashboard() {
           <Button 
             variant="ghost" 
             className="w-full justify-start h-10 text-left font-normal text-sm transition-colors hover:bg-slate-100/60 dark:hover:bg-gray-800/30" 
-            onClick={() => setActiveTab("settings")}
+            onClick={() => router.push("/logout")}
           >
             <div className="mr-3 p-1 rounded-md">
               <Settings className="h-4 w-4 text-slate-500 dark:text-gray-400" />
             </div>
-            Settings
+            Logout
           </Button>
         </div>
       </div>
@@ -288,8 +382,9 @@ export default function FacultyDashboard() {
         </header>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          {/* <TabsList className="grid w-full grid-cols-4 md:w-auto md:grid-cols-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-lg">
+          {/* <TabsList className="grid w-full grid-cols-5 md:w-auto md:grid-cols-5 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-lg">
             <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Overview</TabsTrigger>
+            <TabsTrigger value="batches" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Batches</TabsTrigger>
             <TabsTrigger value="tests" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Tests</TabsTrigger>
             <TabsTrigger value="questions" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Questions</TabsTrigger>
             <TabsTrigger value="submissions" className="data-[state=active]:bg-white data-[state=active]:shadow-md">Submissions</TabsTrigger>
@@ -297,433 +392,247 @@ export default function FacultyDashboard() {
           
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-
-            {/* Year Selection */}
-            {!selectedYear && (
-              <div className="max-w-4xl mx-auto mt-25">
-                <div className="text-center mb-10">
-                  <h2 className="text-4xl font-medium text-slate-800 dark:text-white mb-2" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
-                    Select Academic Year
-                  </h2>
-                  <p className="text-sm text-slate-500 dark:text-gray-400">Choose the academic year to begin managing your courses</p>
-                </div>
-                <div className="grid gap-6 md:grid-cols-2">
-                  {academicData.years.map((year, index) => (
-                    <Card 
-                      key={year.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50 backdrop-blur-sm"
-                      onClick={() => setSelectedYear(year.id)}
-                    >
-                      <CardContent className="p-8">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-2">
-                              {year.name}
-                            </h3>
-                            <div className="space-y-1 text-sm text-slate-500 dark:text-gray-400">
-                              <p>{year.semesters.length} semesters</p>
-                              <p>{year.semesters.reduce((total, sem) => total + sem.batches.length, 0)} batches total</p>
-                            </div>
-                          </div>
-                          <div className="w-12 h-12 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
-                            <BookOpen className="h-6 w-6 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Semester Selection */}
-            {selectedYear && !selectedSemester && (
-              <div className="max-w-4xl mx-auto mt-25">
-                <div className="flex items-center gap-4 mb-8">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={resetToYear}
-                    className="text-slate-600 dark:text-gray-300 border-slate-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
-                    Back
-                  </Button>
-                  <div className="h-6 w-px bg-slate-200 dark:bg-gray-700"></div>
-                  <div>
-                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-white">
-                      {getCurrentYear()?.name} Semesters
-                    </h2>
-                    <p className="text-slate-500 dark:text-gray-400">Select a semester to view batches</p>
-                  </div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {getCurrentYear()?.semesters.map((semester, index) => (
-                    <Card 
-                      key={semester.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
-                      onClick={() => setSelectedSemester(semester.id)}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2">
-                              {semester.name}
-                            </h3>
-                            <div className="space-y-1 text-sm text-slate-500 dark:text-gray-400">
-                              <p>{semester.batches.length} batches</p>
-                              <p>{semester.batches.reduce((total, batch) => total + batch.students, 0)} students</p>
-                            </div>
-                          </div>
-                          <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
-                            <Calendar className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Batch Selection */}
-            {selectedSemester && !selectedBatch && (
-              <div className="max-w-5xl mx-auto mt-25">
-                <div className="flex items-center gap-4 mb-8">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={resetToSemester}
-                    className="text-slate-600 dark:text-gray-300 border-slate-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
-                    Back
-                  </Button>
-                  <div className="h-6 w-px bg-slate-200 dark:bg-gray-700"></div>
-                  <div>
-                    <h2 className="text-3xl font-semibold text-slate-800 dark:text-white">
-                      {getCurrentSemester()?.name} Batches
-                    </h2>
-                    <p className="text-slate-500 dark:text-gray-400">Select a batch to manage tests and students</p>
-                  </div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {getCurrentSemester()?.batches.map((batch, index) => (
-                    <Card 
-                      key={batch.id} 
-                      className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
-                      onClick={() => setSelectedBatch(batch.id)}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
-                              {batch.name}
-                            </h3>
-                            <p className="text-sm text-slate-500 dark:text-gray-400">
-                              {batch.students} students
-                            </p>
-                          </div>
-                          <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
-                            <Users className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-xs font-medium text-slate-600 dark:text-gray-400 uppercase tracking-wide">Courses</p>
-                          <div className="flex flex-wrap gap-1">
-                            {batch.courses.slice(0, 3).map((course) => (
-                              <span 
-                                key={course} 
-                                className="px-2 py-1 bg-slate-100 dark:bg-gray-800 text-xs text-slate-600 dark:text-gray-300 rounded"
-                              >
-                                {course}
-                              </span>
-                            ))}
-                            {batch.courses.length > 3 && (
-                              <span className="px-2 py-1 bg-slate-100 dark:bg-gray-800 text-xs text-slate-600 dark:text-gray-300 rounded">
-                                +{batch.courses.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Batch Dashboard */}
-            {selectedBatch && (
-              <div className="space-y-8 animate-in fade-in-50 duration-500 mt-20">
-                <div className="flex items-center gap-6 mb-8">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={resetToBatch}
-                    className="shadow-sm hover:shadow-md transition-all duration-200"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Back to Batches
-                  </Button>
-                  <div className="flex-1">
-                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
-                      {getCurrentBatch()?.name} Dashboard
-                    </h2>
-                    <div className="flex items-center gap-2 text-slate-600 dark:text-gray-300">
-                      <span className="text-lg">{getCurrentYear()?.name}</span>
-                      <span>•</span>
-                      <span className="text-lg">{getCurrentSemester()?.name}</span>
-                      <span>•</span>
-                      <span className="text-lg font-semibold">{getCurrentBatch()?.students} Students</span>
+            {/* Batch Statistics */}
+            <div className="grid gap-4 md:grid-cols-4 mb-6">
+              <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Batches</p>
+                      <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">{batches.length}</p>
+                    </div>
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                      <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                   </div>
-                  <Button 
-                    onClick={() => router.push("/create-test")} 
-                    className="ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
-                    size="lg"
-                  >
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Create Test
-                  </Button>
-                </div>
-
-                {/* Batch Stats */}
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                  <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-semibold text-blue-700 dark:text-blue-300">Total Students</CardTitle>
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
-                        <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-blue-700 dark:text-blue-300">{getCurrentBatch()?.students}</div>
-                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                        Currently enrolled
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-700 dark:text-green-300">Total Students</p>
+                      <p className="text-2xl font-bold text-green-800 dark:text-green-200">
+                        {batches.reduce((total, batch) => total + (batch.students?.length || 0), 0)}
                       </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-semibold text-green-700 dark:text-green-300">Active Tests</CardTitle>
-                      <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                        <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-green-700 dark:text-green-300">
-                        {dummyTests.filter(test => test.status === "Published" && test.batch === selectedBatch).length}
-                      </div>
-                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                        Currently active
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-semibold text-purple-700 dark:text-purple-300">Total Courses</CardTitle>
-                      <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                        <BookOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">
-                        {getCurrentBatch()?.courses.length}
-                      </div>
-                      <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
-                        This semester
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-semibold text-orange-700 dark:text-orange-300">Recent Submissions</CardTitle>
-                      <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
-                        <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-orange-700 dark:text-orange-300">{recentSubmissions.length}</div>
-                      <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-                        Past 24 hours
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Courses List */}
-                <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">
-                      Courses for {getCurrentBatch()?.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      {getCurrentBatch()?.courses.map((course, index) => (
-                        <div 
-                          key={course} 
-                          className="p-4 border border-slate-200 dark:border-gray-800 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition-all duration-300 hover:shadow-md hover:scale-105 animate-in fade-in-50"
-                          style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                          <div className="font-semibold text-slate-800 dark:text-white text-lg">{course}</div>
-                          <div className="text-sm text-slate-500 dark:text-gray-400 mt-1">
-                            {dummyTests.filter(test => test.course === course && test.batch === selectedBatch).length} tests created
-                          </div>
-                        </div>
-                      ))}
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                      <GraduationCap className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Active Batches</p>
+                      <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">
+                        {batches.filter(b => b.students?.length > 0).length}
+                      </p>
+                    </div>
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                      <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-700 dark:text-orange-300">This Month</p>
+                      <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">
+                        {batches.filter(b => {
+                          const createdDate = new Date(b.created_at);
+                          const now = new Date();
+                          return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear();
+                        }).length}
+                      </p>
+                    </div>
+                    <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
+                      <Calendar className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-                {/* Recent Tests for this Batch */}
-                <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">
-                      Recent Tests - {getCurrentBatch()?.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {dummyTests
-                        .filter(test => test.batch === selectedBatch)
-                        .slice(0, 3)
-                        .map((test, index) => (
-                          <div 
-                            key={test.id} 
-                            className="flex items-center justify-between p-6 border border-slate-200 dark:border-gray-800 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] bg-white/50 dark:bg-gray-900/30 animate-in fade-in-50"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
+            {/* Recent Batches */}
+            <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">Your Batches</CardTitle>
+                <CardDescription>Manage your student batches and view recent activity</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingBatches ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : batchError ? (
+                  <div className="text-center py-8">
+                    <p className="text-red-600 dark:text-red-400">{batchError}</p>
+                    <Button onClick={fetchBatches} className="mt-4">
+                      Try Again
+                    </Button>
+                  </div>
+                ) : batches.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                      <Users className="w-12 h-12 text-slate-400 dark:text-gray-500" />
+                    </div>
+                    <h3 className="text-xl font-medium mb-2 text-slate-800 dark:text-white">No batches found</h3>
+                    <p className="text-slate-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                      You haven't created any batches yet. Create your first batch to get started.
+                    </p>
+                    <Button 
+                      onClick={() => router.push("/create-batch")}
+                      className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700"
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Create Your First Batch
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {batches.slice(0, 6).map((batch, index) => (
+                      <Card 
+                        key={batch.id} 
+                        className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
+                        onClick={() => router.push(`/batches/${batch.id}`)}
+                      >
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
                             <div>
-                              <p className="font-semibold text-lg text-slate-800 dark:text-white">{test.title}</p>
-                              <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
-                                {test.course} • {test.questions} questions • {test.duration} minutes
+                              <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
+                                {batch.batch_name}
+                              </h3>
+                              <p className="text-sm text-slate-500 dark:text-gray-400">
+                                {batch.students?.length || 0} students
                               </p>
                             </div>
-                            <div className="text-right">
-                              <div className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm ${
-                                test.status === 'Published' 
-                                  ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200' 
-                                  : test.status === 'Draft' 
-                                    ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border border-yellow-200' 
-                                    : 'bg-gradient-to-r from-slate-100 to-gray-100 text-slate-800 border border-slate-200'
-                              }`}>
-                                {test.status}
-                              </div>
-                              <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">{formatDate(test.startTime)}</p>
+                            <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
+                              <Users className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                             </div>
                           </div>
-                        ))}
-                      {dummyTests.filter(test => test.batch === selectedBatch).length === 0 && (
-                        <div className="text-center py-12">
-                          <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                            <FileText className="w-12 h-12 text-slate-400 dark:text-gray-500" />
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-slate-600 dark:text-gray-400">Academic Year:</span>
+                              <span className="font-medium text-slate-800 dark:text-white">{batch.academic_year}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-slate-600 dark:text-gray-400">Semester:</span>
+                              <span className="font-medium text-slate-800 dark:text-white">{batch.semester}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-slate-600 dark:text-gray-400">Created:</span>
+                              <span className="font-medium text-slate-800 dark:text-white">
+                                {new Date(batch.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
                           </div>
-                          <p className="text-slate-500 dark:text-gray-400 text-lg">No tests found for this batch</p>
-                          <p className="text-slate-400 dark:text-gray-500 text-sm mt-1">Create your first test to get started</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    onClick={() => router.push("/create-batch")}
+                    className="w-full justify-start bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Create New Batch
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveTab("batches")}
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
+                    <Users className="mr-2 h-4 w-4" />
+                    Manage All Batches
+                  </Button>
+                  <Button 
+                    onClick={() => router.push("/create-test")}
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Create New Test
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Recent Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {batches.slice(0, 3).map((batch) => (
+                      <div key={batch.id} className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                          <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-800 dark:text-white">
+                            Created batch "{batch.batch_name}"
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-gray-400">
+                            {new Date(batch.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                    {batches.length === 0 && (
+                      <p className="text-sm text-slate-500 dark:text-gray-400 text-center py-4">
+                        No recent activity
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          {/* Batches Tab */}
+          <TabsContent value="batches" className="space-y-6">
+            <BatchesTab />
           </TabsContent>
           
           {/* Tests Tab */}
           <TabsContent value="tests" className="space-y-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Manage Tests</h2>
-                <p className="text-slate-600 dark:text-gray-400 mt-1">Create, edit, and manage all your tests</p>
+            {loadingTests ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
-              <Button 
-                onClick={() => router.push("/create-test")}
-                // className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Create Test
-              </Button>
-            </div>
-            
-            <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-              <CardContent className="pt-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-slate-200 dark:border-slate-700">
-                      <TableHead className="font-semibold">Test ID</TableHead>
-                      <TableHead className="font-semibold">Title</TableHead>
-                      <TableHead className="font-semibold">Course</TableHead>
-                      <TableHead className="font-semibold">Duration</TableHead>
-                      <TableHead className="font-semibold">Questions</TableHead>
-                      <TableHead className="font-semibold">Schedule</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="text-right font-semibold">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {dummyTests.map((test, index) => (
-                      <TableRow 
-                        key={test.id} 
-                        className="border-slate-200 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors duration-200 animate-in fade-in-50"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <TableCell className="font-mono text-sm font-medium">{test.id}</TableCell>
-                        <TableCell className="font-medium">{test.title}</TableCell>
-                        <TableCell>
-                          <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-                            {test.course}
-                          </span>
-                        </TableCell>
-                        <TableCell>{test.duration} min</TableCell>
-                        <TableCell>{test.questions}</TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="text-xs font-medium">Start: {formatDate(test.startTime)}</div>
-                            <div className="text-xs text-slate-500">End: {formatDate(test.endTime)}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                            test.status === 'Published' 
-                              ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200' 
-                              : test.status === 'Draft' 
-                                ? 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border border-yellow-200' 
-                                : 'bg-gradient-to-r from-slate-100 to-gray-100 text-slate-800 border border-slate-200'
-                          }`}>
-                            {test.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100 dark:hover:bg-slate-700">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Add Questions</DropdownMenuItem>
-                              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                              <DropdownMenuItem>
-                                {test.status === "Published" ? "Unpublish" : "Publish"}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+            ) : testsError ? (
+              <div className="text-center py-8">
+                <p className="text-red-600 dark:text-red-400">{testsError}</p>
+                <Button onClick={fetchTests} className="mt-4">
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              <TestsTab 
+                tests={tests}
+                onTestUpdate={(updatedTests) => {
+                  setTests(updatedTests);
+                }} 
+              />
+            )}
           </TabsContent>
           
           {/* Questions Tab */}
@@ -732,21 +641,91 @@ export default function FacultyDashboard() {
               <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Questions Bank</h2>
               <Button 
                 onClick={() => router.push("/add-question")}
-                // className="bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
               </Button>
             </div>
             
-            <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-              <CardContent className="pt-6">
-                <p className="text-slate-500 dark:text-gray-400 text-center py-8">
-                  Questions bank functionality will be implemented here. <br/>
-                  This will allow you to create, edit and manage questions that can be added to tests.
-                </p>
-              </CardContent>
-            </Card>
+            {loadingQuestions ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              </div>
+            ) : questionsError ? (
+              <div className="text-center py-8">
+                <p className="text-red-600 dark:text-red-400">{questionsError}</p>
+                <Button onClick={fetchQuestions} className="mt-4">
+                  Try Again
+                </Button>
+              </div>
+            ) : questions.length === 0 ? (
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardContent className="pt-6">
+                  <div className="text-center py-12">
+                    <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                      <svg className="w-12 h-12 text-slate-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-medium mb-2 text-slate-800 dark:text-white">No questions found</h3>
+                    <p className="text-slate-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                      You haven't created any questions yet. Create your first question to get started.
+                    </p>
+                    <Button 
+                      onClick={() => router.push("/add-question")}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Create Your First Question
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {questions.map((question, index) => (
+                  <Card 
+                    key={question.id} 
+                    className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
+                    onClick={() => router.push(`/tests/${question.test_id || 'unknown'}/questions`)}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            {question.question_type === 'coding' && <Code className="h-5 w-5 text-blue-600" />}
+                            {question.question_type === 'multiple_choice' && <FileText className="h-5 w-5 text-green-600" />}
+                            {question.question_type === 'short_answer' && <HelpCircle className="h-5 w-5 text-orange-600" />}
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
+                              Q{index + 1}
+                            </h3>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              question.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                              question.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                            }`}>
+                              {question.difficulty}
+                            </span>
+                          </div>
+                          
+                          <p className="text-sm text-slate-600 dark:text-gray-400 mb-3 line-clamp-3">
+                            {question.question_text.length > 100 
+                              ? question.question_text.substring(0, 100) + '...' 
+                              : question.question_text}
+                          </p>
+                          
+                          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-gray-400">
+                            <span>{question.test_title} - {question.test_batch_name}</span>
+                            <span>{question.marks} marks</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </TabsContent>
           
           {/* Submissions Tab */}

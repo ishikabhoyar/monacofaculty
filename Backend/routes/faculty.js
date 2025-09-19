@@ -1,11 +1,10 @@
 const express = require('express');
-const db = require('../db');
-const authenticateToken = require('../authMiddleware');
-
 const router = express.Router();
+const pool = require('../db');
+const authMiddleware = require('../authMiddleware');
 
 // GET /api/faculty/:id - Get faculty data by ID
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params;
     const facultyIdFromToken = req.user.id;
 
@@ -14,35 +13,29 @@ router.get('/:id', authenticateToken, async (req, res) => {
         return res.status(403).json({ success: false, message: 'Unauthorized: You can only view your own faculty data.' });
     }
 
-    let connection;
     try {
-        connection = await db.getConnection();
-        const [rows] = await connection.execute(
-            'SELECT faculty_id, name, email, department FROM faculties WHERE faculty_id = ?',
+        const result = await pool.query(
+            'SELECT id, name, email, department FROM faculties WHERE id = $1',
             [id]
         );
 
-        if (rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'Faculty not found.' });
         }
 
-        res.status(200).json({ success: true, faculty: rows[0] });
+        res.status(200).json({ success: true, faculty: result.rows[0] });
 
     } catch (error) {
         console.error('Error fetching faculty data:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch faculty data.', error: error.message });
-    } finally {
-        if (connection) {
-            connection.release();
-        }
     }
 });
 
 // PUT /api/faculty/:id - Update faculty data
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params;
     const { name, email, department } = req.body;
-    const facultyIdFromToken = req.user.id; // Assuming req.user.id is populated by authenticateToken
+    const facultyIdFromToken = req.user.id;
 
     // Authorization check: Ensure faculty can only update their own data
     if (parseInt(id) !== facultyIdFromToken) {
@@ -56,9 +49,10 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
     let updateFields = [];
     let updateValues = [];
+    let paramIndex = 1;
 
     if (name) {
-        updateFields.push('name = ?');
+        updateFields.push(`name = $${paramIndex++}`);
         updateValues.push(name);
     }
     if (email) {
@@ -66,11 +60,11 @@ router.put('/:id', authenticateToken, async (req, res) => {
         if (!/^[^\\]+@[^\\]+\\\.[^\\]+$/.test(email)) {
             return res.status(400).json({ success: false, message: 'Invalid email format.' });
         }
-        updateFields.push('email = ?');
+        updateFields.push(`email = $${paramIndex++}`);
         updateValues.push(email);
     }
     if (department) {
-        updateFields.push('department = ?');
+        updateFields.push(`department = $${paramIndex++}`);
         updateValues.push(department);
     }
 
@@ -78,15 +72,13 @@ router.put('/:id', authenticateToken, async (req, res) => {
         return res.status(400).json({ success: false, message: 'No valid fields provided for update.' });
     }
 
-    const query = `UPDATE faculties SET ${updateFields.join(', ')} WHERE faculty_id = ?`;
+    const query = `UPDATE faculties SET ${updateFields.join(', ')} WHERE id = $${paramIndex}`;
     updateValues.push(id);
 
-    let connection;
     try {
-        connection = await db.getConnection();
-        const [result] = await connection.execute(query, updateValues);
+        const result = await pool.query(query, updateValues);
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ success: false, message: 'Faculty not found or no changes made.' });
         }
 
@@ -94,15 +86,11 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
     } catch (error) {
         console.error('Error updating faculty data:', error);
-        // Handle specific MySQL errors (e.g., duplicate email)
-        if (error.code === 'ER_DUP_ENTRY') {
+        // Handle specific PostgreSQL errors (e.g., duplicate email)
+        if (error.code === '23505') {
             return res.status(409).json({ success: false, message: 'Email already in use by another faculty member.', error: error.message });
         }
         res.status(500).json({ success: false, message: 'Failed to update faculty data.', error: error.message });
-    } finally {
-        if (connection) {
-            connection.release();
-        }
     }
 });
 

@@ -199,26 +199,34 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
 
     // Form validation
     if (!batchData.batchName || !batchData.academicYear || !batchData.semester) {
-      alert("Please fill in all required fields");
+      setErrors(["Please fill in all required fields"]);
       return;
     }
 
     if (students.length === 0) {
-      alert("Please upload a student list");
+      setErrors(["Please upload a student list"]);
       return;
     }
 
     try {
+      // Set loading state
+      setIsProcessing(true);
+      
       const batchPayload = {
         ...batchData,
-        students,
+        students: students.map(student => ({
+          rollNumber: student.rollNumber,
+          name: student.name,
+          email: student.email,
+          phoneNumber: student.phoneNumber || '',
+        })),
       };
 
       // Get the token from local storage
       const token = localStorage.getItem('token');
       
       if (!token) {
-        alert("You need to be logged in to create a batch");
+        setErrors(["You need to be logged in to create a batch"]);
         router.push("/login");
         return;
       }
@@ -233,17 +241,20 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
         body: JSON.stringify(batchPayload),
       });
 
-      const result = await response.json();
-
-      if (result.success) {
-        alert("Batch created successfully!");
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        // Success - redirect to dashboard or batch details
         router.push("/");
       } else {
-        alert(`Failed to create batch: ${result.message}`);
+        // Handle errors from API
+        setErrors([data.message || "Failed to create batch"]);
       }
     } catch (error) {
       console.error("Error creating batch:", error);
-      alert("An error occurred while creating the batch. Please try again.");
+      setErrors(["An unexpected error occurred. Please try again."]);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
