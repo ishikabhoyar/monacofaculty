@@ -232,7 +232,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
       }
       
       // Send data to your API endpoint
-      const response = await fetch("http://localhost:5000/api/batches", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

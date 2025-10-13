@@ -55,7 +55,7 @@ export default function EditBatchPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -98,7 +98,7 @@ export default function EditBatchPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

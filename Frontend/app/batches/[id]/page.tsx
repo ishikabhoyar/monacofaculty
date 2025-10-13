@@ -96,7 +96,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -131,7 +131,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}/students`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}/students/${editingStudent.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students/${editingStudent.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/batches/${batchId}/students/${studentId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students/${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

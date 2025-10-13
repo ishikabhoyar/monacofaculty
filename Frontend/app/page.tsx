@@ -131,7 +131,7 @@ export default function FacultyDashboard() {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/batches', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -164,7 +164,7 @@ export default function FacultyDashboard() {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/tests', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/tests`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -202,7 +202,7 @@ export default function FacultyDashboard() {
       const allQuestions: any[] = [];
       
       // Get all tests first to fetch questions from each
-      const testsResponse = await fetch('http://localhost:5000/api/tests', {
+      const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/tests`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -214,7 +214,7 @@ export default function FacultyDashboard() {
         // Fetch questions for each test
         for (const test of testsData.tests || []) {
           try {
-            const questionsResponse = await fetch(`http://localhost:5000/api/questions/test/${test.id}`, {
+            const questionsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/questions/test/${test.id}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
               },

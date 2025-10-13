@@ -1,10 +1,11 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/faculty';
-const TESTS_URL = 'http://localhost:5000/api/tests';
-const QUESTIONS_URL = 'http://localhost:5000/api/questions';
-const BATCHES_URL = 'http://localhost:5000/api/batches';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090';
+const API_URL = `${BASE_URL}/api/faculty`;
+const TESTS_URL = `${BASE_URL}/api/tests`;
+const QUESTIONS_URL = `${BASE_URL}/api/questions`;
+const BATCHES_URL = `${BASE_URL}/api/batches`;
 
 export const getFacultyData = async (id: string, token: string) => {
   const response = await axios.get(`${API_URL}/${id}`, {

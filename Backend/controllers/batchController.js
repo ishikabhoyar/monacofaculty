@@ -2,6 +2,22 @@ const pool = require('../db');
 const XLSX = require('xlsx');
 
 class BatchController {
+    constructor() {
+        // Bind all methods to maintain 'this' context
+        this.createBatch = this.createBatch.bind(this);
+        this.getBatches = this.getBatches.bind(this);
+        this.getBatchById = this.getBatchById.bind(this);
+        this.updateBatch = this.updateBatch.bind(this);
+        this.deleteBatch = this.deleteBatch.bind(this);
+        this.addStudent = this.addStudent.bind(this);
+        this.updateStudent = this.updateStudent.bind(this);
+        this.deleteStudent = this.deleteStudent.bind(this);
+        this.importStudents = this.importStudents.bind(this);
+        this.validateStudentData = this.validateStudentData.bind(this);
+        this.parseCSV = this.parseCSV.bind(this);
+        this.parseExcel = this.parseExcel.bind(this);
+    }
+
     // Create a new batch with students
     async createBatch(req, res) {
         const client = await pool.connect();
@@ -64,19 +80,104 @@ class BatchController {
                     });
                 }
                 
-                // Insert students
-                const studentValues = students.map(student => 
-                    `('${student.rollNumber}', '${student.name}', '${student.email}', '${student.phoneNumber || ''}', ${batch.id})`
-                ).join(', ');
+                // Check for existing students with same roll number or email in ANY batch
+                const rollNumbers = students.map(s => s.rollNumber);
+                const emails = students.map(s => s.email);
                 
-                const studentQuery = `
-                    INSERT INTO students (roll_number, name, email, phone_number, batch_id)
-                    VALUES ${studentValues}
-                    RETURNING id, roll_number, name, email, phone_number, created_at
-                `;
+                const existingStudentsCheck = await client.query(
+                    `SELECT roll_number, email, batch_id, 
+                            (SELECT name FROM batches WHERE id = students.batch_id) as batch_name
+                     FROM students 
+                     WHERE roll_number = ANY($1) OR email = ANY($2)`,
+                    [rollNumbers, emails]
+                );
                 
-                const studentResult = await client.query(studentQuery);
-                insertedStudents = studentResult.rows;
+                if (existingStudentsCheck.rows.length > 0) {
+                    const duplicateErrors = [];
+                    
+                    for (const existing of existingStudentsCheck.rows) {
+                        const studentIndex = students.findIndex(
+                            s => s.rollNumber === existing.roll_number || s.email === existing.email
+                        );
+                        
+                        if (existing.roll_number && rollNumbers.includes(existing.roll_number)) {
+                            duplicateErrors.push(
+                                `Student ${studentIndex + 1}: Roll number '${existing.roll_number}' already exists in batch '${existing.batch_name}'`
+                            );
+                        }
+                        if (existing.email && emails.includes(existing.email)) {
+                            duplicateErrors.push(
+                                `Student ${studentIndex + 1}: Email '${existing.email}' already exists in batch '${existing.batch_name}'`
+                            );
+                        }
+                    }
+                    
+                    await client.query('ROLLBACK');
+                    return res.status(409).json({
+                        success: false,
+                        message: 'Some students already exist in other batches',
+                        errors: [...new Set(duplicateErrors)] // Remove duplicates
+                    });
+                }
+                
+                // Check for duplicates within the current submission
+                const rollNumberDuplicates = rollNumbers.filter((item, index) => rollNumbers.indexOf(item) !== index);
+                const emailDuplicates = emails.filter((item, index) => emails.indexOf(item) !== index);
+                
+                if (rollNumberDuplicates.length > 0 || emailDuplicates.length > 0) {
+                    const duplicateErrors = [];
+                    
+                    if (rollNumberDuplicates.length > 0) {
+                        duplicateErrors.push(`Duplicate roll numbers in submission: ${[...new Set(rollNumberDuplicates)].join(', ')}`);
+                    }
+                    if (emailDuplicates.length > 0) {
+                        duplicateErrors.push(`Duplicate emails in submission: ${[...new Set(emailDuplicates)].join(', ')}`);
+                    }
+                    
+                    await client.query('ROLLBACK');
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Duplicate student data in submission',
+                        errors: duplicateErrors
+                    });
+                }
+                
+                // Insert students one by one for better error handling
+                for (let i = 0; i < students.length; i++) {
+                    const student = students[i];
+                    
+                    try {
+                        const studentResult = await client.query(
+                            `INSERT INTO students (roll_number, name, email, phone, batch_id)
+                             VALUES ($1, $2, $3, $4, $5)
+                             RETURNING id, roll_number, name, email, phone, created_at`,
+                            [student.rollNumber, student.name, student.email, student.phoneNumber || '', batch.id]
+                        );
+                        insertedStudents.push(studentResult.rows[0]);
+                    } catch (error) {
+                        await client.query('ROLLBACK');
+                        
+                        // Handle unique constraint violations
+                        if (error.code === '23505') {
+                            let errorMessage = '';
+                            if (error.constraint && error.constraint.includes('roll_number')) {
+                                errorMessage = `Student ${i + 1}: Roll number '${student.rollNumber}' already exists`;
+                            } else if (error.constraint && error.constraint.includes('email')) {
+                                errorMessage = `Student ${i + 1}: Email '${student.email}' already exists`;
+                            } else {
+                                errorMessage = `Student ${i + 1}: Duplicate entry detected`;
+                            }
+                            
+                            return res.status(409).json({
+                                success: false,
+                                message: 'Failed to add student due to duplicate data',
+                                error: errorMessage
+                            });
+                        }
+                        
+                        throw error; // Re-throw if it's not a constraint violation
+                    }
+                }
             }
             
             await client.query('COMMIT');
@@ -93,9 +194,21 @@ class BatchController {
         } catch (error) {
             await client.query('ROLLBACK');
             console.error('Error creating batch:', error);
+            
+            // Handle specific database errors
+            if (error.code === '23505') {
+                // Unique constraint violation
+                return res.status(409).json({
+                    success: false,
+                    message: 'Duplicate entry detected',
+                    error: error.detail || 'A student with this roll number or email already exists'
+                });
+            }
+            
             res.status(500).json({
                 success: false,
-                message: 'Internal server error'
+                message: 'Internal server error',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         } finally {
             client.release();
