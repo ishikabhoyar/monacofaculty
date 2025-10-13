@@ -22,11 +22,13 @@ const testRoutes = require('./routes/tests');
 const facultyRoutes = require('./routes/faculty');
 const batchRoutes = require('./routes/batches');
 const questionRoutes = require('./routes/questions');
+const studentRoutes = require('./routes/students');
 
 app.use('/api/tests', testRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/questions', questionRoutes);
+app.use('/api/students', studentRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -66,6 +68,64 @@ app.post('/api/login', authMiddleware, (req, res) => {
         token: token,
         facultyId: req.user.id
     });
+});
+
+// Student Google OAuth login endpoint
+// Student Google OAuth login endpoint
+app.post('/api/student/login', authMiddleware, async (req, res) => {
+    try {
+        const { email, name, sub: google_id } = req.user;
+        
+        console.log('Student Google login attempt for:', email);
+        
+        // Check if student exists in the database by email
+        const studentResult = await pool.query('SELECT * FROM students WHERE email = $1', [email]);
+        
+        if (studentResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Student not found. Please contact your administrator to register your account.'
+            });
+        }
+
+        const student = studentResult.rows[0];
+        
+        // Update google_id if not set
+        if (!student.google_id) {
+            await pool.query('UPDATE students SET google_id = $1 WHERE id = $2', [google_id, student.id]);
+        }
+
+        // Generate JWT token for student
+        const token = jwt.sign(
+            { 
+                id: student.id, 
+                email: student.email,
+                type: 'student',
+                batchId: student.batch_id
+            },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            success: true,
+            student: {
+                id: student.id,
+                name: student.name,
+                email: student.email,
+                rollNumber: student.roll_number,
+                batchId: student.batch_id
+            },
+            token: token
+        });
+
+    } catch (error) {
+        console.error('Student login error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error during student login'
+        });
+    }
 });
 
 checkDatabaseConnection();

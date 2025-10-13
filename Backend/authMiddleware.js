@@ -1,8 +1,7 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const pool = require('./db');
-
-const CLIENT_ID = '586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com';
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -27,6 +26,8 @@ async function authMiddleware(req, res, next) {
 
   try {
     if (isLoginRequest) {
+      console.log('Processing Google login request...');
+      
       // For login requests, verify the Google token
       const ticket = await client.verifyIdToken({
         idToken: token,
@@ -35,19 +36,24 @@ async function authMiddleware(req, res, next) {
       
       const payload = ticket.getPayload();
       const { email, name, sub: google_id } = payload;
+      
+      console.log('Google token verified for user:', email);
 
       // Check if user exists in the database
       const userResult = await pool.query('SELECT * FROM faculties WHERE email = $1', [email]);
 
       if (userResult.rows.length === 0) {
+        console.log('Creating new user:', email);
         // If user does not exist, create a new user
         const newUser = await pool.query(
           'INSERT INTO faculties (name, email, google_id) VALUES ($1, $2, $3) RETURNING *',
           [name, email, google_id]
         );
         req.user = newUser.rows[0];
+        console.log('New user created:', req.user.id);
       } else {
         req.user = userResult.rows[0];
+        console.log('Existing user found:', req.user.id);
       }
     } else {
       // For regular API requests, verify our JWT
@@ -70,13 +76,19 @@ async function authMiddleware(req, res, next) {
     next();
   } catch (error) {
     console.error('Error verifying token:', error);
+    console.error('Error details:', error.message);
     
     // Check if token is expired
     if (error.message && error.message.includes('expired')) {
       return res.status(401).json({ success: false, message: 'Authentication failed: Token expired.' });
     }
     
-    res.status(401).json({ success: false, message: 'Authentication failed: Invalid token.' });
+    // Check for Google API errors
+    if (error.message && error.message.includes('Wrong number of segments')) {
+      return res.status(401).json({ success: false, message: 'Authentication failed: Invalid Google token format.' });
+    }
+    
+    res.status(401).json({ success: false, message: `Authentication failed: ${error.message || 'Invalid token.'}` });
   }
 }
 

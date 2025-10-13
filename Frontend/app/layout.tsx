@@ -113,7 +113,7 @@ export default function RootLayout({
       </head>
       {/* Hello world */}
       <body className={`${inter.className} ${ibmPlexMono.variable} relative min-h-screen`}>
-        <GoogleOAuthProvider clientId="586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com"}>
           <ThemeProvider>
             {children}
             <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/40 dark:border-gray-800/20 bg-white/80 backdrop-blur-md dark:bg-[#070c1f]/80">

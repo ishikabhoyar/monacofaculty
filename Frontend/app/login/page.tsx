@@ -6,8 +6,8 @@ import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import Bg from '../../public/BG-login(2).jpg';
-import logo from '../../public/KJSCE.png';
-import logo1 from '../../public/university.png';
+import logo from '../../public/kjsce2x.png';
+import logo1 from '../../public/Vidyavihar@3x.png';
 import Bottom from '../../public/Bottom.png';
 
 export default function Login() {
@@ -22,8 +22,11 @@ export default function Login() {
   }, [router]);
 
   const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    console.log('Google login success:', credentialResponse);
+    
     if (credentialResponse.credential) {
       try {
+        console.log('Sending credential to backend...');
         const response = await fetch('http://localhost:5000/api/login', {
           method: 'POST',
           headers: {
@@ -33,6 +36,7 @@ export default function Login() {
         });
 
         const data = await response.json();
+        console.log('Backend response:', response.status, data);
         
         if (response.ok && data.success) {
           // Store the session token returned from the server
@@ -43,18 +47,35 @@ export default function Login() {
           router.push('/');
         } else {
           console.error('Login failed:', data.message);
-          alert(data.message || 'Login failed. Please try again.');
+          alert(`Login failed: ${data.message || 'Please try again.'}`);
         }
       } catch (error) {
         console.error('Error during login:', error);
-        alert('An error occurred during login. Please try again.');
+        alert(`Network error during login. Please check your connection and try again. Error: ${error}`);
       }
+    } else {
+      console.error('No credential received from Google');
+      alert('No credential received from Google. Please try again.');
     }
   };
 
   const handleLoginError = () => {
-    console.error('Login failed');
-    alert('Login failed. Please try again.');
+    console.error('Google login failed - checking network and configuration...');
+    
+    // Check if we're online
+    if (!navigator.onLine) {
+      alert('You appear to be offline. Please check your internet connection and try again.');
+      return;
+    }
+    
+    // Check if Google Identity Services script loaded
+    if (typeof window !== 'undefined' && !(window as any).google) {
+      console.error('Google Identity Services script not loaded');
+      alert('Google authentication service is not available. Please refresh the page and try again.');
+      return;
+    }
+    
+    alert('Google login failed. This might be due to:\n• Network connectivity issues\n• Browser compatibility\n• Google account configuration\n\nPlease try again or contact support if the problem persists.');
   };
 
   return (
