@@ -1,16 +1,10 @@
 services:
-  backend:
+  tunnel:
     build:
       context: .
       dockerfile: Dockerfile.tunnel
     restart: unless-stopped
     network_mode: "host"
     environment:
-      - PORT=6666
-      - NODE_ENV=production
       # Define cloudflared environment variables
-      - TUNNEL_ORIGIN_CERT=/etc/cloudflared/cert.pem
       - NO_AUTOUPDATE=true
-    # Add your database connection here if needed
-    # env_file:
-    #   - .env
