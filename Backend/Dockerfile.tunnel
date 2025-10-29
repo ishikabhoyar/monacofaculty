@@ -1,0 +1,56 @@
+# Multi-stage build
+FROM node:18-alpine AS base
+
+# Install cloudflared
+RUN apk add --no-cache \
+    supervisor \
+    curl \
+    && curl -L https://github.com/cloudflare/cloudflared/releases/download/2023.5.0/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared \
+    && chmod +x /usr/local/bin/cloudflared
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --production
+
+# Copy application files
+COPY . .
+
+# Copy cloudflared configuration
+COPY credentials.json /etc/cloudflared/credentials.json
+COPY config.json /etc/cloudflared/config.json
+
+# Create supervisord configuration
+RUN mkdir -p /etc/supervisor/conf.d && \
+    echo "[supervisord]" > /etc/supervisor/conf.d/supervisord.conf && \
+    echo "nodaemon=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "user=root" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "[program:backend]" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "command=node server.js" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "directory=/app" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile=/dev/stdout" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile_maxbytes=0" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile=/dev/stderr" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "[program:cloudflared]" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "command=cloudflared tunnel --config /etc/cloudflared/config.json run" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile=/dev/stdout" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile_maxbytes=0" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile=/dev/stderr" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/conf.d/supervisord.conf
+
+# Expose port for local access
+EXPOSE 5000
+
+# Use supervisord to manage processes
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

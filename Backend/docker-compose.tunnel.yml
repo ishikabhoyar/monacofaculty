@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.tunnel
+    restart: unless-stopped
+    # Port is only exposed locally, traffic comes through the tunnel
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      # Define cloudflared environment variables
+      - TUNNEL_ORIGIN_CERT=/etc/cloudflared/cert.pem
+      - NO_AUTOUPDATE=true
+    # Add your database connection here if needed
+    # env_file:
+    #   - .env
+    # Isolated network
+    networks:
+      - monacofaculty-backend-network
+
+networks:
+  monacofaculty-backend-network:
+    driver: bridge

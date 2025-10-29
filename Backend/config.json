@@ -1,0 +1,15 @@
+{
+  "tunnel": "38e6bf5a-5f9f-438e-8b44-40c55b834079",
+  "credentials-file": "/etc/cloudflared/credentials.json",
+  "ingress": [
+    {
+      "hostname": "monacofbackend.ishikabhoyar.tech",
+      "service": "http://localhost:6666"
+    },
+    {
+      "service": "http_status:404"
+    }
+  ],
+  "protocol": "http2",
+  "loglevel": "info"
+}
