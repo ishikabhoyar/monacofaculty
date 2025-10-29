@@ -14,10 +14,3 @@ services:
     # Add your database connection here if needed
     # env_file:
     #   - .env
-    # Isolated network
-    networks:
-      - monacofaculty-backend-network
-
-networks:
-  monacofaculty-backend-network:
-    driver: bridge
