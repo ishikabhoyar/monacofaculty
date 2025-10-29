@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const authHeader = req.headers.get('Authorization');
+    
     const response = await fetch(`${process.env.BACKEND_URL}/api/students/tests`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'Authorization': authHeader || ''
       }
     });
     const data = await response.json();

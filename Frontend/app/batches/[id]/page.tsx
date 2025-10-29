@@ -182,7 +182,7 @@ export default function BatchDetailsPage() {
           rollNumber: editingStudent.roll_number,
           name: editingStudent.name,
           email: editingStudent.email,
-          phoneNumber: editingStudent.phone
+          phoneNumber: editingStudent.phone_number
         }),
       });
 

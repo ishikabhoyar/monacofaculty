@@ -1,12 +1,24 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
+interface Test {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  duration_minutes: number;
+  faculty_name: string;
+  password_required: boolean;
+}
+
 const TestList = () => {
-  const [tests, setTests] = useState([]);
-  const [selectedTest, setSelectedTest] = useState(null);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [selectedTest, setSelectedTest] = useState<Test | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,7 +43,7 @@ const TestList = () => {
     }
   };
 
-  const handleTestClick = (test) => {
+  const handleTestClick = (test: Test) => {
     setSelectedTest(test);
     if (test.password_required) {
       setShowPasswordModal(true);
@@ -40,7 +52,7 @@ const TestList = () => {
     }
   };
 
-  const startTest = async (testId, password = null) => {
+  const startTest = async (testId: string, password: string | null = null) => {
     try {
       const response = await fetch(`/api/students/tests/${testId}/questions`, {
         headers: {
@@ -66,7 +78,7 @@ const TestList = () => {
     }
   };
 
-  const getStatusBadgeClass = (status) => {
+  const getStatusBadgeClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'active':
         return 'bg-green-100 text-green-800';

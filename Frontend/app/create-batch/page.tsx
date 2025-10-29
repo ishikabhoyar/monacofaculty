@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getApiUrl } from "@/lib/utils";
 import { ArrowLeft, Upload, FileSpreadsheet, Download, Users, AlertCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 

@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request, { params }: { params: { testId: string } }) {
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ testId: string }> }
+) {
   try {
-    const response = await fetch(`${process.env.BACKEND_URL}/api/students/tests/${params.testId}/questions`, {
+    const { testId } = await context.params;
+    const authHeader = req.headers.get('Authorization');
+    
+    const response = await fetch(`${process.env.BACKEND_URL}/api/students/tests/${testId}/questions`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'Authorization': authHeader || ''
       }
     });
     const data = await response.json();
@@ -15,13 +21,19 @@ export async function GET(req: Request, { params }: { params: { testId: string }
   }
 }
 
-export async function POST(req: Request, { params }: { params: { testId: string } }) {
+export async function POST(
+  req: Request,
+  context: { params: Promise<{ testId: string }> }
+) {
   try {
+    const { testId } = await context.params;
     const body = await req.json();
-    const response = await fetch(`${process.env.BACKEND_URL}/api/students/tests/${params.testId}/verify-password`, {
+    const authHeader = req.headers.get('Authorization');
+    
+    const response = await fetch(`${process.env.BACKEND_URL}/api/students/tests/${testId}/verify-password`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': authHeader || '',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
