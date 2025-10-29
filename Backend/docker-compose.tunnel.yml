@@ -6,9 +6,9 @@ services:
     restart: unless-stopped
     # Port is only exposed locally, traffic comes through the tunnel
     ports:
-      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:6666:6666"
     environment:
-      - PORT=5000
+      - PORT=6666
       - NODE_ENV=production
       # Define cloudflared environment variables
       - TUNNEL_ORIGIN_CERT=/etc/cloudflared/cert.pem

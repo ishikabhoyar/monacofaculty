@@ -50,7 +50,7 @@ RUN mkdir -p /etc/supervisor/conf.d && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/conf.d/supervisord.conf
 
 # Expose port for local access
-EXPOSE 5000
+EXPOSE 6666
 
 # Use supervisord to manage processes
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
