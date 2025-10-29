@@ -46,6 +46,7 @@ import {
   Phone
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getApiUrl } from "@/lib/utils";
 
 interface Student {
   id: string;
@@ -96,7 +97,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -131,13 +132,18 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}/students`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(newStudent),
+        body: JSON.stringify({
+          rollNumber: newStudent.roll_number,
+          name: newStudent.name,
+          email: newStudent.email,
+          phoneNumber: newStudent.phone_number
+        }),
       });
 
       const data = await response.json();
@@ -166,13 +172,18 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students/${editingStudent.id}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}/students/${editingStudent.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(editingStudent),
+        body: JSON.stringify({
+          rollNumber: editingStudent.roll_number,
+          name: editingStudent.name,
+          email: editingStudent.email,
+          phoneNumber: editingStudent.phone
+        }),
       });
 
       const data = await response.json();
@@ -202,7 +213,7 @@ export default function BatchDetailsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/students/${studentId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}/students/${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

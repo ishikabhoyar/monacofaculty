@@ -46,6 +46,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Upload as UploadIcon, FileText, CheckCircle as CheckCircleIcon, XCircle, AlertTriangle } from "lucide-react";
+import { getApiUrl } from "@/lib/utils";
 
 interface Batch {
   id: string;
@@ -94,7 +95,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
+      const response = await fetch(`${getApiUrl()}/api/batches`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -142,7 +143,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -185,7 +186,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -241,7 +242,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       setImportProgress(30);
       setImportStatus('processing');
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}/import-students`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}/import-students`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

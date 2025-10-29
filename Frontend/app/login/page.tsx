@@ -9,6 +9,7 @@ import Bg from '../../public/BG-login(2).jpg';
 import logo from '../../public/kjsce2x.png';
 import logo1 from '../../public/Vidyavihar@3x.png';
 import Bottom from '../../public/Bottom.png';
+import { getApiUrl } from "@/lib/utils";
 
 export default function Login() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Login() {
     if (credentialResponse.credential) {
       try {
         console.log('Sending credential to backend...');
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/login`, {
+        const response = await fetch(`${getApiUrl()}/api/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

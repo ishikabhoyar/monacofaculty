@@ -178,6 +178,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
           'Excel files are not fully supported yet. Please convert your Excel file to CSV format.',
           'Steps: Open Excel → File → Save As → Choose CSV (Comma delimited) format'
         ]);
+
         setIsProcessing(false);
         return;
       }
@@ -232,7 +233,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
       }
       
       // Send data to your API endpoint
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
+      const response = await fetch(`${getApiUrl()}/api/batches`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Save } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getApiUrl } from "@/lib/utils";
 
 interface Batch {
   id: string;
@@ -55,7 +56,7 @@ export default function EditBatchPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -98,7 +99,7 @@ export default function EditBatchPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches/${batchId}`, {
+      const response = await fetch(`${getApiUrl()}/api/batches/${batchId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

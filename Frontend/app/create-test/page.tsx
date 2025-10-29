@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Users, AlertCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getApiUrl } from "@/lib/utils";
 
 // Sample course data - in a real app, this would come from your API
 const courses = [
@@ -83,7 +84,7 @@ function CreateTestPage() {
         return;
       }
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
+      const response = await fetch(`${getApiUrl()}/api/batches`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -148,7 +149,7 @@ function CreateTestPage() {
       };
       
       // Send data to your API endpoint
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/tests`, {
+      const response = await fetch(`${getApiUrl()}/api/tests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -44,6 +44,7 @@ import {
 import { ThemeToggle } from "@/components/ThemeToggle";
 import BatchesTab from "@/components/BatchesTab";
 import TestsTab from "@/components/TestsTab";
+import { getApiUrl } from "@/lib/utils";
 
 // Academic data structure
 const academicData = {
@@ -131,7 +132,7 @@ export default function FacultyDashboard() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/batches`, {
+      const response = await fetch(`${getApiUrl()}/api/batches`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -164,7 +165,7 @@ export default function FacultyDashboard() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/tests`, {
+      const response = await fetch(`${getApiUrl()}/api/tests`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -202,7 +203,7 @@ export default function FacultyDashboard() {
       const allQuestions: any[] = [];
       
       // Get all tests first to fetch questions from each
-      const testsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/tests`, {
+      const testsResponse = await fetch(`${getApiUrl()}/api/tests`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -214,7 +215,7 @@ export default function FacultyDashboard() {
         // Fetch questions for each test
         for (const test of testsData.tests || []) {
           try {
-            const questionsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090'}/api/questions/test/${test.id}`, {
+            const questionsResponse = await fetch(`${getApiUrl()}/api/questions/test/${test.id}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
               },
