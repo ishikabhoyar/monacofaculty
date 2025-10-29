@@ -175,3 +175,27 @@ export const getBatches = async (token: string) => {
   });
   return response.data;
 };
+
+// Submissions API functions
+export const getSubmissions = async (token: string, testId?: string, batchId?: string) => {
+  const params: any = {};
+  if (testId) params.testId = testId;
+  if (batchId) params.batchId = batchId;
+  
+  const response = await axios.get(`${TESTS_URL}/submissions`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params,
+  });
+  return response.data;
+};
+
+export const getSubmissionStats = async (token: string) => {
+  const response = await axios.get(`${TESTS_URL}/submissions/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

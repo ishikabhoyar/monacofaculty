@@ -110,6 +110,7 @@ INSERT INTO tags (name, description, color) VALUES
 ('Recursion', 'Recursive solutions and problems', '#A3E4D7');
 
 -- Students table
+-- Note: Students can belong to multiple batches, so no unique constraints on roll_number or email
 CREATE TABLE IF NOT EXISTS students (
   id SERIAL PRIMARY KEY,
   roll_number VARCHAR(50) NOT NULL,
@@ -118,9 +119,7 @@ CREATE TABLE IF NOT EXISTS students (
   phone VARCHAR(20),
   batch_id INTEGER REFERENCES batches(id) ON DELETE CASCADE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(roll_number, batch_id),
-  UNIQUE(email, batch_id)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Test assignments table - fix references
@@ -137,5 +136,7 @@ CREATE TABLE submissions (
     test_id INTEGER REFERENCES tests(id),  -- Now references tests.id
     question_id INTEGER REFERENCES questions(id),  -- Now references questions.id
     submitted_answer TEXT,
-    marks_obtained INTEGER
+    marks_obtained INTEGER,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

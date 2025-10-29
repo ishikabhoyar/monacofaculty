@@ -80,47 +80,10 @@ class BatchController {
                     });
                 }
                 
-                // Check for existing students with same roll number or email in ANY batch
+                // Check for duplicates within submission only
                 const rollNumbers = students.map(s => s.rollNumber);
                 const emails = students.map(s => s.email);
                 
-                const existingStudentsCheck = await client.query(
-                    `SELECT roll_number, email, batch_id, 
-                            (SELECT name FROM batches WHERE id = students.batch_id) as batch_name
-                     FROM students 
-                     WHERE roll_number = ANY($1) OR email = ANY($2)`,
-                    [rollNumbers, emails]
-                );
-                
-                if (existingStudentsCheck.rows.length > 0) {
-                    const duplicateErrors = [];
-                    
-                    for (const existing of existingStudentsCheck.rows) {
-                        const studentIndex = students.findIndex(
-                            s => s.rollNumber === existing.roll_number || s.email === existing.email
-                        );
-                        
-                        if (existing.roll_number && rollNumbers.includes(existing.roll_number)) {
-                            duplicateErrors.push(
-                                `Student ${studentIndex + 1}: Roll number '${existing.roll_number}' already exists in batch '${existing.batch_name}'`
-                            );
-                        }
-                        if (existing.email && emails.includes(existing.email)) {
-                            duplicateErrors.push(
-                                `Student ${studentIndex + 1}: Email '${existing.email}' already exists in batch '${existing.batch_name}'`
-                            );
-                        }
-                    }
-                    
-                    await client.query('ROLLBACK');
-                    return res.status(409).json({
-                        success: false,
-                        message: 'Some students already exist in other batches',
-                        errors: [...new Set(duplicateErrors)] // Remove duplicates
-                    });
-                }
-                
-                // Check for duplicates within the current submission
                 const rollNumberDuplicates = rollNumbers.filter((item, index) => rollNumbers.indexOf(item) !== index);
                 const emailDuplicates = emails.filter((item, index) => emails.indexOf(item) !== index);
                 
@@ -157,16 +120,9 @@ class BatchController {
                     } catch (error) {
                         await client.query('ROLLBACK');
                         
-                        // Handle unique constraint violations
+                        // Handle unique constraint violations (shouldn't happen after validation, but just in case)
                         if (error.code === '23505') {
-                            let errorMessage = '';
-                            if (error.constraint && error.constraint.includes('roll_number')) {
-                                errorMessage = `Student ${i + 1}: Roll number '${student.rollNumber}' already exists`;
-                            } else if (error.constraint && error.constraint.includes('email')) {
-                                errorMessage = `Student ${i + 1}: Email '${student.email}' already exists`;
-                            } else {
-                                errorMessage = `Student ${i + 1}: Duplicate entry detected`;
-                            }
+                            let errorMessage = `Student ${i + 1}: Duplicate entry detected in this submission`;
                             
                             return res.status(409).json({
                                 success: false,
@@ -469,21 +425,6 @@ class BatchController {
         } catch (error) {
             console.error('Error adding student:', error);
             
-            // Handle unique constraint violations
-            if (error.code === '23505') {
-                if (error.constraint.includes('roll_number')) {
-                    return res.status(409).json({
-                        success: false,
-                        message: 'A student with this roll number already exists in this batch'
-                    });
-                } else if (error.constraint.includes('email')) {
-                    return res.status(409).json({
-                        success: false,
-                        message: 'A student with this email already exists in this batch'
-                    });
-                }
-            }
-            
             res.status(500).json({
                 success: false,
                 message: 'Internal server error'
@@ -559,21 +500,6 @@ class BatchController {
             
         } catch (error) {
             console.error('Error updating student:', error);
-            
-            // Handle unique constraint violations
-            if (error.code === '23505') {
-                if (error.constraint.includes('roll_number')) {
-                    return res.status(409).json({
-                        success: false,
-                        message: 'A student with this roll number already exists in this batch'
-                    });
-                } else if (error.constraint.includes('email')) {
-                    return res.status(409).json({
-                        success: false,
-                        message: 'A student with this email already exists in this batch'
-                    });
-                }
-            }
             
             res.status(500).json({
                 success: false,
@@ -707,19 +633,7 @@ class BatchController {
                         results.successful++;
                     } catch (error) {
                         results.failed++;
-                        
-                        // Handle unique constraint violations
-                        if (error.code === '23505') {
-                            if (error.constraint.includes('roll_number')) {
-                                results.errors.push(`Row ${i + 1}: Roll number '${student.rollNumber}' already exists`);
-                            } else if (error.constraint.includes('email')) {
-                                results.errors.push(`Row ${i + 1}: Email '${student.email}' already exists`);
-                            } else {
-                                results.errors.push(`Row ${i + 1}: Duplicate data`);
-                            }
-                        } else {
-                            results.errors.push(`Row ${i + 1}: ${error.message}`);
-                        }
+                        results.errors.push(`Row ${i + 1}: ${error.message}`);
                     }
                 }
                 

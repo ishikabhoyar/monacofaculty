@@ -14,6 +14,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -45,6 +52,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import BatchesTab from "@/components/BatchesTab";
 import TestsTab from "@/components/TestsTab";
 import { getApiUrl } from "@/lib/utils";
+import { getSubmissions } from "@/lib/facultyApi";
 
 // Academic data structure
 const academicData = {
@@ -118,6 +126,11 @@ export default function FacultyDashboard() {
   const [tests, setTests] = useState<any[]>([]);
   const [loadingTests, setLoadingTests] = useState(true);
   const [testsError, setTestsError] = useState<string | null>(null);
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [submissionsError, setSubmissionsError] = useState<string | null>(null);
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
+  const [isSubmissionDialogOpen, setIsSubmissionDialogOpen] = useState(false);
   const router = useRouter();
 
   // Fetch batches from backend
@@ -252,6 +265,60 @@ export default function FacultyDashboard() {
     fetchTests();
     fetchQuestions();
   }, []);
+
+  // Fetch submissions
+  const fetchSubmissions = async () => {
+    try {
+      setLoadingSubmissions(true);
+      setSubmissionsError(null);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const response = await getSubmissions(token);
+      
+      if (response.success) {
+        setSubmissions(response.submissions || []);
+      } else {
+        setSubmissionsError('Failed to load submissions');
+      }
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+      setSubmissionsError('Network error. Please try again.');
+    } finally {
+      setLoadingSubmissions(false);
+    }
+  };
+
+  // Fetch submissions when submissions tab is opened
+  useEffect(() => {
+    if (activeTab === 'submissions' && submissions.length === 0) {
+      fetchSubmissions();
+    }
+  }, [activeTab]);
+
+  // Format time ago
+  const formatTimeAgo = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) return `${diffMins} min${diffMins !== 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+  };
+
+  const viewSubmissionDetails = (submission: any) => {
+    setSelectedSubmission(submission);
+    setIsSubmissionDialogOpen(true);
+  };
   
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-8">
@@ -734,47 +801,89 @@ export default function FacultyDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2>
               <div className="flex gap-2">
-                <Button variant="outline" className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700">Filter</Button>
+                <Button 
+                  variant="outline" 
+                  className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
+                  onClick={() => fetchSubmissions()}
+                >
+                  Refresh
+                </Button>
                 <Button variant="outline" className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700">Export</Button>
               </div>
             </div>
             
-            <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-              <CardContent className="pt-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="dark:border-gray-800/40">
-                      <TableHead className="text-slate-600 dark:text-gray-400">Submission ID</TableHead>
-                      <TableHead className="text-slate-600 dark:text-gray-400">Student Name</TableHead>
-                      <TableHead className="text-slate-600 dark:text-gray-400">Test</TableHead>
-                      <TableHead className="text-slate-600 dark:text-gray-400">Submission Time</TableHead>
-                      <TableHead className="text-slate-600 dark:text-gray-400">Score</TableHead>
-                      <TableHead className="text-right text-slate-600 dark:text-gray-400">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {recentSubmissions.map((submission) => (
-                      <TableRow key={submission.id} className="dark:border-gray-800/40 dark:hover:bg-[#0a1029]">
-                        <TableCell className="font-medium text-slate-800 dark:text-gray-300">{submission.id}</TableCell>
-                        <TableCell className="dark:text-gray-300">{submission.student}</TableCell>
-                        <TableCell className="dark:text-gray-300">{submission.test}</TableCell>
-                        <TableCell className="dark:text-gray-400">{submission.time}</TableCell>
-                        <TableCell className="dark:text-gray-300">{submission.score}</TableCell>
-                        <TableCell className="text-right">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="dark:text-blue-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-300"
-                          >
-                            View Details
-                          </Button>
-                        </TableCell>
+            {loadingSubmissions ? (
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardContent className="pt-6">
+                  <p className="text-center text-gray-500 dark:text-gray-400">Loading submissions...</p>
+                </CardContent>
+              </Card>
+            ) : submissionsError ? (
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardContent className="pt-6">
+                  <p className="text-center text-red-500">{submissionsError}</p>
+                </CardContent>
+              </Card>
+            ) : submissions.length === 0 ? (
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardContent className="pt-6">
+                  <p className="text-center text-gray-500 dark:text-gray-400">No submissions yet</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                <CardContent className="pt-6">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="dark:border-gray-800/40">
+                        <TableHead className="text-slate-600 dark:text-gray-400">Student</TableHead>
+                        <TableHead className="text-slate-600 dark:text-gray-400">Test</TableHead>
+                        <TableHead className="text-slate-600 dark:text-gray-400">Question</TableHead>
+                        <TableHead className="text-slate-600 dark:text-gray-400">Batch</TableHead>
+                        <TableHead className="text-slate-600 dark:text-gray-400">Submitted</TableHead>
+                        <TableHead className="text-slate-600 dark:text-gray-400">Score</TableHead>
+                        <TableHead className="text-right text-slate-600 dark:text-gray-400">Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+                    </TableHeader>
+                    <TableBody>
+                      {submissions.map((submission) => (
+                        <TableRow key={submission.submission_id} className="dark:border-gray-800/40 dark:hover:bg-[#0a1029]">
+                          <TableCell className="font-medium text-slate-800 dark:text-gray-300">
+                            <div>
+                              <div>{submission.student_name}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-500">{submission.student_roll}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="dark:text-gray-300">{submission.test_title}</TableCell>
+                          <TableCell className="dark:text-gray-300">
+                            <div className="max-w-xs truncate" title={submission.question_text}>
+                              {submission.question_text}
+                            </div>
+                          </TableCell>
+                          <TableCell className="dark:text-gray-300">{submission.batch_name}</TableCell>
+                          <TableCell className="dark:text-gray-400">{formatTimeAgo(submission.submitted_at)}</TableCell>
+                          <TableCell className="dark:text-gray-300">
+                            {submission.marks_obtained !== null 
+                              ? `${submission.marks_obtained}/${submission.total_marks}` 
+                              : 'Not graded'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="dark:text-blue-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-300"
+                              onClick={() => viewSubmissionDetails(submission)}
+                            >
+                              View Code
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
           
           {/* Settings Tab */}
@@ -898,6 +1007,82 @@ export default function FacultyDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Submission Details Dialog */}
+      <Dialog open={isSubmissionDialogOpen} onOpenChange={setIsSubmissionDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto dark:bg-[#070c1f] dark:border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="dark:text-white">Submission Details</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              View student&apos;s code submission
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedSubmission && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Student</p>
+                  <p className="text-base dark:text-white">{selectedSubmission.student_name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500">{selectedSubmission.student_roll}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Test</p>
+                  <p className="text-base dark:text-white">{selectedSubmission.test_title}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Batch</p>
+                  <p className="text-base dark:text-white">{selectedSubmission.batch_name}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Submitted</p>
+                  <p className="text-base dark:text-white">
+                    {selectedSubmission.submitted_at 
+                      ? new Date(selectedSubmission.submitted_at).toLocaleString()
+                      : 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Question</p>
+                <p className="text-base dark:text-white">{selectedSubmission.question_text}</p>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                  Submitted Code
+                  {selectedSubmission.programming_language && (
+                    <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">
+                      ({selectedSubmission.programming_language})
+                    </span>
+                  )}
+                </p>
+                <pre className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-x-auto border border-gray-300 dark:border-gray-700">
+                  <code className="text-sm dark:text-gray-300">{selectedSubmission.submitted_answer}</code>
+                </pre>
+              </div>
+
+              <div className="flex justify-between items-center pt-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Score</p>
+                  <p className="text-lg font-bold dark:text-white">
+                    {selectedSubmission.marks_obtained !== null 
+                      ? `${selectedSubmission.marks_obtained}/${selectedSubmission.total_marks}` 
+                      : 'Not graded yet'}
+                  </p>
+                </div>
+                <Button 
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  onClick={() => setIsSubmissionDialogOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

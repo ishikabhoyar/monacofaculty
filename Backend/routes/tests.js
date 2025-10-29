@@ -107,6 +107,107 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+// Get all submissions for faculty's tests
+router.get('/submissions', authMiddleware, async (req, res) => {
+  try {
+    const faculty_id = req.user.id;
+    const { testId, batchId } = req.query;
+    
+    let query = `
+      SELECT 
+        s.id as submission_id,
+        s.submitted_answer,
+        s.marks_obtained,
+        s.submitted_at,
+        s.updated_at,
+        st.id as student_id,
+        st.name as student_name,
+        st.roll_number as student_roll,
+        st.email as student_email,
+        t.id as test_id,
+        t.title as test_title,
+        q.id as question_id,
+        q.question_text,
+        q.marks as total_marks,
+        q.question_type,
+        q.programming_language,
+        b.id as batch_id,
+        b.name as batch_name
+      FROM submissions s
+      JOIN students st ON s.student_id = st.id
+      JOIN tests t ON s.test_id = t.id
+      JOIN questions q ON s.question_id = q.id
+      JOIN batches b ON st.batch_id = b.id
+      WHERE t.faculty_id = $1
+    `;
+    
+    let params = [faculty_id];
+    let paramCount = 1;
+    
+    if (testId) {
+      paramCount++;
+      query += ` AND t.id = $${paramCount}`;
+      params.push(testId);
+    }
+    
+    if (batchId) {
+      paramCount++;
+      query += ` AND b.id = $${paramCount}`;
+      params.push(batchId);
+    }
+    
+    query += ' ORDER BY s.submitted_at DESC';
+    
+    const submissionsResult = await pool.query(query, params);
+    
+    res.json({
+      success: true,
+      submissions: submissionsResult.rows
+    });
+  } catch (error) {
+    console.error('Error fetching submissions:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching submissions',
+      error: error.message
+    });
+  }
+});
+
+// Get submission statistics for faculty
+router.get('/submissions/stats', authMiddleware, async (req, res) => {
+  try {
+    const faculty_id = req.user.id;
+    
+    const statsQuery = `
+      SELECT 
+        COUNT(DISTINCT s.id) as total_submissions,
+        COUNT(DISTINCT s.student_id) as unique_students,
+        COUNT(DISTINCT s.test_id) as tests_with_submissions,
+        ROUND(AVG(CASE WHEN s.marks_obtained IS NOT NULL AND q.marks > 0 
+                  THEN (s.marks_obtained::float / q.marks) * 100 
+                  ELSE NULL END), 2) as average_score_percent
+      FROM submissions s
+      JOIN tests t ON s.test_id = t.id
+      JOIN questions q ON s.question_id = q.id
+      WHERE t.faculty_id = $1
+    `;
+    
+    const statsResult = await pool.query(statsQuery, [faculty_id]);
+    
+    res.json({
+      success: true,
+      stats: statsResult.rows[0]
+    });
+  } catch (error) {
+    console.error('Error fetching submission stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching submission statistics'
+    });
+  }
+});
+
 // Get a specific test by ID
 router.get('/:id', authMiddleware, async (req, res) => {
   try {

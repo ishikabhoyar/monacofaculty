@@ -337,13 +337,13 @@ router.post('/submissions', studentAuthMiddleware, async (req, res) => {
       if (existingSubmission.rows.length > 0) {
         // Update existing submission
         return pool.query(
-          'UPDATE submissions SET submitted_answer = $1 WHERE id = $2 RETURNING *',
+          'UPDATE submissions SET submitted_answer = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *',
           [submittedAnswer, existingSubmission.rows[0].id]
         );
       } else {
         // Insert new submission
         return pool.query(
-          'INSERT INTO submissions (student_id, test_id, question_id, submitted_answer) VALUES ($1, $2, $3, $4) RETURNING *',
+          'INSERT INTO submissions (student_id, test_id, question_id, submitted_answer, submitted_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *',
           [studentId, testId, questionId, submittedAnswer]
         );
       }
