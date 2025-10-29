@@ -4,9 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.tunnel
     restart: unless-stopped
-    # Port is only exposed locally, traffic comes through the tunnel
-    ports:
-      - "127.0.0.1:6666:6666"
+    network_mode: "host"
     environment:
       - PORT=6666
       - NODE_ENV=production
