@@ -390,88 +390,94 @@ export default function FacultyDashboard() {
   };
   
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-8">
+    <div className="flex min-h-screen bg-gradient-to-br from-neutral-50 via-stone-50 to-zinc-50 dark:from-[#0a0a0a] dark:via-[#0c0c0c] dark:to-[#0e0e0e] pb-8">
       {/* Sidebar */}
-      <div className="hidden w-64 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/40 dark:border-gray-800/20 p-5 md:flex shadow-md">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-            <GraduationCap className="h-6 w-6 text-white" />
+      <div className="hidden w-72 flex-col bg-white/60 backdrop-blur-2xl dark:bg-black/40 border-r border-neutral-200/50 dark:border-white/[0.08] p-6 md:flex">
+        <div className="flex items-center gap-3 mb-10">
+          <div className="p-2.5 bg-gradient-to-br from-neutral-900 to-neutral-700 dark:from-neutral-100 dark:to-neutral-300 rounded-2xl">
+            <GraduationCap className="h-6 w-6 text-white dark:text-black" />
           </div>
           <div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
               Faculty Portal
             </h2>
           </div>
         </div>
         
-        <nav className="space-y-2">
+        <nav className="space-y-1.5">
           <Button 
             variant={activeTab === "overview" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-300 ${
+              activeTab === "overview" 
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100" 
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5"
+            }`}
             onClick={() => setActiveTab("overview")}
           >
-            <div className="mr-3 p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-              <BarChart3 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
+            <BarChart3 className="h-4 w-4 mr-3" />
             Overview
           </Button>
 
           <Button 
             variant={activeTab === "batches" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-300 ${
+              activeTab === "batches" 
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100" 
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5"
+            }`}
             onClick={() => setActiveTab("batches")}
           >
-            <div className="mr-3 p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-              <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-            </div>
+            <Users className="h-4 w-4 mr-3" />
             Manage Batches
           </Button>
 
           <Button 
             variant={activeTab === "tests" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-300 ${
+              activeTab === "tests" 
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100" 
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5"
+            }`}
             onClick={() => setActiveTab("tests")}
           >
-            <div className="mr-3 p-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
-              <FileText className="h-4 w-4 text-green-600 dark:text-green-400" />
-            </div>
+            <FileText className="h-4 w-4 mr-3" />
             Manage Tests
           </Button>
           
           <Button 
             variant={activeTab === "questions" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-300 ${
+              activeTab === "questions" 
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100" 
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5"
+            }`}
             onClick={() => setActiveTab("questions")}
           >
-            <div className="mr-3 p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-              <svg className="h-4 w-4 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
+            <HelpCircle className="h-4 w-4 mr-3" />
             Questions Bank
           </Button>
           
           <Button 
             variant={activeTab === "submissions" ? "default" : "ghost"} 
-            className="w-full justify-start h-12 text-left font-medium transition-all duration-200 hover:scale-105 hover:shadow-md dark:hover:bg-gray-800/50" 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-300 ${
+              activeTab === "submissions" 
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100" 
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5"
+            }`}
             onClick={() => setActiveTab("submissions")}
           >
-            <div className="mr-3 p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-              <TrendingUp className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-            </div>
+            <TrendingUp className="h-4 w-4 mr-3" />
             Submissions
           </Button>
         </nav>
 
-        <div className="mt-auto pt-4 border-t border-slate-200/60 dark:border-gray-800/30">
+        <div className="mt-auto pt-6 border-t border-neutral-200/50 dark:border-white/[0.08]">
           <Button 
             variant="ghost" 
-            className="w-full justify-start h-10 text-left font-normal text-sm transition-colors hover:bg-slate-100/60 dark:hover:bg-gray-800/30" 
+            className="w-full justify-start h-10 text-left font-normal text-sm text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/50 dark:hover:bg-white/5 transition-all duration-300" 
             onClick={() => router.push("/logout")}
           >
-            <div className="mr-3 p-1 rounded-md">
-              <Settings className="h-4 w-4 text-slate-500 dark:text-gray-400" />
-            </div>
+            <Settings className="h-4 w-4 mr-3" />
             Logout
           </Button>
         </div>
@@ -481,28 +487,19 @@ export default function FacultyDashboard() {
       <div className="flex-1 overflow-auto p-8">
         <header className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
-              Faculty Dashboard
+            <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+              Dashboard
             </h1>
-            <p className="text-slate-600 dark:text-gray-400 mt-1">
-              Welcome back! Manage your academic content with ease.
+            <p className="text-neutral-500 dark:text-neutral-400 text-sm mt-1">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-2 items-center">
             <ThemeToggle />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="shadow-sm hover:shadow-md transition-all duration-200"
-              onClick={() => setActiveTab("settings")}
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Button>
             <Button 
               size="sm" 
               onClick={() => router.push("/create-batch")}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-sm hover:shadow-md transition-all duration-200"
+              className="bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all duration-300"
             >
               <Users className="mr-2 h-4 w-4" />
               New Batch
@@ -510,7 +507,7 @@ export default function FacultyDashboard() {
             <Button 
               size="sm" 
               onClick={() => router.push("/create-test")}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-sm hover:shadow-md transition-all duration-200"
+              className="bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all duration-300"
             >
               <PlusCircle className="mr-2 h-4 w-4" />
               New Test
@@ -529,80 +526,62 @@ export default function FacultyDashboard() {
           
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            {/* Batch Statistics */}
-            <div className="grid gap-4 md:grid-cols-4 mb-6">
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-4">
+            {/* Quick Stats */}
+            <div className="grid gap-4 md:grid-cols-3 mb-6">
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-300">
+                <CardContent className="p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Batches</p>
-                      <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">{batches.length}</p>
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Batches</p>
+                      <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{batches.length}</p>
                     </div>
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
-                      <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
+                    <Users className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-4">
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-300">
+                <CardContent className="p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-green-700 dark:text-green-300">Total Students</p>
-                      <p className="text-2xl font-bold text-green-800 dark:text-green-200">
-                        {batches.reduce((total, batch) => total + (batch.students?.length || 0), 0)}
-                      </p>
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Total Tests</p>
+                      <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{tests.length}</p>
                     </div>
-                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                      <GraduationCap className="h-6 w-6 text-green-600 dark:text-green-400" />
-                    </div>
+                    <FileText className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-4">
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-300">
+                <CardContent className="p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Active Batches</p>
-                      <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">
-                        {batches.filter(b => b.students?.length > 0).length}
-                      </p>
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Questions</p>
+                      <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{questions.length}</p>
                     </div>
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                      <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-700 dark:text-orange-300">This Month</p>
-                      <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">
-                        {batches.filter(b => {
-                          const createdDate = new Date(b.created_at);
-                          const now = new Date();
-                          return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear();
-                        }).length}
-                      </p>
-                    </div>
-                    <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
-                      <Calendar className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                    </div>
+                    <HelpCircle className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Recent Batches */}
-            <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+            <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">Your Batches</CardTitle>
-                <CardDescription>Manage your student batches and view recent activity</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Recent Batches</CardTitle>
+                    <CardDescription className="text-neutral-500 dark:text-neutral-400 text-sm">Your active student batches</CardDescription>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setActiveTab("batches")}
+                    className="text-neutral-600 dark:text-neutral-400"
+                  >
+                    View All <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {loadingBatches ? (
@@ -617,131 +596,145 @@ export default function FacultyDashboard() {
                     </Button>
                   </div>
                 ) : batches.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                      <Users className="w-12 h-12 text-slate-400 dark:text-gray-500" />
+                  <div className="text-center py-16">
+                    <div className="mx-auto w-20 h-20 bg-neutral-100 dark:bg-white/5 rounded-3xl flex items-center justify-center mb-6">
+                      <Users className="w-10 h-10 text-neutral-400 dark:text-neutral-500" />
                     </div>
-                    <h3 className="text-xl font-medium mb-2 text-slate-800 dark:text-white">No batches found</h3>
-                    <p className="text-slate-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                    <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">No batches found</h3>
+                    <p className="text-neutral-500 dark:text-neutral-400 mb-8 max-w-md mx-auto">
                       You haven't created any batches yet. Create your first batch to get started.
                     </p>
                     <Button 
                       onClick={() => router.push("/create-batch")}
-                      className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700"
+                      className="bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100"
                     >
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Create Your First Batch
                     </Button>
                   </div>
                 ) : (
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {batches.slice(0, 6).map((batch, index) => (
-                      <Card 
+                  <div className="space-y-2">
+                    {batches.slice(0, 5).map((batch, index) => (
+                      <div 
                         key={batch.id} 
-                        className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
+                        className="flex items-center justify-between p-4 rounded-xl bg-white/40 dark:bg-white/[0.03] border border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/60 dark:hover:bg-white/[0.05] cursor-pointer transition-all duration-200"
                         onClick={() => router.push(`/batches/${batch.id}`)}
                       >
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between mb-4">
-                            <div>
-                              <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
-                                {batch.batch_name}
-                              </h3>
-                              <p className="text-sm text-slate-500 dark:text-gray-400">
-                                {batch.students?.length || 0} students
-                              </p>
-                            </div>
-                            <div className="w-10 h-10 bg-slate-100 dark:bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 transition-colors">
-                              <Users className="h-5 w-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                            </div>
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-neutral-100 dark:bg-white/10 rounded-xl flex items-center justify-center">
+                            <Users className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />
                           </div>
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600 dark:text-gray-400">Academic Year:</span>
-                              <span className="font-medium text-slate-800 dark:text-white">{batch.academic_year}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600 dark:text-gray-400">Semester:</span>
-                              <span className="font-medium text-slate-800 dark:text-white">{batch.semester}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600 dark:text-gray-400">Created:</span>
-                              <span className="font-medium text-slate-800 dark:text-white">
-                                {new Date(batch.created_at).toLocaleDateString()}
-                              </span>
-                            </div>
+                          <div>
+                            <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
+                              {batch.batch_name}
+                            </h3>
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                              {batch.academic_year} • Semester {batch.semester}
+                            </p>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                              {batch.students?.length || 0} students
+                            </p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                              {new Date(batch.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-neutral-400" />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
-                    onClick={() => router.push("/create-batch")}
-                    className="w-full justify-start bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create New Batch
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab("batches")}
-                    variant="outline"
-                    className="w-full justify-start"
-                  >
-                    <Users className="mr-2 h-4 w-4" />
-                    Manage All Batches
-                  </Button>
-                  <Button 
-                    onClick={() => router.push("/create-test")}
-                    variant="outline"
-                    className="w-full justify-start"
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Create New Test
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Recent Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {batches.slice(0, 3).map((batch) => (
-                      <div key={batch.id} className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
-                          <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-slate-800 dark:text-white">
-                            Created batch "{batch.batch_name}"
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-gray-400">
-                            {new Date(batch.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                    {batches.length === 0 && (
-                      <p className="text-sm text-slate-500 dark:text-gray-400 text-center py-4">
-                        No recent activity
-                      </p>
-                    )}
+            {/* Active Tests */}
+            <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Active Tests</CardTitle>
+                    <CardDescription className="text-neutral-500 dark:text-neutral-400 text-sm">Ongoing and upcoming tests</CardDescription>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setActiveTab("tests")}
+                    className="text-neutral-600 dark:text-neutral-400"
+                  >
+                    View All <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {loadingTests ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-neutral-900 dark:border-neutral-100"></div>
+                  </div>
+                ) : tests.length === 0 ? (
+                  <div className="text-center py-8">
+                    <FileText className="h-8 w-8 text-neutral-400 dark:text-neutral-500 mx-auto mb-2" />
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">No tests created yet</p>
+                    <Button 
+                      size="sm"
+                      onClick={() => router.push("/create-test")}
+                      className="mt-4 bg-neutral-900 dark:bg-white text-white dark:text-black"
+                    >
+                      Create First Test
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {tests.slice(0, 3).map((test) => {
+                      const now = new Date();
+                      const startTime = new Date(test.start_time);
+                      const endTime = new Date(test.end_time);
+                      let status = 'Upcoming';
+                      let statusColor = 'bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-neutral-300';
+                      
+                      if (endTime < now) {
+                        status = 'Completed';
+                        statusColor = 'bg-neutral-100 dark:bg-white/5 text-neutral-400 dark:text-neutral-500';
+                      } else if (startTime <= now && endTime >= now) {
+                        status = 'Active';
+                        statusColor = 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400';
+                      }
+
+                      return (
+                        <div 
+                          key={test.id}
+                          className="flex items-center justify-between p-4 rounded-xl bg-white/40 dark:bg-white/[0.03] border border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/60 dark:hover:bg-white/[0.05] cursor-pointer transition-all duration-200"
+                          onClick={() => setActiveTab("tests")}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-neutral-100 dark:bg-white/10 rounded-xl flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />
+                            </div>
+                            <div>
+                              <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
+                                {test.title}
+                              </h3>
+                              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                {test.batch_name} • {test.duration_minutes} min
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor}`}>
+                              {status}
+                            </span>
+                            <ArrowRight className="h-4 w-4 text-neutral-400" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
           
           {/* Batches Tab */}
@@ -775,10 +768,13 @@ export default function FacultyDashboard() {
           {/* Questions Tab */}
           <TabsContent value="questions">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Questions Bank</h2>
+              <div>
+                <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Questions Bank</h2>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Manage all your test questions</p>
+              </div>
               <Button 
                 onClick={() => router.push("/add-question")}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                className="bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-100"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
@@ -786,107 +782,129 @@ export default function FacultyDashboard() {
             </div>
             
             {loadingQuestions ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-              </div>
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
+                <CardContent className="pt-6">
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-neutral-900 dark:border-neutral-100"></div>
+                  </div>
+                </CardContent>
+              </Card>
             ) : questionsError ? (
-              <div className="text-center py-8">
-                <p className="text-red-600 dark:text-red-400">{questionsError}</p>
-                <Button onClick={fetchQuestions} className="mt-4">
-                  Try Again
-                </Button>
-              </div>
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
+                <CardContent className="pt-6">
+                  <div className="text-center py-8">
+                    <p className="text-red-600 dark:text-red-400">{questionsError}</p>
+                    <Button onClick={fetchQuestions} className="mt-4" variant="outline">
+                      Try Again
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ) : questions.length === 0 ? (
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
                 <CardContent className="pt-6">
                   <div className="text-center py-12">
-                    <div className="mx-auto w-24 h-24 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                      <svg className="w-12 h-12 text-slate-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                    <div className="mx-auto w-16 h-16 bg-neutral-100 dark:bg-white/5 rounded-3xl flex items-center justify-center mb-4">
+                      <HelpCircle className="w-8 h-8 text-neutral-400 dark:text-neutral-500" />
                     </div>
-                    <h3 className="text-xl font-medium mb-2 text-slate-800 dark:text-white">No questions found</h3>
-                    <p className="text-slate-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                      You haven't created any questions yet. Create your first question to get started.
+                    <h3 className="text-lg font-semibold mb-2 text-neutral-900 dark:text-neutral-100">No questions yet</h3>
+                    <p className="text-neutral-500 dark:text-neutral-400 mb-6 max-w-md mx-auto text-sm">
+                      Create questions to add them to your tests
                     </p>
                     <Button 
                       onClick={() => router.push("/add-question")}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                      className="bg-neutral-900 dark:bg-white text-white dark:text-black"
                     >
                       <PlusCircle className="mr-2 h-4 w-4" />
-                      Create Your First Question
+                      Create First Question
                     </Button>
                   </div>
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {questions.map((question, index) => (
-                  <Card 
-                    key={question.id} 
-                    className="cursor-pointer group border border-slate-200 dark:border-gray-800 hover:border-slate-300 dark:hover:border-gray-700 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-900/50"
-                    onClick={() => router.push(`/tests/${question.test_id || 'unknown'}/questions`)}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            {question.question_type === 'coding' && <Code className="h-5 w-5 text-blue-600" />}
-                            {question.question_type === 'multiple_choice' && <FileText className="h-5 w-5 text-green-600" />}
-                            {question.question_type === 'short_answer' && <HelpCircle className="h-5 w-5 text-orange-600" />}
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
-                              Q{index + 1}
-                            </h3>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              question.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                              question.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                            }`}>
-                              {question.difficulty}
-                            </span>
+              <Card className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-neutral-200/50 dark:border-white/[0.08]">
+                <CardContent className="pt-6">
+                  <div className="space-y-2">
+                    {questions.map((question, index) => (
+                      <div 
+                        key={question.id} 
+                        className="flex items-center justify-between p-4 rounded-xl bg-white/40 dark:bg-white/[0.03] border border-neutral-200/50 dark:border-white/[0.08] hover:bg-white/60 dark:hover:bg-white/[0.05] cursor-pointer transition-all duration-200"
+                        onClick={() => router.push(`/tests/${question.test_id || 'unknown'}/questions`)}
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="w-10 h-10 bg-neutral-100 dark:bg-white/10 rounded-xl flex items-center justify-center">
+                            {question.question_type === 'coding' && <Code className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />}
+                            {question.question_type === 'multiple_choice' && <FileText className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />}
+                            {question.question_type === 'short_answer' && <HelpCircle className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />}
                           </div>
-                          
-                          <p className="text-sm text-slate-600 dark:text-gray-400 mb-3 line-clamp-3">
-                            {question.question_text.length > 100 
-                              ? question.question_text.substring(0, 100) + '...' 
-                              : question.question_text}
-                          </p>
-                          
-                          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-gray-400">
-                            <span>{question.test_title} - {question.test_batch_name}</span>
-                            <span>{question.marks} marks</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
+                                Question {index + 1}
+                              </h3>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                question.difficulty === 'easy' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' :
+                                question.difficulty === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400' :
+                                'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                              }`}>
+                                {question.difficulty}
+                              </span>
+                            </div>
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate">
+                              {question.question_text}
+                            </p>
                           </div>
                         </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                              {question.marks} marks
+                            </p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                              {question.test_title}
+                            </p>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-neutral-400" />
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </TabsContent>
           
           {/* Submissions Tab */}
           <TabsContent value="submissions">
             <div className="flex justify-between items-center mb-6">
-              {/* <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2> */}
+              <div>
+                <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+                  {selectedTestForSubmissions ? 'Student Submissions' : 'Select Test'}
+                </h2>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                  {selectedTestForSubmissions ? 'Review and grade submissions' : 'Choose a test to view submissions'}
+                </p>
+              </div>
               <div className="flex gap-2">
                 {selectedTestForSubmissions && (
-                  <Button 
-                    variant="outline" 
-                    className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
-                    onClick={() => fetchSubmissions(selectedTestForSubmissions)}
-                  >
-                    Refresh
-                  </Button>
-                )}
-                {selectedTestForSubmissions && (
-                  <Button 
-                    variant="outline" 
-                    className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
-                    onClick={() => handleTestSelectForSubmissions(null)}
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" /> Back to Tests
-                  </Button>
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-neutral-300 dark:border-white/[0.08] hover:bg-neutral-100 dark:hover:bg-white/5"
+                      onClick={() => fetchSubmissions(selectedTestForSubmissions)}
+                    >
+                      Refresh
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-neutral-300 dark:border-white/[0.08] hover:bg-neutral-100 dark:hover:bg-white/5"
+                      onClick={() => handleTestSelectForSubmissions(null)}
+                    >
+                      <ChevronLeft className="h-4 w-4 mr-1" /> Back
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
@@ -1063,126 +1081,6 @@ export default function FacultyDashboard() {
                 )}
               </div>
             )}
-          </TabsContent>
-          
-          {/* Settings Tab */}
-          <TabsContent value="settings">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Faculty Settings</h2>
-              <Button 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                Save Changes
-              </Button>
-            </div>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* Account Settings */}
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardHeader>
-                  <CardTitle className="text-xl text-slate-800 dark:text-white">Account Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                      Name
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="Dr. John Doe"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                      Email Address
-                    </label>
-                    <input 
-                      type="email" 
-                      placeholder="john.doe@somaiya.edu"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                      Department
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="Computer Engineering"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                      Faculty ID
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="FAC12345"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled
-                    />
-                    <p className="text-xs text-slate-500 dark:text-gray-400">Faculty ID cannot be changed</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* Password Settings */}
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardHeader>
-                  <CardTitle className="text-xl text-slate-800 dark:text-white">Change Password</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                        Current Password
-                      </label>
-                      <input 
-                        type="password" 
-                        placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                        New Password
-                      </label>
-                      <input 
-                        type="password" 
-                        placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                        Confirm New Password
-                      </label>
-                      <input 
-                        type="password" 
-                        placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    
-                    <div className="pt-4">
-                      <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
-                      <Button 
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                      >
-                        Update Password
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
       </div>

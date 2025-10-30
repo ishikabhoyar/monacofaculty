@@ -120,9 +120,9 @@ export default function RootLayout({
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com"}>
           <ThemeProvider>
             {children}
-            <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/40 dark:border-gray-800/20 bg-white/80 backdrop-blur-md dark:bg-[#070c1f]/80">
-              <div className="flex items-center justify-center h-7">
-                <span className="text-xs text-slate-500 dark:text-gray-500 flex items-center">
+            <footer className="fixed bottom-0 left-0 right-0 border-t border-neutral-200/50 dark:border-white/[0.08] bg-white/60 backdrop-blur-2xl dark:bg-black/40">
+              <div className="flex items-center justify-center h-8">
+                <span className="text-xs text-neutral-400 dark:text-neutral-500 flex items-center">
                   Copyright © 2025. Made with
                   ♡ by Ishika and Arnab.
                 </span>
