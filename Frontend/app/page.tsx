@@ -51,6 +51,7 @@ import {
 import { ThemeToggle } from "@/components/ThemeToggle";
 import BatchesTab from "@/components/BatchesTab";
 import TestsTab from "@/components/TestsTab";
+import SubmissionCodeViewer from "@/components/SubmissionCodeViewer";
 import { getApiUrl } from "@/lib/utils";
 import { getSubmissions } from "@/lib/facultyApi";
 
@@ -318,6 +319,62 @@ export default function FacultyDashboard() {
   const viewSubmissionDetails = (submission: any) => {
     setSelectedSubmission(submission);
     setIsSubmissionDialogOpen(true);
+  };
+
+  const handleGradeSubmission = async (submissionId: string, marks: number) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch(`${getApiUrl()}/api/faculty/submissions/${submissionId}/grade`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ marks }),
+      });
+
+      if (!response.ok) {
+        let errorMessage = 'Failed to update marks';
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } else {
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            errorMessage = `Server error (${response.status}): ${response.statusText}`;
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
+        }
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json();
+      console.log('Grading successful:', result);
+
+      // Update the submission in the local state
+      setSubmissions(prev => 
+        prev.map(sub => 
+          sub.submission_id === submissionId 
+            ? { ...sub, marks_obtained: marks }
+            : sub
+        )
+      );
+
+      // Update selected submission if it's the one being graded
+      if (selectedSubmission?.submission_id === submissionId) {
+        setSelectedSubmission({ ...selectedSubmission, marks_obtained: marks });
+      }
+    } catch (error) {
+      console.error('Error grading submission:', error);
+      throw error;
+    }
   };
   
   return (
@@ -1010,75 +1067,20 @@ export default function FacultyDashboard() {
 
       {/* Submission Details Dialog */}
       <Dialog open={isSubmissionDialogOpen} onOpenChange={setIsSubmissionDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto dark:bg-[#070c1f] dark:border-gray-800">
+        <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-[95vh] dark:bg-[#070c1f] dark:border-gray-800 p-6">
           <DialogHeader>
-            <DialogTitle className="dark:text-white">Submission Details</DialogTitle>
+            <DialogTitle className="dark:text-white">Review Student Submission</DialogTitle>
             <DialogDescription className="dark:text-gray-400">
-              View student&apos;s code submission
+              View, run, and grade student&apos;s code submission
             </DialogDescription>
           </DialogHeader>
           
           {selectedSubmission && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Student</p>
-                  <p className="text-base dark:text-white">{selectedSubmission.student_name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500">{selectedSubmission.student_roll}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Test</p>
-                  <p className="text-base dark:text-white">{selectedSubmission.test_title}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Batch</p>
-                  <p className="text-base dark:text-white">{selectedSubmission.batch_name}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Submitted</p>
-                  <p className="text-base dark:text-white">
-                    {selectedSubmission.submitted_at 
-                      ? new Date(selectedSubmission.submitted_at).toLocaleString()
-                      : 'N/A'}
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Question</p>
-                <p className="text-base dark:text-white">{selectedSubmission.question_text}</p>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-                  Submitted Code
-                  {selectedSubmission.programming_language && (
-                    <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">
-                      ({selectedSubmission.programming_language})
-                    </span>
-                  )}
-                </p>
-                <pre className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-x-auto border border-gray-300 dark:border-gray-700">
-                  <code className="text-sm dark:text-gray-300">{selectedSubmission.submitted_answer}</code>
-                </pre>
-              </div>
-
-              <div className="flex justify-between items-center pt-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Score</p>
-                  <p className="text-lg font-bold dark:text-white">
-                    {selectedSubmission.marks_obtained !== null 
-                      ? `${selectedSubmission.marks_obtained}/${selectedSubmission.total_marks}` 
-                      : 'Not graded yet'}
-                  </p>
-                </div>
-                <Button 
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                  onClick={() => setIsSubmissionDialogOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
+            <div className="h-[calc(95vh-120px)] overflow-hidden">
+              <SubmissionCodeViewer 
+                submission={selectedSubmission}
+                onGrade={handleGradeSubmission}
+              />
             </div>
           )}
         </DialogContent>

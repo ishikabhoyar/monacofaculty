@@ -3,6 +3,79 @@ const router = express.Router();
 const pool = require('../db');
 const authMiddleware = require('../authMiddleware');
 
+// PUT /api/faculty/submissions/:submissionId/grade - Grade a submission (must be before /:id route)
+router.put('/submissions/:submissionId/grade', authMiddleware, async (req, res) => {
+    const { submissionId } = req.params;
+    const { marks } = req.body;
+    const facultyId = req.user.id;
+
+    // Validate marks
+    if (marks === undefined || marks === null) {
+        return res.status(400).json({ success: false, message: 'Marks are required.' });
+    }
+
+    if (typeof marks !== 'number' || marks < 0) {
+        return res.status(400).json({ success: false, message: 'Marks must be a non-negative number.' });
+    }
+
+    try {
+        // First, verify that this submission belongs to a test created by this faculty
+        const verifyQuery = `
+            SELECT s.*, t.faculty_id, q.marks as total_marks
+            FROM submissions s
+            JOIN questions q ON s.question_id = q.id
+            JOIN tests t ON q.test_id = t.id
+            WHERE s.id = $1
+        `;
+        const verifyResult = await pool.query(verifyQuery, [submissionId]);
+
+        if (verifyResult.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Submission not found.' });
+        }
+
+        const submission = verifyResult.rows[0];
+
+        // Check if faculty owns this test
+        if (submission.faculty_id !== facultyId) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Unauthorized: You can only grade submissions for your own tests.' 
+            });
+        }
+
+        // Check if marks exceed total marks for the question
+        if (marks > submission.total_marks) {
+            return res.status(400).json({ 
+                success: false, 
+                message: `Marks cannot exceed ${submission.total_marks} (total marks for this question).` 
+            });
+        }
+
+        // Update the submission with the marks
+        const updateQuery = `
+            UPDATE submissions 
+            SET marks_obtained = $1, updated_at = NOW()
+            WHERE id = $2
+            RETURNING *
+        `;
+        const updateResult = await pool.query(updateQuery, [marks, submissionId]);
+
+        res.status(200).json({ 
+            success: true, 
+            message: 'Submission graded successfully.',
+            submission: updateResult.rows[0]
+        });
+
+    } catch (error) {
+        console.error('Error grading submission:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to grade submission.', 
+            error: error.message 
+        });
+    }
+});
+
 // GET /api/faculty/:id - Get faculty data by ID
 router.get('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params;
