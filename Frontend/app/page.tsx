@@ -459,7 +459,7 @@ export default function FacultyDashboard() {
             <div className="mr-3 p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
               <TrendingUp className="h-4 w-4 text-orange-600 dark:text-orange-400" />
             </div>
-            Student Submissions
+            Submissions
           </Button>
         </nav>
 
@@ -778,7 +778,7 @@ export default function FacultyDashboard() {
               <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Questions Bank</h2>
               <Button 
                 onClick={() => router.push("/add-question")}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
@@ -868,7 +868,7 @@ export default function FacultyDashboard() {
           {/* Submissions Tab */}
           <TabsContent value="submissions">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2>
+              {/* <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2> */}
               <div className="flex gap-2">
                 {selectedTestForSubmissions && (
                   <Button 
@@ -894,7 +894,7 @@ export default function FacultyDashboard() {
             {!selectedTestForSubmissions ? (
               /* Show Tests List */
               <div>
-                <Card className="dark:bg-[#070c1f] dark:border-gray-800/40 mb-4">
+                {/* <Card className="dark:bg-[#070c1f] dark:border-gray-800/40 mb-4">
                   <CardContent className="pt-6">
                     <h3 className="text-lg font-semibold mb-4 text-slate-800 dark:text-white">
                       Select a test to view submissions
@@ -903,7 +903,7 @@ export default function FacultyDashboard() {
                       Click on a test to see all student submissions for that test.
                     </p>
                   </CardContent>
-                </Card>
+                </Card> */}
 
                 {loadingTests ? (
                   <div className="flex justify-center py-8">
