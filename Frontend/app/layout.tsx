@@ -1,10 +1,14 @@
 import "./globals.css";
-import { IBM_Plex_Mono, Inter } from "next/font/google";
+import { IBM_Plex_Mono, Lexend } from "next/font/google";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const lexend = Lexend({ 
+  subsets: ["latin"],
+  variable: "--font-lexend",
+  display: "swap"
+});
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex-mono",
@@ -112,7 +116,7 @@ export default function RootLayout({
         `}</style>
       </head>
       {/* Hello world */}
-      <body className={`${inter.className} ${ibmPlexMono.variable} relative min-h-screen`}>
+      <body className={`${lexend.className} ${ibmPlexMono.variable} relative min-h-screen`}>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "586378657128-smg8t52eqbji66c3eg967f70hsr54q5r.apps.googleusercontent.com"}>
           <ThemeProvider>
             {children}
