@@ -132,6 +132,7 @@ export default function FacultyDashboard() {
   const [submissionsError, setSubmissionsError] = useState<string | null>(null);
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
   const [isSubmissionDialogOpen, setIsSubmissionDialogOpen] = useState(false);
+  const [selectedTestForSubmissions, setSelectedTestForSubmissions] = useState<string | null>(null);
   const router = useRouter();
 
   // Fetch batches from backend
@@ -268,7 +269,7 @@ export default function FacultyDashboard() {
   }, []);
 
   // Fetch submissions
-  const fetchSubmissions = async () => {
+  const fetchSubmissions = async (testId?: string) => {
     try {
       setLoadingSubmissions(true);
       setSubmissionsError(null);
@@ -279,7 +280,7 @@ export default function FacultyDashboard() {
         return;
       }
 
-      const response = await getSubmissions(token);
+      const response = await getSubmissions(token, testId);
       
       if (response.success) {
         setSubmissions(response.submissions || []);
@@ -294,10 +295,21 @@ export default function FacultyDashboard() {
     }
   };
 
-  // Fetch submissions when submissions tab is opened
+  // Handle test selection for submissions
+  const handleTestSelectForSubmissions = async (testId: string | null) => {
+    setSelectedTestForSubmissions(testId);
+    if (testId) {
+      await fetchSubmissions(testId);
+    } else {
+      setSubmissions([]);
+    }
+  };
+
+  // Reset selected test when switching tabs
   useEffect(() => {
-    if (activeTab === 'submissions' && submissions.length === 0) {
-      fetchSubmissions();
+    if (activeTab !== 'submissions') {
+      setSelectedTestForSubmissions(null);
+      setSubmissions([]);
     }
   }, [activeTab]);
 
@@ -858,88 +870,198 @@ export default function FacultyDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Submissions</h2>
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
-                  onClick={() => fetchSubmissions()}
-                >
-                  Refresh
-                </Button>
-                <Button variant="outline" className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700">Export</Button>
+                {selectedTestForSubmissions && (
+                  <Button 
+                    variant="outline" 
+                    className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => fetchSubmissions(selectedTestForSubmissions)}
+                  >
+                    Refresh
+                  </Button>
+                )}
+                {selectedTestForSubmissions && (
+                  <Button 
+                    variant="outline" 
+                    className="dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => handleTestSelectForSubmissions(null)}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" /> Back to Tests
+                  </Button>
+                )}
               </div>
             </div>
-            
-            {loadingSubmissions ? (
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardContent className="pt-6">
-                  <p className="text-center text-gray-500 dark:text-gray-400">Loading submissions...</p>
-                </CardContent>
-              </Card>
-            ) : submissionsError ? (
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardContent className="pt-6">
-                  <p className="text-center text-red-500">{submissionsError}</p>
-                </CardContent>
-              </Card>
-            ) : submissions.length === 0 ? (
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardContent className="pt-6">
-                  <p className="text-center text-gray-500 dark:text-gray-400">No submissions yet</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
-                <CardContent className="pt-6">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="dark:border-gray-800/40">
-                        <TableHead className="text-slate-600 dark:text-gray-400">Student</TableHead>
-                        <TableHead className="text-slate-600 dark:text-gray-400">Test</TableHead>
-                        <TableHead className="text-slate-600 dark:text-gray-400">Question</TableHead>
-                        <TableHead className="text-slate-600 dark:text-gray-400">Batch</TableHead>
-                        <TableHead className="text-slate-600 dark:text-gray-400">Submitted</TableHead>
-                        <TableHead className="text-slate-600 dark:text-gray-400">Score</TableHead>
-                        <TableHead className="text-right text-slate-600 dark:text-gray-400">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {submissions.map((submission) => (
-                        <TableRow key={submission.submission_id} className="dark:border-gray-800/40 dark:hover:bg-[#0a1029]">
-                          <TableCell className="font-medium text-slate-800 dark:text-gray-300">
-                            <div>
-                              <div>{submission.student_name}</div>
-                              <div className="text-xs text-gray-500 dark:text-gray-500">{submission.student_roll}</div>
+
+            {!selectedTestForSubmissions ? (
+              /* Show Tests List */
+              <div>
+                <Card className="dark:bg-[#070c1f] dark:border-gray-800/40 mb-4">
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-semibold mb-4 text-slate-800 dark:text-white">
+                      Select a test to view submissions
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      Click on a test to see all student submissions for that test.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {loadingTests ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : testsError ? (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <p className="text-center text-red-500">{testsError}</p>
+                    </CardContent>
+                  </Card>
+                ) : tests.length === 0 ? (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <p className="text-center text-gray-500 dark:text-gray-400">No tests found</p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {tests.map((test) => {
+                      const now = new Date();
+                      const startTime = new Date(test.start_time);
+                      const endTime = new Date(test.end_time);
+                      let status = 'Draft';
+                      let statusColor = 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+                      
+                      if (endTime < now) {
+                        status = 'Completed';
+                        statusColor = 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+                      } else if (startTime <= now && endTime >= now) {
+                        status = 'Active';
+                        statusColor = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                      } else if (startTime > now) {
+                        status = 'Upcoming';
+                        statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+                      }
+
+                      return (
+                        <Card 
+                          key={test.id}
+                          className="cursor-pointer hover:shadow-lg transition-shadow dark:bg-[#070c1f] dark:border-gray-800/40 dark:hover:border-blue-800"
+                          onClick={() => handleTestSelectForSubmissions(test.id)}
+                        >
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between mb-3">
+                              <h3 className="text-lg font-semibold text-slate-800 dark:text-white line-clamp-2">
+                                {test.title}
+                              </h3>
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor} whitespace-nowrap ml-2`}>
+                                {status}
+                              </span>
                             </div>
-                          </TableCell>
-                          <TableCell className="dark:text-gray-300">{submission.test_title}</TableCell>
-                          <TableCell className="dark:text-gray-300">
-                            <div className="max-w-xs truncate" title={submission.question_text}>
-                              {submission.question_text}
+                            
+                            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                              <div className="flex items-center">
+                                <Users className="h-4 w-4 mr-2" />
+                                <span>{test.batch_name}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <Calendar className="h-4 w-4 mr-2" />
+                                <span>{new Date(test.start_time).toLocaleDateString()}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <Clock className="h-4 w-4 mr-2" />
+                                <span>{test.duration_minutes} minutes</span>
+                              </div>
                             </div>
-                          </TableCell>
-                          <TableCell className="dark:text-gray-300">{submission.batch_name}</TableCell>
-                          <TableCell className="dark:text-gray-400">{formatTimeAgo(submission.submitted_at)}</TableCell>
-                          <TableCell className="dark:text-gray-300">
-                            {submission.marks_obtained !== null 
-                              ? `${submission.marks_obtained}/${submission.total_marks}` 
-                              : 'Not graded'}
-                          </TableCell>
-                          <TableCell className="text-right">
+
                             <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="dark:text-blue-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-300"
-                              onClick={() => viewSubmissionDetails(submission)}
+                              className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleTestSelectForSubmissions(test.id);
+                              }}
                             >
-                              View Code
+                              View Submissions <ArrowRight className="h-4 w-4 ml-2" />
                             </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Show Submissions for Selected Test */
+              <div>
+                {loadingSubmissions ? (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <p className="text-center text-gray-500 dark:text-gray-400">Loading submissions...</p>
+                    </CardContent>
+                  </Card>
+                ) : submissionsError ? (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <p className="text-center text-red-500">{submissionsError}</p>
+                    </CardContent>
+                  </Card>
+                ) : submissions.length === 0 ? (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <p className="text-center text-gray-500 dark:text-gray-400">No submissions yet for this test</p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+                    <CardContent className="pt-6">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="dark:border-gray-800/40">
+                            <TableHead className="text-slate-600 dark:text-gray-400">Student</TableHead>
+                            <TableHead className="text-slate-600 dark:text-gray-400">Question</TableHead>
+                            <TableHead className="text-slate-600 dark:text-gray-400">Batch</TableHead>
+                            <TableHead className="text-slate-600 dark:text-gray-400">Submitted</TableHead>
+                            <TableHead className="text-slate-600 dark:text-gray-400">Score</TableHead>
+                            <TableHead className="text-right text-slate-600 dark:text-gray-400">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {submissions.map((submission) => (
+                            <TableRow key={submission.submission_id} className="dark:border-gray-800/40 dark:hover:bg-[#0a1029]">
+                              <TableCell className="font-medium text-slate-800 dark:text-gray-300">
+                                <div>
+                                  <div>{submission.student_name}</div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-500">{submission.student_roll}</div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="dark:text-gray-300">
+                                <div className="max-w-xs truncate" title={submission.question_text}>
+                                  {submission.question_text}
+                                </div>
+                              </TableCell>
+                              <TableCell className="dark:text-gray-300">{submission.batch_name}</TableCell>
+                              <TableCell className="dark:text-gray-400">{formatTimeAgo(submission.submitted_at)}</TableCell>
+                              <TableCell className="dark:text-gray-300">
+                                {submission.marks_obtained !== null 
+                                  ? `${submission.marks_obtained}/${submission.total_marks}` 
+                                  : 'Not graded'}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="dark:text-blue-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-300"
+                                  onClick={() => viewSubmissionDetails(submission)}
+                                >
+                                  View Code
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             )}
           </TabsContent>
           

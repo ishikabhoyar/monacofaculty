@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from "@monaco-editor/react";
-import { Play, Save, CheckCircle } from 'lucide-react';
+import { Play, Save, CheckCircle, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -332,6 +332,227 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
     return langMap[lang.toLowerCase()] || 'javascript';
   };
 
+  // Print code and submission details
+  const handlePrint = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow popups to print');
+      return;
+    }
+
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Submission - ${submission.student_name} - ${submission.test_title}</title>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              margin: 40px;
+              color: #333;
+            }
+            .header {
+              border-bottom: 3px solid #2563eb;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+            }
+            h1 {
+              color: #1e40af;
+              margin: 0 0 10px 0;
+              font-size: 28px;
+            }
+            .subtitle {
+              color: #64748b;
+              font-size: 14px;
+            }
+            .details-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 20px;
+              margin-bottom: 30px;
+              background: #f8fafc;
+              padding: 20px;
+              border-radius: 8px;
+              border: 1px solid #e2e8f0;
+            }
+            .detail-item {
+              margin-bottom: 10px;
+            }
+            .detail-label {
+              font-weight: 600;
+              color: #475569;
+              font-size: 12px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              margin-bottom: 4px;
+            }
+            .detail-value {
+              color: #1e293b;
+              font-size: 14px;
+            }
+            .question-section {
+              margin-bottom: 30px;
+              background: #fefce8;
+              padding: 20px;
+              border-radius: 8px;
+              border-left: 4px solid #eab308;
+            }
+            .question-label {
+              font-weight: 600;
+              color: #854d0e;
+              font-size: 12px;
+              text-transform: uppercase;
+              margin-bottom: 8px;
+            }
+            .question-text {
+              color: #422006;
+              font-size: 14px;
+              line-height: 1.6;
+            }
+            .code-section {
+              margin-bottom: 30px;
+            }
+            .code-header {
+              background: #1e293b;
+              color: white;
+              padding: 12px 16px;
+              border-radius: 8px 8px 0 0;
+              font-weight: 600;
+              font-size: 14px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .language-badge {
+              background: #3b82f6;
+              padding: 4px 12px;
+              border-radius: 4px;
+              font-size: 12px;
+              font-weight: 500;
+            }
+            pre {
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-top: none;
+              border-radius: 0 0 8px 8px;
+              padding: 20px;
+              overflow-x: auto;
+              margin: 0;
+              line-height: 1.6;
+            }
+            code {
+              font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+              font-size: 13px;
+              color: #1e293b;
+            }
+            .marks-section {
+              background: #f0fdf4;
+              padding: 20px;
+              border-radius: 8px;
+              border-left: 4px solid #22c55e;
+              margin-bottom: 30px;
+            }
+            .marks-label {
+              font-weight: 600;
+              color: #166534;
+              font-size: 12px;
+              text-transform: uppercase;
+              margin-bottom: 8px;
+            }
+            .marks-value {
+              font-size: 24px;
+              font-weight: bold;
+              color: ${submission.marks_obtained !== null ? '#15803d' : '#64748b'};
+            }
+            .footer {
+              margin-top: 40px;
+              padding-top: 20px;
+              border-top: 1px solid #e2e8f0;
+              text-align: center;
+              color: #64748b;
+              font-size: 12px;
+            }
+            @media print {
+              body {
+                margin: 20px;
+              }
+              .no-print {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Student Submission</h1>
+            <p class="subtitle">Generated on ${new Date().toLocaleString()}</p>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-label">Student Name</div>
+              <div class="detail-value">${submission.student_name}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Roll Number</div>
+              <div class="detail-value">${submission.student_roll}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Test</div>
+              <div class="detail-value">${submission.test_title}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Batch</div>
+              <div class="detail-value">${submission.batch_name}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Submitted At</div>
+              <div class="detail-value">${submission.submitted_at ? new Date(submission.submitted_at).toLocaleString() : 'N/A'}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Programming Language</div>
+              <div class="detail-value">${language}</div>
+            </div>
+          </div>
+
+          <div class="question-section">
+            <div class="question-label">Question</div>
+            <div class="question-text">${submission.question_text}</div>
+          </div>
+
+          <div class="marks-section">
+            <div class="marks-label">Marks Obtained</div>
+            <div class="marks-value">
+              ${submission.marks_obtained !== null ? `${submission.marks_obtained} / ${submission.total_marks}` : 'Not graded yet'}
+            </div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-header">
+              <span>Submitted Code</span>
+              <span class="language-badge">${language.toUpperCase()}</span>
+            </div>
+            <pre><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+          </div>
+
+          <div class="footer">
+            <p>This is an official submission record from the Faculty Portal</p>
+            <p>© ${new Date().getFullYear()} - All rights reserved</p>
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+            }
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+  };
+
   return (
     <div className="flex flex-col h-full space-y-4">
       {/* Student Info Header */}
@@ -381,6 +602,14 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
                 disabled={isRunning}
               >
                 <Play size={14} /> {isRunning ? 'Running...' : 'Run Code'}
+              </Button>
+              <Button 
+                size="sm"
+                variant="outline"
+                className="flex items-center gap-1 text-xs"
+                onClick={handlePrint}
+              >
+                <Printer size={14} /> Print Code
               </Button>
             </div>
           </div>

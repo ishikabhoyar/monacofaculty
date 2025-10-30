@@ -4,8 +4,8 @@ export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getTestById, getQuestionsForTest } from '../../../lib/facultyApi';
-import { ArrowLeft, BookOpen, Clock, Users, Calendar } from 'lucide-react';
+import { getTestById, getQuestionsForTest, getSubmissions } from '../../../lib/facultyApi';
+import { ArrowLeft, BookOpen, Clock, Users, Calendar, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 interface Test {
@@ -31,6 +31,20 @@ interface Question {
   marks: number;
 }
 
+interface Submission {
+  submission_id: string;
+  student_name: string;
+  student_roll: string;
+  student_email: string;
+  question_text: string;
+  submitted_answer: string;
+  marks_obtained: number | null;
+  total_marks: number;
+  submitted_at: string;
+  question_type: string;
+  programming_language: string | null;
+}
+
 export default function TestDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -38,7 +52,9 @@ export default function TestDetailPage() {
 
   const [test, setTest] = useState<Test | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -53,9 +69,10 @@ export default function TestDetailPage() {
         return;
       }
 
-      const [testResponse, questionsResponse] = await Promise.all([
+      const [testResponse, questionsResponse, submissionsResponse] = await Promise.all([
         getTestById(testId, token),
-        getQuestionsForTest(testId, token)
+        getQuestionsForTest(testId, token),
+        getSubmissions(token, testId)
       ]);
 
       if (testResponse.success) {
@@ -63,6 +80,9 @@ export default function TestDetailPage() {
       }
       if (questionsResponse.success) {
         setQuestions(questionsResponse.questions);
+      }
+      if (submissionsResponse.success) {
+        setSubmissions(submissionsResponse.submissions);
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch test data');
@@ -249,6 +269,153 @@ export default function TestDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Submissions Section */}
+      <div className="mt-6 bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold flex items-center">
+            <FileText className="h-5 w-5 mr-2" />
+            Submissions ({submissions.length})
+          </h2>
+        </div>
+
+        {loadingSubmissions ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading submissions...</p>
+          </div>
+        ) : submissions.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No submissions yet for this test.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Student
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Roll Number
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Question
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Marks
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Submitted At
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Answer
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {submissions.map((submission) => (
+                  <tr key={submission.submission_id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {submission.student_name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {submission.student_email}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                      {submission.student_roll}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="text-sm text-gray-900 max-w-xs truncate" title={submission.question_text}>
+                        {submission.question_text}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        {submission.question_type}
+                      </span>
+                      {submission.programming_language && (
+                        <span className="ml-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                          {submission.programming_language}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <span className={`font-semibold ${
+                        submission.marks_obtained !== null 
+                          ? submission.marks_obtained >= submission.total_marks * 0.7
+                            ? 'text-green-600'
+                            : submission.marks_obtained >= submission.total_marks * 0.4
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
+                          : 'text-gray-500'
+                      }`}>
+                        {submission.marks_obtained !== null ? submission.marks_obtained : 'N/A'} / {submission.total_marks}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      {formatDateTime(submission.submitted_at)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <details className="text-sm">
+                        <summary className="cursor-pointer text-blue-600 hover:text-blue-800">
+                          View Answer
+                        </summary>
+                        <div className="mt-2 p-3 bg-gray-50 rounded-md max-h-48 overflow-auto">
+                          <pre className="whitespace-pre-wrap text-xs">
+                            {submission.submitted_answer}
+                          </pre>
+                        </div>
+                      </details>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Submission Statistics */}
+        {submissions.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold mb-4">Submission Statistics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Total Submissions</p>
+                <p className="text-2xl font-bold text-blue-600">{submissions.length}</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Unique Students</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {new Set(submissions.map(s => s.student_roll)).size}
+                </p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Average Score</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {submissions.filter(s => s.marks_obtained !== null).length > 0
+                    ? (submissions
+                        .filter(s => s.marks_obtained !== null)
+                        .reduce((sum, s) => sum + ((s.marks_obtained! / s.total_marks) * 100), 0) /
+                        submissions.filter(s => s.marks_obtained !== null).length
+                      ).toFixed(1)
+                    : 'N/A'}%
+                </p>
+              </div>
+              <div className="bg-yellow-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Graded Submissions</p>
+                <p className="text-2xl font-bold text-yellow-600">
+                  {submissions.filter(s => s.marks_obtained !== null).length}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
