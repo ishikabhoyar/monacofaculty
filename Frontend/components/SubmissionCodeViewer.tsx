@@ -6,6 +6,7 @@ import { Play, Save, CheckCircle, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getExecutorApiUrl, getExecutorWsUrl } from '@/lib/utils';
 
 interface SubmissionCodeViewerProps {
   submission: {
@@ -102,7 +103,7 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
       setActiveSocket(null);
     }
 
-    const wsUrl = `ws://localhost:8080/api/ws/terminal/${id}`;
+    const wsUrl = `${getExecutorWsUrl()}/api/ws/terminal/${id}`;
     const socket = new WebSocket(wsUrl);
     
     socket.onopen = () => {
@@ -251,7 +252,7 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
       ]);
       
       try {
-        const response = await fetch('http://localhost:8080/api/submit', {
+        const response = await fetch(`${getExecutorApiUrl()}/api/submit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

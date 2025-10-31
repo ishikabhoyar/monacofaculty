@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from "@monaco-editor/react";
 import { Play, Send } from 'lucide-react';
+import { getExecutorApiUrl, getExecutorWsUrl } from '@/lib/utils';
 
 interface CodeChallengeProps {
   initialCode?: string;
@@ -105,7 +106,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
       setActiveSocket(null);
     }
 
-    const wsUrl = `ws://localhost:8080/api/ws/terminal/${id}`;
+    const wsUrl = `${getExecutorWsUrl()}/api/ws/terminal/${id}`;
     const socket = new WebSocket(wsUrl);
     
     socket.onopen = () => {
@@ -254,7 +255,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
       ]);
       
       try {
-        const response = await fetch('http://localhost:8080/api/submit', {
+        const response = await fetch(`${getExecutorApiUrl()}/api/submit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
