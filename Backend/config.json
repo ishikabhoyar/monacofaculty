@@ -4,7 +4,7 @@
   "ingress": [
     {
       "hostname": "monacofbackend.ishikabhoyar.tech",
-      "service": "http://host.docker.internal:6700"
+      "service": "http://172.18.0.1:6700"
     },
     {
       "service": "http_status:404"
