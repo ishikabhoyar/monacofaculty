@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://monacofaculty.pages.dev'], // Add your frontend URLs
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev'], // Add your frontend URLs
   credentials: true
 }));
 app.use(express.json());
