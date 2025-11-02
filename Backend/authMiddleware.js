@@ -39,6 +39,22 @@ async function authMiddleware(req, res, next) {
       
       console.log('Google token verified for user:', email);
 
+      // Check if email is in the allowed_emails list
+      const allowedEmailResult = await pool.query(
+        'SELECT * FROM allowed_emails WHERE email = $1 AND is_active = true',
+        [email]
+      );
+
+      if (allowedEmailResult.rows.length === 0) {
+        console.log('Email not authorized:', email);
+        return res.status(403).json({ 
+          success: false, 
+          message: 'Access denied. Your email is not authorized to access this system.' 
+        });
+      }
+
+      console.log('Email is authorized:', email);
+
       // Check if user exists in the database
       const userResult = await pool.query('SELECT * FROM faculties WHERE email = $1', [email]);
 

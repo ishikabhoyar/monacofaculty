@@ -1,3 +1,13 @@
+-- Allowed emails table for login whitelist
+CREATE TABLE IF NOT EXISTS allowed_emails (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    added_by VARCHAR(255), -- Optional: track who added this email
+    is_active BOOLEAN DEFAULT true, -- Optional: ability to disable without deleting
+    notes TEXT -- Optional: notes about this user
+);
+
 CREATE TABLE faculties (
     id SERIAL PRIMARY KEY,  -- Changed from faculty_id to id for consistency
     name VARCHAR(255) NOT NULL,

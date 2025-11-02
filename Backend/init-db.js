@@ -76,6 +76,28 @@ async function migrateDatabase() {
       );
     `);
 
+    // Create allowed_emails table
+    console.log('Creating allowed_emails table...');
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS allowed_emails (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        added_by VARCHAR(255),
+        is_active BOOLEAN DEFAULT true,
+        notes TEXT
+      );
+    `);
+
+    // Create indexes for allowed_emails
+    console.log('Creating indexes for allowed_emails...');
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_allowed_emails_email ON allowed_emails(email);
+    `);
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_allowed_emails_active ON allowed_emails(is_active);
+    `);
+
     // Insert default tags if they don't exist
     console.log('Inserting default tags...');
     const defaultTags = [
