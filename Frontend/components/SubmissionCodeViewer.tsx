@@ -598,33 +598,33 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
   };
 
   return (
-    <div className="flex flex-col h-full space-y-4">
-      {/* Student Info Header */}
-      <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
+    <div className="flex flex-col h-full space-y-2">
+      {/* Student Info Header - Compact */}
+      <div className="grid grid-cols-4 gap-3 p-3 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
         <div>
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Student</p>
-          <p className="text-sm font-semibold dark:text-white">{submission.student_name}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">{submission.student_roll}</p>
+          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Student</p>
+          <p className="text-xs font-semibold dark:text-white">{submission.student_name}</p>
+          <p className="text-[10px] text-gray-500 dark:text-gray-500">{submission.student_roll}</p>
         </div>
         <div>
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Test</p>
-          <p className="text-sm font-semibold dark:text-white">{submission.test_title}</p>
+          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Test</p>
+          <p className="text-xs font-semibold dark:text-white">{submission.test_title}</p>
         </div>
         <div>
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Batch</p>
-          <p className="text-sm dark:text-white">{submission.batch_name}</p>
+          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Batch</p>
+          <p className="text-xs dark:text-white">{submission.batch_name}</p>
         </div>
         <div>
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Submitted</p>
-          <p className="text-sm dark:text-white">
+          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Submitted</p>
+          <p className="text-xs dark:text-white">
             {submission.submitted_at 
               ? new Date(submission.submitted_at).toLocaleString()
               : 'N/A'}
           </p>
         </div>
-        <div className="col-span-2">
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Question</p>
-          <p className="text-sm dark:text-white">{submission.question_text}</p>
+        <div className="col-span-4">
+          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Question</p>
+          <p className="text-xs dark:text-white line-clamp-2">{submission.question_text}</p>
         </div>
       </div>
 
@@ -677,16 +677,16 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
         </div>
         
         {/* Terminal Output */}
-        <div className="flex-none border-t bg-background dark:bg-gray-900/50" style={{ height: '180px' }}>
-          <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted dark:bg-gray-800/50">
-            <span className="text-xs font-medium">Output</span>
+        <div className="flex-none border-t bg-background dark:bg-gray-900/50" style={{ height: '200px' }}>
+          <div className="flex items-center justify-between px-2 py-1 border-b bg-muted dark:bg-gray-800/50">
+            <span className="text-[11px] font-medium">Output</span>
             {waitingForInput && (
-              <span className="text-xs text-green-500 animate-pulse">● Waiting for input...</span>
+              <span className="text-[10px] text-green-500 animate-pulse">● Waiting for input...</span>
             )}
           </div>
           <div 
-            className="p-2 overflow-auto font-mono text-xs bg-black text-white" 
-            style={{ height: 'calc(100% - 33px)' }}
+            className="p-2 overflow-auto font-mono text-[11px] bg-black text-white" 
+            style={{ height: 'calc(100% - 29px)' }}
             onClick={() => terminalInputRef.current?.focus()}
           >
             {terminalOutput.length === 0 ? (
@@ -729,11 +729,11 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
         </div>
       </div>
 
-      {/* Grading Section */}
-      <div className="flex items-end gap-4 p-4 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
-        <div className="flex-1">
-          <Label htmlFor="marks" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Award Marks (out of {submission.total_marks})
+      {/* Grading Section - Compact */}
+      <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
+        <div className="flex-1 flex items-center gap-2">
+          <Label htmlFor="marks" className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+            Award Marks (out of {submission.total_marks}):
           </Label>
           <Input
             id="marks"
@@ -743,20 +743,21 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
             step="0.5"
             value={marks}
             onChange={(e) => setMarks(e.target.value)}
-            className="mt-1"
-            placeholder={`0 - ${submission.total_marks}`}
+            className="w-24 h-8 text-sm"
+            placeholder={`0-${submission.total_marks}`}
           />
         </div>
         <Button 
           onClick={handleGrade}
           disabled={isSaving}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+          size="sm"
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-8"
         >
           {isSaving ? (
             <>Saving...</>
           ) : (
             <>
-              <CheckCircle size={16} className="mr-1" />
+              <CheckCircle size={14} className="mr-1" />
               Save Marks
             </>
           )}
