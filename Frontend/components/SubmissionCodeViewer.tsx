@@ -598,33 +598,33 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
   };
 
   return (
-    <div className="flex flex-col h-full space-y-2">
-      {/* Student Info Header - Compact */}
-      <div className="grid grid-cols-4 gap-3 p-3 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
+    <div className="flex flex-col h-full space-y-1.5">
+      {/* Student Info Header - Ultra Compact */}
+      <div className="grid grid-cols-5 gap-2 px-2 py-1.5 bg-slate-50 dark:bg-gray-900/50 rounded border border-slate-200 dark:border-gray-800">
         <div>
-          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Student</p>
-          <p className="text-xs font-semibold dark:text-white">{submission.student_name}</p>
-          <p className="text-[10px] text-gray-500 dark:text-gray-500">{submission.student_roll}</p>
+          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Student</p>
+          <p className="text-[11px] font-semibold dark:text-white leading-tight">{submission.student_name}</p>
+          <p className="text-[9px] text-gray-500 dark:text-gray-500 leading-tight">{submission.student_roll}</p>
         </div>
         <div>
-          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Test</p>
-          <p className="text-xs font-semibold dark:text-white">{submission.test_title}</p>
+          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Test</p>
+          <p className="text-[11px] font-semibold dark:text-white leading-tight">{submission.test_title}</p>
         </div>
         <div>
-          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Batch</p>
-          <p className="text-xs dark:text-white">{submission.batch_name}</p>
+          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Batch</p>
+          <p className="text-[11px] dark:text-white leading-tight">{submission.batch_name}</p>
         </div>
         <div>
-          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase">Submitted</p>
-          <p className="text-xs dark:text-white">
+          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Submitted</p>
+          <p className="text-[11px] dark:text-white leading-tight">
             {submission.submitted_at 
-              ? new Date(submission.submitted_at).toLocaleString()
+              ? new Date(submission.submitted_at).toLocaleString('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
               : 'N/A'}
           </p>
         </div>
-        <div className="col-span-4">
-          <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Question</p>
-          <p className="text-xs dark:text-white line-clamp-2">{submission.question_text}</p>
+        <div>
+          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Question</p>
+          <p className="text-[11px] dark:text-white line-clamp-1 leading-tight">{submission.question_text}</p>
         </div>
       </div>
 
