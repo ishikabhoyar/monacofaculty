@@ -137,7 +137,8 @@ router.get('/submissions', authMiddleware, async (req, res) => {
       JOIN students st ON s.student_id = st.id
       JOIN tests t ON s.test_id = t.id
       JOIN questions q ON s.question_id = q.id
-      JOIN batches b ON st.batch_id = b.id
+      JOIN student_batches sb ON st.id = sb.student_id
+      JOIN batches b ON sb.batch_id = b.id
       WHERE t.faculty_id = $1
     `;
     
