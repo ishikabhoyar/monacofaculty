@@ -110,17 +110,46 @@ class BatchController {
                     const student = students[i];
                     
                     try {
-                        const studentResult = await client.query(
-                            `INSERT INTO students (roll_number, name, email, phone, batch_id)
-                             VALUES ($1, $2, $3, $4, $5)
-                             RETURNING id, roll_number, name, email, phone, created_at`,
-                            [student.rollNumber, student.name, student.email, student.phoneNumber || '', batch.id]
+                        // Check if student already exists
+                        const existingStudent = await client.query(
+                            'SELECT id FROM students WHERE email = $1 OR roll_number = $2',
+                            [student.email, student.rollNumber]
                         );
-                        insertedStudents.push(studentResult.rows[0]);
+
+                        let studentId;
+                        if (existingStudent.rows.length > 0) {
+                            // Student exists, use their ID
+                            studentId = existingStudent.rows[0].id;
+                        } else {
+                            // Create new student
+                            const studentResult = await client.query(
+                                `INSERT INTO students (roll_number, name, email, phone)
+                                 VALUES ($1, $2, $3, $4)
+                                 RETURNING id, roll_number, name, email, phone, created_at`,
+                                [student.rollNumber, student.name, student.email, student.phoneNumber || '']
+                            );
+                            studentId = studentResult.rows[0].id;
+                            insertedStudents.push(studentResult.rows[0]);
+                        }
+
+                        // Add student to batch via junction table
+                        await client.query(
+                            'INSERT INTO student_batches (student_id, batch_id) VALUES ($1, $2) ON CONFLICT (student_id, batch_id) DO NOTHING',
+                            [studentId, batch.id]
+                        );
+
+                        // If student existed, add them to inserted list for response
+                        if (existingStudent.rows.length > 0) {
+                            const studentData = await client.query(
+                                'SELECT id, roll_number, name, email, phone, created_at FROM students WHERE id = $1',
+                                [studentId]
+                            );
+                            insertedStudents.push(studentData.rows[0]);
+                        }
                     } catch (error) {
                         await client.query('ROLLBACK');
                         
-                        // Handle unique constraint violations (shouldn't happen after validation, but just in case)
+                        // Handle unique constraint violations
                         if (error.code === '23505') {
                             let errorMessage = `Student ${i + 1}: Duplicate entry detected in this submission`;
                             
@@ -185,11 +214,13 @@ class BatchController {
                                 'name', s.name,
                                 'email', s.email,
                                 'phone_number', s.phone,
-                                'created_at', s.created_at
+                                'created_at', s.created_at,
+                                'enrolled_at', sb.enrolled_at
                             )
                         ) FILTER (WHERE s.id IS NOT NULL), '[]') as students
                  FROM batches b
-                 LEFT JOIN students s ON b.id = s.batch_id
+                 LEFT JOIN student_batches sb ON b.id = sb.batch_id
+                 LEFT JOIN students s ON sb.student_id = s.id
                  WHERE b.faculty_id = $1
                  GROUP BY b.id
                  ORDER BY b.created_at DESC`,
@@ -225,11 +256,13 @@ class BatchController {
                                 'name', s.name,
                                 'email', s.email,
                                 'phone_number', s.phone,
-                                'created_at', s.created_at
+                                'created_at', s.created_at,
+                                'enrolled_at', sb.enrolled_at
                             )
                         ) FILTER (WHERE s.id IS NOT NULL), '[]') as students
                  FROM batches b
-                 LEFT JOIN students s ON b.id = s.batch_id
+                 LEFT JOIN student_batches sb ON b.id = sb.batch_id
+                 LEFT JOIN students s ON sb.student_id = s.id
                  WHERE b.id = $1 AND b.faculty_id = $2
                  GROUP BY b.id`,
                 [id, facultyId]
@@ -345,8 +378,8 @@ class BatchController {
                 });
             }
             
-            // Delete students first (cascade will handle this, but let's be explicit)
-            await client.query('DELETE FROM students WHERE batch_id = $1', [id]);
+            // Delete student_batches relationships (will cascade automatically, but being explicit)
+            await client.query('DELETE FROM student_batches WHERE batch_id = $1', [id]);
             
             // Delete batch
             await client.query('DELETE FROM batches WHERE id = $1 AND faculty_id = $2', [id, facultyId]);
@@ -408,18 +441,60 @@ class BatchController {
                 });
             }
             
-            // Insert student
-            const result = await pool.query(
-                `INSERT INTO students (roll_number, name, email, phone, batch_id)
-                 VALUES ($1, $2, $3, $4, $5)
-                 RETURNING id, roll_number, name, email, phone, created_at`,
-                [rollNumber, name, email, phoneNumber || '', id]
+            // Check if student already exists
+            const existingStudent = await pool.query(
+                'SELECT id FROM students WHERE email = $1 OR roll_number = $2',
+                [email, rollNumber]
+            );
+
+            let studentId;
+            let student;
+            
+            if (existingStudent.rows.length > 0) {
+                // Student exists, just add to batch
+                studentId = existingStudent.rows[0].id;
+                
+                // Check if already in this batch
+                const alreadyInBatch = await pool.query(
+                    'SELECT id FROM student_batches WHERE student_id = $1 AND batch_id = $2',
+                    [studentId, id]
+                );
+                
+                if (alreadyInBatch.rows.length > 0) {
+                    return res.status(409).json({
+                        success: false,
+                        message: 'Student is already enrolled in this batch'
+                    });
+                }
+                
+                // Get student details
+                const studentData = await pool.query(
+                    'SELECT id, roll_number, name, email, phone, created_at FROM students WHERE id = $1',
+                    [studentId]
+                );
+                student = studentData.rows[0];
+            } else {
+                // Create new student
+                const result = await pool.query(
+                    `INSERT INTO students (roll_number, name, email, phone)
+                     VALUES ($1, $2, $3, $4)
+                     RETURNING id, roll_number, name, email, phone, created_at`,
+                    [rollNumber, name, email, phoneNumber || '']
+                );
+                student = result.rows[0];
+                studentId = student.id;
+            }
+            
+            // Add student to batch
+            await pool.query(
+                'INSERT INTO student_batches (student_id, batch_id) VALUES ($1, $2)',
+                [studentId, id]
             );
             
             res.status(201).json({
                 success: true,
                 message: 'Student added successfully',
-                student: result.rows[0]
+                student: student
             });
             
         } catch (error) {
@@ -462,7 +537,9 @@ class BatchController {
             
             // Check if student exists in the batch
             const studentCheck = await pool.query(
-                'SELECT id FROM students WHERE id = $1 AND batch_id = $2',
+                `SELECT s.id FROM students s
+                 JOIN student_batches sb ON s.id = sb.student_id
+                 WHERE s.id = $1 AND sb.batch_id = $2`,
                 [studentId, id]
             );
             
@@ -487,9 +564,9 @@ class BatchController {
             const result = await pool.query(
                 `UPDATE students 
                  SET roll_number = $1, name = $2, email = $3, phone = $4
-                 WHERE id = $5 AND batch_id = $6
+                 WHERE id = $5
                  RETURNING id, roll_number, name, email, phone`,
-                [rollNumber, name, email, phoneNumber || '', studentId, id]
+                [rollNumber, name, email, phoneNumber || '', studentId]
             );
             
             res.json({
@@ -529,7 +606,7 @@ class BatchController {
             
             // Check if student exists in the batch
             const studentCheck = await pool.query(
-                'SELECT id FROM students WHERE id = $1 AND batch_id = $2',
+                'SELECT id FROM student_batches WHERE student_id = $1 AND batch_id = $2',
                 [studentId, id]
             );
             
@@ -540,8 +617,8 @@ class BatchController {
                 });
             }
             
-            // Delete student
-            await pool.query('DELETE FROM students WHERE id = $1 AND batch_id = $2', [studentId, id]);
+            // Remove student from batch (not deleting the student, just the enrollment)
+            await pool.query('DELETE FROM student_batches WHERE student_id = $1 AND batch_id = $2', [studentId, id]);
             
             res.json({
                 success: true,
@@ -624,11 +701,31 @@ class BatchController {
                     }
                     
                     try {
-                        // Insert student
+                        // Check if student already exists
+                        const existingStudent = await client.query(
+                            'SELECT id FROM students WHERE email = $1 OR roll_number = $2',
+                            [student.email, student.rollNumber]
+                        );
+
+                        let studentId;
+                        if (existingStudent.rows.length > 0) {
+                            // Student exists, use their ID
+                            studentId = existingStudent.rows[0].id;
+                        } else {
+                            // Create new student
+                            const studentResult = await client.query(
+                                `INSERT INTO students (roll_number, name, email, phone)
+                                 VALUES ($1, $2, $3, $4)
+                                 RETURNING id`,
+                                [student.rollNumber, student.name, student.email, student.phoneNumber || '']
+                            );
+                            studentId = studentResult.rows[0].id;
+                        }
+
+                        // Add student to batch via junction table
                         await client.query(
-                            `INSERT INTO students (roll_number, name, email, phone, batch_id)
-                             VALUES ($1, $2, $3, $4, $5)`,
-                            [student.rollNumber, student.name, student.email, student.phoneNumber || '', id]
+                            'INSERT INTO student_batches (student_id, batch_id) VALUES ($1, $2) ON CONFLICT (student_id, batch_id) DO NOTHING',
+                            [studentId, id]
                         );
                         results.successful++;
                     } catch (error) {
