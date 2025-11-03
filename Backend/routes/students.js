@@ -121,29 +121,29 @@ const studentAuthMiddleware = async (req, res, next) => {
   }
 };
 
-// Get tests available for the student (based on their batch)
+// Get tests available for the student (based on their batches)
 router.get('/tests', studentAuthMiddleware, async (req, res) => {
   try {
     const studentId = req.student.id;
 
-    // Get student's batch
-    const studentBatchResult = await pool.query(
-      'SELECT batch_id FROM students WHERE id = $1',
+    // Get student's batches
+    const studentBatchesResult = await pool.query(
+      'SELECT batch_id FROM student_batches WHERE student_id = $1',
       [studentId]
     );
 
-    if (studentBatchResult.rows.length === 0) {
+    if (studentBatchesResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        message: 'Student not found'
+        message: 'Student not enrolled in any batch'
       });
     }
 
-    const batchId = studentBatchResult.rows[0].batch_id;
+    const batchIds = studentBatchesResult.rows.map(row => row.batch_id);
 
-    // Get tests assigned to this batch (either directly or via assignments)
+    // Get tests assigned to any of the student's batches (either directly or via assignments)
     const testsResult = await pool.query(
-      `SELECT
+      `SELECT DISTINCT
         t.id,
         t.title,
         t.course_id as course,
@@ -161,9 +161,9 @@ router.get('/tests', studentAuthMiddleware, async (req, res) => {
         f.name as faculty_name
       FROM tests t
       JOIN faculties f ON t.faculty_id = f.id
-      WHERE t.batch_id = $1
+      WHERE t.batch_id = ANY($1::int[])
       UNION
-      SELECT
+      SELECT DISTINCT
         t.id,
         t.title,
         t.course_id as course,
@@ -182,9 +182,9 @@ router.get('/tests', studentAuthMiddleware, async (req, res) => {
       FROM tests t
       JOIN test_assignments ta ON t.id = ta.test_id
       JOIN faculties f ON t.faculty_id = f.id
-      WHERE ta.batch_id = $1
+      WHERE ta.batch_id = ANY($1::int[])
       ORDER BY start_time DESC`,
-      [batchId]
+      [batchIds]
     );
 
     res.json({
@@ -209,8 +209,14 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
     // Verify student has access to this test
     const accessCheck = await pool.query(
       `SELECT t.id FROM tests t
-       WHERE t.id = $1 AND (t.batch_id = (SELECT batch_id FROM students WHERE id = $2)
-                           OR EXISTS (SELECT 1 FROM test_assignments ta WHERE ta.test_id = t.id AND ta.batch_id = (SELECT batch_id FROM students WHERE id = $2)))`,
+       WHERE t.id = $1 AND (
+         t.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         OR EXISTS (
+           SELECT 1 FROM test_assignments ta 
+           WHERE ta.test_id = t.id 
+           AND ta.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         )
+       )`,
       [testId, studentId]
     );
 
@@ -312,8 +318,14 @@ router.post('/submissions', studentAuthMiddleware, async (req, res) => {
     // Verify student has access to this test
     const accessCheck = await pool.query(
       `SELECT t.id FROM tests t
-       WHERE t.id = $1 AND (t.batch_id = (SELECT batch_id FROM students WHERE id = $2)
-                           OR EXISTS (SELECT 1 FROM test_assignments ta WHERE ta.test_id = t.id AND ta.batch_id = (SELECT batch_id FROM students WHERE id = $2)))`,
+       WHERE t.id = $1 AND (
+         t.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         OR EXISTS (
+           SELECT 1 FROM test_assignments ta 
+           WHERE ta.test_id = t.id 
+           AND ta.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         )
+       )`,
       [testId, studentId]
     );
 
@@ -374,8 +386,14 @@ router.post('/tests/:testId/verify-password', studentAuthMiddleware, async (req,
 
     const testResult = await pool.query(
       `SELECT t.id, t.password FROM tests t
-       WHERE t.id = $1 AND (t.batch_id = (SELECT batch_id FROM students WHERE id = $2)
-                           OR EXISTS (SELECT 1 FROM test_assignments ta WHERE ta.test_id = t.id AND ta.batch_id = (SELECT batch_id FROM students WHERE id = $2)))`,
+       WHERE t.id = $1 AND (
+         t.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         OR EXISTS (
+           SELECT 1 FROM test_assignments ta 
+           WHERE ta.test_id = t.id 
+           AND ta.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
+         )
+       )`,
       [testId, studentId]
     );
 
