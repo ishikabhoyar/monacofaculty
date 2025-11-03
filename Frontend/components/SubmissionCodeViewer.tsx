@@ -38,7 +38,10 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
   const [activeSocket, setActiveSocket] = useState<WebSocket | null>(null);
   const [marks, setMarks] = useState<string>(submission.marks_obtained?.toString() || '');
   const [isSaving, setIsSaving] = useState(false);
+  const [terminalInput, setTerminalInput] = useState<string>('');
+  const [waitingForInput, setWaitingForInput] = useState<boolean>(false);
   const socketRef = useRef<WebSocket | null>(null);
+  const terminalInputRef = useRef<HTMLInputElement | null>(null);
 
   // Update code if submission changes
   useEffect(() => {
@@ -72,6 +75,8 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
   // Reset execution state
   const resetExecutionState = () => {
     setIsRunning(false);
+    setWaitingForInput(false);
+    setTerminalInput('');
     
     if (socketRef.current) {
       if (socketRef.current.readyState === WebSocket.OPEN) {
@@ -109,6 +114,13 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
     socket.onopen = () => {
       console.log('WebSocket connection established');
       setActiveSocket(socket);
+      setWaitingForInput(true);
+      // Focus the input field when connection is ready
+      setTimeout(() => {
+        if (terminalInputRef.current) {
+          terminalInputRef.current.focus();
+        }
+      }, 100);
     };
     
     socket.onmessage = (event) => {
@@ -128,10 +140,18 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
             break;
             
           case 'input_prompt':
+            console.log('Input prompt received');
             setTerminalOutput(prev => [
               ...prev,
               { type: 'output', content: message.content }
             ]);
+            // Enable input and focus
+            setWaitingForInput(true);
+            setTimeout(() => {
+              if (terminalInputRef.current) {
+                terminalInputRef.current.focus();
+              }
+            }, 50);
             break;
           
           case 'status':
@@ -223,6 +243,29 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
     
     socketRef.current = socket;
     return socket;
+  };
+
+  // Handle terminal input submission
+  const handleInputSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!terminalInput.trim()) return;
+
+    // Display the input in terminal
+    setTerminalOutput(prev => [
+      ...prev,
+      { type: 'output', content: `> ${terminalInput}` }
+    ]);
+
+    // If socket is available, send input to backend
+    if (activeSocket && activeSocket.readyState === WebSocket.OPEN) {
+      activeSocket.send(JSON.stringify({
+        type: 'input',
+        content: terminalInput + '\n'
+      }));
+    }
+
+    // Clear input
+    setTerminalInput('');
   };
 
   // Handle code execution
@@ -637,23 +680,50 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
         <div className="flex-none border-t bg-background dark:bg-gray-900/50" style={{ height: '180px' }}>
           <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted dark:bg-gray-800/50">
             <span className="text-xs font-medium">Output</span>
+            {waitingForInput && (
+              <span className="text-xs text-green-500 animate-pulse">● Waiting for input...</span>
+            )}
           </div>
-          <div className="p-2 h-full overflow-auto font-mono text-xs bg-black text-white" style={{ height: 'calc(100% - 33px)' }}>
+          <div 
+            className="p-2 overflow-auto font-mono text-xs bg-black text-white" 
+            style={{ height: 'calc(100% - 33px)' }}
+            onClick={() => terminalInputRef.current?.focus()}
+          >
             {terminalOutput.length === 0 ? (
               <div className="text-gray-500">Run the code to see output...</div>
             ) : (
-              terminalOutput.map((line, index) => (
-                <div 
-                  key={index} 
-                  className={`${
-                    line.type === 'error' ? 'text-red-400' : 
-                    line.type === 'system' ? 'text-blue-400' : 
-                    'text-white'
-                  }`}
-                >
-                  {line.content}
-                </div>
-              ))
+              <>
+                {terminalOutput.map((line, index) => (
+                  <div 
+                    key={index} 
+                    className={`${
+                      line.type === 'error' ? 'text-red-400' : 
+                      line.type === 'system' ? 'text-blue-400' : 
+                      'text-white'
+                    }`}
+                  >
+                    {line.content}
+                  </div>
+                ))}
+                {/* Input field inline with output */}
+                {waitingForInput && activeSocket && (
+                  <form onSubmit={handleInputSubmit} className="inline-block w-full">
+                    <div className="flex items-start">
+                      <span className="text-green-400 mr-1">{'>'}</span>
+                      <input
+                        ref={terminalInputRef}
+                        type="text"
+                        value={terminalInput}
+                        onChange={(e) => setTerminalInput(e.target.value)}
+                        className="flex-1 bg-transparent text-white outline-none border-none"
+                        placeholder="Type input and press Enter..."
+                        disabled={!activeSocket || activeSocket.readyState !== WebSocket.OPEN}
+                        autoFocus
+                      />
+                    </div>
+                  </form>
+                )}
+              </>
             )}
           </div>
         </div>
