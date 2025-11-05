@@ -48,7 +48,7 @@ import {
   Phone
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { getApiUrl } from "@/lib/utils";
+import { getApiUrl, handleAuthError } from "@/lib/utils";
 
 interface Student {
   id: string;
@@ -105,6 +105,9 @@ export default function BatchDetailsPage() {
         },
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -148,6 +151,9 @@ export default function BatchDetailsPage() {
         }),
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -188,6 +194,9 @@ export default function BatchDetailsPage() {
         }),
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -221,6 +230,9 @@ export default function BatchDetailsPage() {
           'Authorization': `Bearer ${token}`,
         },
       });
+
+      // Handle auth errors
+      handleAuthError(response);
 
       const data = await response.json();
 

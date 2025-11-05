@@ -52,7 +52,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import BatchesTab from "@/components/BatchesTab";
 import TestsTab from "@/components/TestsTab";
 import SubmissionCodeViewer from "@/components/SubmissionCodeViewer";
-import { getApiUrl } from "@/lib/utils";
+import { getApiUrl, handleAuthError } from "@/lib/utils";
 import { getSubmissions } from "@/lib/facultyApi";
 
 // Academic data structure
@@ -153,6 +153,9 @@ export default function FacultyDashboard() {
         },
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -185,6 +188,9 @@ export default function FacultyDashboard() {
           'Authorization': `Bearer ${token}`,
         },
       });
+
+      // Handle auth errors
+      handleAuthError(response);
 
       const data = await response.json();
 

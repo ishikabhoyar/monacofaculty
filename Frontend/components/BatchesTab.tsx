@@ -46,7 +46,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Upload as UploadIcon, FileText, CheckCircle as CheckCircleIcon, XCircle, AlertTriangle } from "lucide-react";
-import { getApiUrl } from "@/lib/utils";
+import { getApiUrl, handleAuthError } from "@/lib/utils";
 
 interface Batch {
   id: string;
@@ -101,6 +101,9 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         },
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -150,6 +153,9 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         },
       });
 
+      // Handle auth errors
+      handleAuthError(response);
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -191,6 +197,9 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           'Authorization': `Bearer ${token}`,
         },
       });
+
+      // Handle auth errors
+      handleAuthError(response);
 
       const data = await response.json();
 
@@ -249,6 +258,9 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         },
         body: formData,
       });
+
+      // Handle auth errors
+      handleAuthError(response);
 
       const data = await response.json();
 

@@ -7,6 +7,29 @@ const TESTS_URL = `${BASE_URL}/api/tests`;
 const QUESTIONS_URL = `${BASE_URL}/api/questions`;
 const BATCHES_URL = `${BASE_URL}/api/batches`;
 
+// Add axios interceptor to handle token expiration globally
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Check if error is 401 (Unauthorized) or 403 (Forbidden) with token expired message
+    if (error.response && (error.response.status === 401 || 
+        (error.response.status === 403 && error.response.data?.message?.includes('token')))) {
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('facultyData');
+      
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const getFacultyData = async (id: string, token: string) => {
   const response = await axios.get(`${API_URL}/${id}`, {
     headers: {

@@ -40,9 +40,18 @@ export default function QuestionsPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     question_text: '',
+    question_type: 'multiple_choice',
     options: ['', '', '', ''],
     correct_answer: '',
-    marks: 1
+    marks: 1,
+    difficulty: 'medium',
+    programming_language: 'python',
+    code_template: '',
+    time_limit_seconds: 5,
+    memory_limit_mb: 256,
+    hints: [] as string[],
+    explanation: '',
+    tags: [] as Array<{ id: string; name: string; color: string; }>
   });
 
   useEffect(() => {
@@ -71,9 +80,18 @@ export default function QuestionsPage() {
   const resetForm = () => {
     setFormData({
       question_text: '',
+      question_type: 'multiple_choice',
       options: ['', '', '', ''],
       correct_answer: '',
-      marks: 1
+      marks: 1,
+      difficulty: 'medium',
+      programming_language: 'python',
+      code_template: '',
+      time_limit_seconds: 5,
+      memory_limit_mb: 256,
+      hints: [],
+      explanation: '',
+      tags: []
     });
   };
 
@@ -108,9 +126,18 @@ export default function QuestionsPage() {
     setEditingQuestion(question.id);
     setFormData({
       question_text: question.question_text,
-      options: [...question.options, '', '', '', ''].slice(0, 4),
-      correct_answer: question.correct_answer,
-      marks: question.marks
+      question_type: question.question_type || 'multiple_choice',
+      options: question.options ? [...question.options, '', '', '', ''].slice(0, 4) : ['', '', '', ''],
+      correct_answer: question.correct_answer || '',
+      marks: question.marks,
+      difficulty: question.difficulty || 'medium',
+      programming_language: question.programming_language || 'python',
+      code_template: question.code_template || '',
+      time_limit_seconds: question.time_limit_seconds || 5,
+      memory_limit_mb: question.memory_limit_mb || 256,
+      hints: question.hints || [],
+      explanation: question.explanation || '',
+      tags: question.tags || []
     });
   };
 
@@ -204,56 +231,156 @@ export default function QuestionsPage() {
           </h2>
 
           <div className="space-y-4">
+            {/* Question Type */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Question Type</label>
+              <select
+                value={formData.question_type}
+                onChange={(e) => setFormData({...formData, question_type: e.target.value})}
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="multiple_choice">Multiple Choice</option>
+                <option value="coding">Coding Question</option>
+                <option value="short_answer">Short Answer</option>
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-1">Question Text</label>
               <textarea
                 value={formData.question_text}
                 onChange={(e) => setFormData({...formData, question_text: e.target.value})}
                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={3}
-                placeholder="Enter your question here..."
+                rows={5}
+                placeholder="Enter your question here... (Markdown supported)"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Options</label>
-              {formData.options.map((option, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <span className="w-8 text-sm text-gray-500">{String.fromCharCode(65 + index)}.</span>
-                  <input
-                    type="text"
-                    value={option}
-                    onChange={(e) => {
-                      const newOptions = [...formData.options];
-                      newOptions[index] = e.target.value;
-                      setFormData({...formData, options: newOptions});
-                    }}
-                    className="flex-1 border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={`Option ${String.fromCharCode(65 + index)}`}
+            {/* MCQ Options - Only show for multiple_choice */}
+            {formData.question_type === 'multiple_choice' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Options</label>
+                  {formData.options.map((option, index) => (
+                    <div key={index} className="flex items-center mb-2">
+                      <span className="w-8 text-sm text-gray-500">{String.fromCharCode(65 + index)}.</span>
+                      <input
+                        type="text"
+                        value={option}
+                        onChange={(e) => {
+                          const newOptions = [...formData.options];
+                          newOptions[index] = e.target.value;
+                          setFormData({...formData, options: newOptions});
+                        }}
+                        className="flex-1 border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder={`Option ${String.fromCharCode(65 + index)}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Correct Answer</label>
+                  <select
+                    value={formData.correct_answer}
+                    onChange={(e) => setFormData({...formData, correct_answer: e.target.value})}
+                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select correct answer</option>
+                    {formData.options.map((option, index) => (
+                      option.trim() && (
+                        <option key={index} value={option}>
+                          {String.fromCharCode(65 + index)}. {option}
+                        </option>
+                      )
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            {/* Coding Question Fields */}
+            {formData.question_type === 'coding' && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Programming Language</label>
+                    <select
+                      value={formData.programming_language}
+                      onChange={(e) => setFormData({...formData, programming_language: e.target.value})}
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="python">Python</option>
+                      <option value="javascript">JavaScript</option>
+                      <option value="java">Java</option>
+                      <option value="cpp">C++</option>
+                      <option value="c">C</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Difficulty</label>
+                    <select
+                      value={formData.difficulty}
+                      onChange={(e) => setFormData({...formData, difficulty: e.target.value})}
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="easy">Easy</option>
+                      <option value="medium">Medium</option>
+                      <option value="hard">Hard</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Code Template (Starter Code)</label>
+                  <textarea
+                    value={formData.code_template}
+                    onChange={(e) => setFormData({...formData, code_template: e.target.value})}
+                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                    rows={6}
+                    placeholder="def solution():\n    # Your code here\n    pass"
                   />
                 </div>
-              ))}
-            </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Time Limit (seconds)</label>
+                    <input
+                      type="number"
+                      value={formData.time_limit_seconds}
+                      onChange={(e) => setFormData({...formData, time_limit_seconds: parseInt(e.target.value) || 5})}
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      min="1"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Memory Limit (MB)</label>
+                    <input
+                      type="number"
+                      value={formData.memory_limit_mb}
+                      onChange={(e) => setFormData({...formData, memory_limit_mb: parseInt(e.target.value) || 256})}
+                      className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      min="128"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Explanation (Optional)</label>
+                  <textarea
+                    value={formData.explanation}
+                    onChange={(e) => setFormData({...formData, explanation: e.target.value})}
+                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    placeholder="Explain the solution approach... (Markdown supported)"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Correct Answer</label>
-                <select
-                  value={formData.correct_answer}
-                  onChange={(e) => setFormData({...formData, correct_answer: e.target.value})}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select correct answer</option>
-                  {formData.options.map((option, index) => (
-                    option.trim() && (
-                      <option key={index} value={option}>
-                        {String.fromCharCode(65 + index)}. {option}
-                      </option>
-                    )
-                  ))}
-                </select>
-              </div>
-
               <div>
                 <label className="block text-sm font-medium mb-1">Marks</label>
                 <input
@@ -264,6 +391,21 @@ export default function QuestionsPage() {
                   min="1"
                 />
               </div>
+
+              {formData.question_type === 'multiple_choice' && (
+                <div>
+                  <label className="block text-sm font-medium mb-1">Difficulty</label>
+                  <select
+                    value={formData.difficulty}
+                    onChange={(e) => setFormData({...formData, difficulty: e.target.value})}
+                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">
