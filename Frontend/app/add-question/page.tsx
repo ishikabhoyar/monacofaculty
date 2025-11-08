@@ -263,7 +263,12 @@ export default function AddQuestionPage() {
                   required
                 >
                   <SelectTrigger id="testId" className="dark:bg-gray-800 dark:border-gray-700">
-                    <SelectValue placeholder="Choose a test to add the question to" />
+                    <SelectValue placeholder="Choose a test to add the question to">
+                      {questionData.testId && tests.find(t => t.id === questionData.testId) ? 
+                        `${tests.find(t => t.id === questionData.testId)?.title} - ${tests.find(t => t.id === questionData.testId)?.batch_name}` : 
+                        "Choose a test to add the question to"
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {tests.map((test) => (
