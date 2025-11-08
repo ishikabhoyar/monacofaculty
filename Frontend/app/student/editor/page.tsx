@@ -78,6 +78,7 @@ const TestEditor = () => {
           initialCode={currentQuestion.code_template || ''}
           onSubmit={handleSubmitCode}
           language={currentQuestion.programming_language}
+          testCases={currentQuestion.test_cases || []}
         />
       </div>
     </div>

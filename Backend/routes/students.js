@@ -246,11 +246,35 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
       [testId]
     );
 
-    // Parse JSON fields and remove sensitive data
-    const questions = questionsResult.rows.map(question => ({
-      ...question,
-      options: question.options ? (typeof question.options === 'string' ? JSON.parse(question.options) : question.options) : [],
-      // Remove hints and explanation for students
+    // Get test cases for each question
+    const questions = await Promise.all(questionsResult.rows.map(async (question) => {
+      let testCases = [];
+      
+      // Only fetch test cases for coding questions
+      if (question.question_type === 'coding') {
+        const testCasesResult = await pool.query(
+          `SELECT
+            id,
+            input,
+            expected_output,
+            is_sample,
+            is_hidden
+          FROM test_cases
+          WHERE question_id = $1
+          ORDER BY is_sample DESC, id`,
+          [question.id]
+        );
+        
+        // Only include sample test cases (not hidden ones)
+        testCases = testCasesResult.rows.filter(tc => tc.is_sample && !tc.is_hidden);
+      }
+      
+      return {
+        ...question,
+        options: question.options ? (typeof question.options === 'string' ? JSON.parse(question.options) : question.options) : [],
+        test_cases: testCases
+        // Remove hints and explanation for students
+      };
     }));
 
     res.json({

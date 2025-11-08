@@ -5,10 +5,19 @@ import Editor from "@monaco-editor/react";
 import { Play, Send } from 'lucide-react';
 import { getExecutorApiUrl, getExecutorWsUrl } from '@/lib/utils';
 
+interface TestCase {
+  id: number;
+  input: string;
+  expected_output: string;
+  is_sample: boolean;
+  is_hidden: boolean;
+}
+
 interface CodeChallengeProps {
   initialCode?: string;
   onSubmit?: (code: string, language: string) => Promise<void>;
   language?: string;
+  testCases?: TestCase[];
 }
 
 interface TerminalLine {
@@ -19,7 +28,8 @@ interface TerminalLine {
 export const CodeChallenge: React.FC<CodeChallengeProps> = ({ 
   initialCode = '', 
   onSubmit,
-  language: initialLanguage = 'javascript'
+  language: initialLanguage = 'javascript',
+  testCases = []
 }) => {
   const [language, setLanguage] = useState(initialLanguage);
   const [code, setCode] = useState(initialCode);
@@ -383,6 +393,32 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
           }}
         />
       </div>
+      
+      {/* Test Cases Section */}
+      {testCases && testCases.length > 0 && (
+        <div className="flex-none border-t bg-background" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted">
+            <span className="text-sm font-medium">Sample Test Cases</span>
+          </div>
+          <div className="p-3 space-y-3">
+            {testCases.map((testCase, index) => (
+              <div key={testCase.id} className="border rounded-md p-2 bg-card">
+                <div className="text-sm font-medium mb-1">Test Case {index + 1}</div>
+                <div className="space-y-1 text-sm">
+                  <div>
+                    <span className="font-medium text-muted-foreground">Input:</span>
+                    <pre className="mt-1 p-2 bg-muted rounded text-xs font-mono">{testCase.input}</pre>
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">Expected Output:</span>
+                    <pre className="mt-1 p-2 bg-muted rounded text-xs font-mono">{testCase.expected_output}</pre>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       
       <div className="flex-none border-t bg-background" style={{ height: '200px' }}>
         <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted">
