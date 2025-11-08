@@ -25,6 +25,7 @@ interface Batch {
   batch_name: string;
   academic_year: string;
   semester: string;
+  course?: string;
   description?: string;
   created_at: string;
   students?: any[];
@@ -43,6 +44,7 @@ export default function EditBatchPage() {
     batch_name: '',
     academic_year: '',
     semester: '',
+    course: '',
     description: ''
   });
 
@@ -72,6 +74,7 @@ export default function EditBatchPage() {
           batch_name: data.batch.batch_name,
           academic_year: data.batch.academic_year,
           semester: data.batch.semester,
+          course: data.batch.course || '',
           description: data.batch.description || ''
         });
       } else {
@@ -87,7 +90,7 @@ export default function EditBatchPage() {
 
   // Update batch
   const handleUpdateBatch = async () => {
-    if (!formData.batch_name || !formData.academic_year || !formData.semester) {
+    if (!formData.batch_name || !formData.academic_year || !formData.semester || !formData.course) {
       alert('Please fill in all required fields');
       return;
     }
@@ -196,13 +199,13 @@ export default function EditBatchPage() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="academic_year">Academic Year *</Label>
+                <Label htmlFor="academic_year">Year *</Label>
                 <Select
                   value={formData.academic_year}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, academic_year: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select academic year" />
+                    <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="first">First Year</SelectItem>
@@ -231,6 +234,28 @@ export default function EditBatchPage() {
                     <SelectItem value="sem6">Semester VI</SelectItem>
                     <SelectItem value="sem7">Semester VII</SelectItem>
                     <SelectItem value="sem8">Semester VIII</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="course">Course *</Label>
+                <Select
+                  value={formData.course}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, course: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select course" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="spm">Structure Programming Methodology</SelectItem>
+                    <SelectItem value="ds">Data Structures</SelectItem>
+                    <SelectItem value="algo">Algorithms</SelectItem>
+                    <SelectItem value="dbms">Database Management Systems</SelectItem>
+                    <SelectItem value="os">Operating Systems</SelectItem>
+                    <SelectItem value="cn">Computer Networks</SelectItem>
+                    <SelectItem value="se">Software Engineering</SelectItem>
+                    <SelectItem value="oop">Object Oriented Programming</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

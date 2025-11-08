@@ -33,8 +33,8 @@ import { getApiUrl } from "@/lib/utils";
 import { ArrowLeft, Upload, FileSpreadsheet, Download, Users, AlertCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-// Sample academic years and semesters data
-const academicYears = [
+// Sample years, semesters, and courses data
+const years = [
   { id: "first", name: "First Year" },
   { id: "second", name: "Second Year" },
   { id: "third", name: "Third Year" },
@@ -52,6 +52,17 @@ const semesters = [
   { id: "sem8", name: "Semester VIII" },
 ];
 
+const courses = [
+  { id: "spm", name: "Structure Programming Methodology" },
+  { id: "ds", name: "Data Structures" },
+  { id: "algo", name: "Algorithms" },
+  { id: "dbms", name: "Database Management Systems" },
+  { id: "os", name: "Operating Systems" },
+  { id: "cn", name: "Computer Networks" },
+  { id: "se", name: "Software Engineering" },
+  { id: "oop", name: "Object Oriented Programming" },
+];
+
 interface Student {
   id: string;
   name: string;
@@ -65,8 +76,9 @@ export default function CreateBatchPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [batchData, setBatchData] = useState({
     batchName: "",
-    academicYear: "",
+    year: "",
     semester: "",
+    course: "",
     description: "",
   });
   const [students, setStudents] = useState<Student[]>([]);
@@ -200,7 +212,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
     e.preventDefault();
 
     // Form validation
-    if (!batchData.batchName || !batchData.academicYear || !batchData.semester) {
+    if (!batchData.batchName || !batchData.year || !batchData.semester || !batchData.course) {
       setErrors(["Please fill in all required fields"]);
       return;
     }
@@ -314,20 +326,20 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                 </div>
 
                 <div className="grid gap-3">
-                  <Label htmlFor="academicYear">
-                    Academic Year <span className="text-red-500">*</span>
+                  <Label htmlFor="year">
+                    Year <span className="text-red-500">*</span>
                   </Label>
                   <Select
-                    name="academicYear"
-                    value={batchData.academicYear}
-                    onValueChange={(value) => handleSelectChange("academicYear", value)}
+                    name="year"
+                    value={batchData.year}
+                    onValueChange={(value) => handleSelectChange("year", value)}
                     required
                   >
-                    <SelectTrigger id="academicYear">
-                      <SelectValue placeholder="Select academic year" />
+                    <SelectTrigger id="year">
+                      <SelectValue placeholder="Select year" />
                     </SelectTrigger>
                     <SelectContent>
-                      {academicYears.map((year) => (
+                      {years.map((year) => (
                         <SelectItem key={year.id} value={year.id}>
                           {year.name}
                         </SelectItem>
@@ -353,6 +365,29 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                       {semesters.map((semester) => (
                         <SelectItem key={semester.id} value={semester.id}>
                           {semester.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-3">
+                  <Label htmlFor="course">
+                    Course <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    name="course"
+                    value={batchData.course}
+                    onValueChange={(value) => handleSelectChange("course", value)}
+                    required
+                  >
+                    <SelectTrigger id="course">
+                      <SelectValue placeholder="Select course" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courses.map((course) => (
+                        <SelectItem key={course.id} value={course.id}>
+                          {course.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -518,7 +553,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
             <Button 
               onClick={handleSubmit} 
               type="submit"
-              disabled={!batchData.batchName || !batchData.academicYear || !batchData.semester || students.length === 0}
+              disabled={!batchData.batchName || !batchData.year || !batchData.semester || !batchData.course || students.length === 0}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
             >
               Create Batch ({students.length} students)
