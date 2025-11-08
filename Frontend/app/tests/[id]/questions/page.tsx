@@ -105,10 +105,22 @@ export default function QuestionsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
+      // Transform field names from snake_case to camelCase for backend
       const response = await createQuestion({
         testId,
-        ...formData,
-        options: formData.options.filter(opt => opt.trim() !== '')
+        questionText: formData.question_text,
+        questionType: formData.question_type,
+        options: formData.options.filter(opt => opt.trim() !== ''),
+        correctAnswer: formData.correct_answer,
+        marks: formData.marks,
+        difficulty: formData.difficulty,
+        programmingLanguage: formData.programming_language,
+        codeTemplate: formData.code_template,
+        timeLimitSeconds: formData.time_limit_seconds,
+        memoryLimitMb: formData.memory_limit_mb,
+        hints: formData.hints,
+        explanation: formData.explanation,
+        tags: formData.tags.map(tag => tag.id)
       }, token);
 
       if (response.success) {
@@ -148,9 +160,21 @@ export default function QuestionsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
+      // Transform field names from snake_case to camelCase for backend
       const response = await updateQuestion(editingQuestion, {
-        ...formData,
-        options: formData.options.filter(opt => opt.trim() !== '')
+        questionText: formData.question_text,
+        questionType: formData.question_type,
+        options: formData.options.filter(opt => opt.trim() !== ''),
+        correctAnswer: formData.correct_answer,
+        marks: formData.marks,
+        difficulty: formData.difficulty,
+        programmingLanguage: formData.programming_language,
+        codeTemplate: formData.code_template,
+        timeLimitSeconds: formData.time_limit_seconds,
+        memoryLimitMb: formData.memory_limit_mb,
+        hints: formData.hints,
+        explanation: formData.explanation,
+        tags: formData.tags.map(tag => tag.id)
       }, token);
 
       if (response.success) {
