@@ -249,7 +249,7 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
     // Parse JSON fields and remove sensitive data
     const questions = questionsResult.rows.map(question => ({
       ...question,
-      options: question.options && question.options.trim() ? JSON.parse(question.options) : [],
+      options: question.options ? (typeof question.options === 'string' ? JSON.parse(question.options) : question.options) : [],
       // Remove hints and explanation for students
     }));
 
