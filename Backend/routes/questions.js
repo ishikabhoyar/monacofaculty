@@ -27,11 +27,45 @@ router.get('/test/:testId', authMiddleware, async (req, res) => {
       [testId]
     );
     
-    // Parse JSON fields
-    const questions = questionsResult.rows.map(question => ({
-      ...question,
-      options: question.options ? JSON.parse(question.options) : [],
-      hints: question.hints ? JSON.parse(question.hints) : []
+    // Parse JSON fields and fetch tags for each question
+    const questions = await Promise.all(questionsResult.rows.map(async (question) => {
+      // Fetch tags for this question
+      const tagsResult = await pool.query(
+        `SELECT t.id, t.name, t.color 
+         FROM tags t
+         JOIN question_tags qt ON t.id = qt.tag_id
+         WHERE qt.question_id = $1`,
+        [question.id]
+      );
+      
+      // Safely parse options
+      let options = [];
+      if (question.options) {
+        try {
+          options = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+        } catch (e) {
+          console.error(`Error parsing options for question ${question.id}:`, e);
+          options = [];
+        }
+      }
+      
+      // Safely parse hints
+      let hints = [];
+      if (question.hints) {
+        try {
+          hints = typeof question.hints === 'string' ? JSON.parse(question.hints) : question.hints;
+        } catch (e) {
+          console.error(`Error parsing hints for question ${question.id}:`, e);
+          hints = [];
+        }
+      }
+      
+      return {
+        ...question,
+        options,
+        hints,
+        tags: tagsResult.rows
+      };
     }));
     
     res.json({
@@ -40,9 +74,12 @@ router.get('/test/:testId', authMiddleware, async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching questions:', error);
+    console.error('Error details:', error.message);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({
       success: false,
-      message: 'Error fetching questions'
+      message: 'Error fetching questions',
+      error: error.message
     });
   }
 });
@@ -136,15 +173,50 @@ router.post('/', authMiddleware, async (req, res) => {
     const question = result.rows[0];
     
     // Handle tags if provided
+    let questionTags = [];
     if (tags && tags.length > 0) {
       const tagValues = tags.map(tagId => `(${question.id}, ${tagId})`).join(', ');
       await pool.query(`INSERT INTO question_tags (question_id, tag_id) VALUES ${tagValues}`);
+      
+      // Fetch the tags for the response
+      const tagsResult = await pool.query(
+        `SELECT t.id, t.name, t.color 
+         FROM tags t
+         JOIN question_tags qt ON t.id = qt.tag_id
+         WHERE qt.question_id = $1`,
+        [question.id]
+      );
+      questionTags = tagsResult.rows;
+    }
+    
+    // Safely parse options and hints for response
+    let parsedOptions = [];
+    if (question.options) {
+      try {
+        parsedOptions = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+      } catch (e) {
+        console.error(`Error parsing options for question ${question.id}:`, e);
+      }
+    }
+    
+    let parsedHints = [];
+    if (question.hints) {
+      try {
+        parsedHints = typeof question.hints === 'string' ? JSON.parse(question.hints) : question.hints;
+      } catch (e) {
+        console.error(`Error parsing hints for question ${question.id}:`, e);
+      }
     }
     
     res.status(201).json({
       success: true,
       message: 'Question created successfully',
-      question: result.rows[0]
+      question: {
+        ...question,
+        options: parsedOptions,
+        hints: parsedHints,
+        tags: questionTags
+      }
     });
   } catch (error) {
     console.error('Error creating question:', error);
@@ -207,6 +279,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     const question = result.rows[0];
     
     // Update tags if provided
+    let questionTags = [];
     if (tags !== undefined) {
       // Remove existing tags
       await pool.query('DELETE FROM question_tags WHERE question_id = $1', [id]);
@@ -218,10 +291,44 @@ router.put('/:id', authMiddleware, async (req, res) => {
       }
     }
     
+    // Fetch tags for response
+    const tagsResult = await pool.query(
+      `SELECT t.id, t.name, t.color 
+       FROM tags t
+       JOIN question_tags qt ON t.id = qt.tag_id
+       WHERE qt.question_id = $1`,
+      [id]
+    );
+    questionTags = tagsResult.rows;
+    
+    // Safely parse options and hints for response
+    let parsedOptions = [];
+    if (question.options) {
+      try {
+        parsedOptions = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+      } catch (e) {
+        console.error(`Error parsing options for question ${question.id}:`, e);
+      }
+    }
+    
+    let parsedHints = [];
+    if (question.hints) {
+      try {
+        parsedHints = typeof question.hints === 'string' ? JSON.parse(question.hints) : question.hints;
+      } catch (e) {
+        console.error(`Error parsing hints for question ${question.id}:`, e);
+      }
+    }
+    
     res.json({
       success: true,
       message: 'Question updated successfully',
-      question: result.rows[0]
+      question: {
+        ...question,
+        options: parsedOptions,
+        hints: parsedHints,
+        tags: questionTags
+      }
     });
   } catch (error) {
     console.error('Error updating question:', error);
