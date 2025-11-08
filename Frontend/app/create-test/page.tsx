@@ -28,11 +28,16 @@ import { getApiUrl } from "@/lib/utils";
 
 // Sample course data - in a real app, this would come from your API
 const courses = [
-  { id: "MATH101", name: "Calculus I" },
-  { id: "PHYS202", name: "Physics II" },
-  { id: "CHEM110", name: "Chemistry Lab" },
-  { id: "MATH099", name: "Algebra Basics" },
-  { id: "CS201", name: "Data Structures" },
+  { id: "spm", name: "Structure Programming Methodology" },
+  { id: "ds", name: "Data Structures" },
+  { id: "algo", name: "Algorithms" },
+  { id: "dbms", name: "Database Management Systems" },
+  { id: "os", name: "Operating Systems" },
+  { id: "cn", name: "Computer Networks" },
+  { id: "se", name: "Software Engineering" },
+  { id: "oop", name: "Object Oriented Programming" },
+  { id: "math101", name: "Calculus I" },
+  { id: "phys202", name: "Physics II" },
 ];
 
 interface Batch {
@@ -43,6 +48,17 @@ interface Batch {
   semester: string;
   students?: any[];
 }
+
+// Helper function to format academic year display
+const formatYear = (academicYear: string) => {
+  const yearMap: { [key: string]: string } = {
+    'first': 'First Year',
+    'second': 'Second Year',
+    'third': 'Third Year',
+    'fourth': 'Fourth Year',
+  };
+  return yearMap[academicYear] || academicYear;
+};
 
 function CreateTestPage() {
   const router = useRouter();
@@ -247,12 +263,12 @@ function CreateTestPage() {
                             <SelectItem key={batch.id} value={batch.id.toString()}>
                               <div className="flex items-center">
                                 <Users className="h-4 w-4 mr-2 text-blue-600" />
-                                <div>
-                                  <div className="font-medium">{batch.batch_name || batch.name}</div>
-                                  <div className="text-xs text-gray-500">
-                                    {batch.academic_year} • {batch.semester} • {batch.students?.length || 0} students
-                                  </div>
+                              <div>
+                                <div className="font-medium">{batch.batch_name || batch.name}</div>
+                                <div className="text-xs text-gray-500">
+                                  {formatYear(batch.academic_year)} • {batch.semester} • {batch.students?.length || 0} students
                                 </div>
+                              </div>
                               </div>
                             </SelectItem>
                           ))}
@@ -268,7 +284,7 @@ function CreateTestPage() {
                                 {selectedBatch.batch_name || selectedBatch.name}
                               </div>
                               <div className="text-sm text-blue-700 dark:text-blue-300">
-                                {selectedBatch.academic_year} • {selectedBatch.semester} • {selectedBatch.students?.length || 0} students
+                                {formatYear(selectedBatch.academic_year)} • {selectedBatch.semester} • {selectedBatch.students?.length || 0} students
                               </div>
                             </div>
                           </div>

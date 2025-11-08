@@ -663,7 +663,7 @@ export default function FacultyDashboard() {
                           </div>
                           <div className="space-y-2">
                             <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600 dark:text-gray-400">Academic Year:</span>
+                              <span className="text-slate-600 dark:text-gray-400">Year:</span>
                               <span className="font-medium text-slate-800 dark:text-white">{batch.academic_year}</span>
                             </div>
                             <div className="flex items-center justify-between text-sm">
