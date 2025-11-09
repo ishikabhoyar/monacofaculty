@@ -390,6 +390,13 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             automaticLayout: true,
+            wordWrap: 'off',
+            wrappingIndent: 'none',
+            formatOnPaste: false,
+            formatOnType: false,
+            acceptSuggestionOnEnter: 'off',
+            quickSuggestions: false,
+            suggestOnTriggerCharacters: false,
           }}
         />
       </div>
