@@ -76,7 +76,7 @@ export default function CreateBatchPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [batchData, setBatchData] = useState({
     batchName: "",
-    year: "",
+    academic_year: "",
     semester: "",
     course: "",
     description: "",
@@ -89,10 +89,18 @@ export default function CreateBatchPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setBatchData((prev) => ({ ...prev, [name]: value }));
+    // Clear errors when user starts typing
+    if (errors.length > 0) {
+      setErrors([]);
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
     setBatchData((prev) => ({ ...prev, [name]: value }));
+    // Clear errors when user makes a selection
+    if (errors.length > 0) {
+      setErrors([]);
+    }
   };
 
   const downloadTemplate = () => {
@@ -212,7 +220,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
     e.preventDefault();
 
     // Form validation
-    if (!batchData.batchName || !batchData.year || !batchData.semester || !batchData.course) {
+    if (!batchData.batchName || !batchData.academic_year || !batchData.semester || !batchData.course) {
       setErrors(["Please fill in all required fields"]);
       return;
     }
@@ -227,7 +235,11 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
       setIsProcessing(true);
       
       const batchPayload = {
-        ...batchData,
+        batchName: batchData.batchName,
+        academicYear: batchData.academic_year,
+        semester: batchData.semester,
+        course: batchData.course,
+        description: batchData.description,
         students: students.map(student => ({
           rollNumber: student.rollNumber,
           name: student.name,
@@ -326,16 +338,16 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                 </div>
 
                 <div className="grid gap-3">
-                  <Label htmlFor="year">
+                  <Label htmlFor="academic_year">
                     Year <span className="text-red-500">*</span>
                   </Label>
                   <Select
-                    name="year"
-                    value={batchData.year}
-                    onValueChange={(value) => handleSelectChange("year", value)}
+                    name="academic_year"
+                    value={batchData.academic_year}
+                    onValueChange={(value) => handleSelectChange("academic_year", value)}
                     required
                   >
-                    <SelectTrigger id="year">
+                    <SelectTrigger id="academic_year">
                       <SelectValue placeholder="Select year" />
                     </SelectTrigger>
                     <SelectContent>
@@ -553,7 +565,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
             <Button 
               onClick={handleSubmit} 
               type="submit"
-              disabled={!batchData.batchName || !batchData.year || !batchData.semester || !batchData.course || students.length === 0}
+              disabled={!batchData.batchName || !batchData.academic_year || !batchData.semester || !batchData.course || students.length === 0}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
             >
               Create Batch ({students.length} students)
