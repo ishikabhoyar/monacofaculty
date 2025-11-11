@@ -50,7 +50,7 @@ import { getApiUrl, handleAuthError } from "@/lib/utils";
 
 interface Batch {
   id: string;
-  batch_name: string;
+  name: string;
   academic_year: string;
   semester: string;
   student_count?: number;
@@ -107,12 +107,14 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       const data = await response.json();
 
       if (response.ok && data.success) {
+        console.log('Batches data received:', data.batches);
         const batchesWithCount = data.batches.map((batch: any) => ({
           ...batch,
           student_count: batch.students?.length || 0,
           status: batch.students?.length > 0 ? 'Active' : 'Inactive'
         }));
         
+        console.log('Processed batches:', batchesWithCount);
         setLocalBatches(batchesWithCount);
         onBatchUpdate?.(batchesWithCount);
       } else {
@@ -214,7 +216,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${batch.batch_name}_students.csv`);
+        link.setAttribute("download", `${batch.name}_students.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -530,7 +532,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <TableCell className="font-mono text-sm font-medium">{batch.id}</TableCell>
-                    <TableCell className="font-medium">{batch.batch_name}</TableCell>
+                    <TableCell className="font-medium text-slate-900 dark:text-white">{batch.name}</TableCell>
                     <TableCell>
                       <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm">
                         {batch.academic_year}
@@ -648,7 +650,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                 <SelectContent>
                   {localBatches.map((batch) => (
                     <SelectItem key={batch.id} value={batch.id}>
-                      {batch.batch_name} ({batch.academic_year} - {batch.semester})
+                      {batch.name} ({batch.academic_year} - {batch.semester})
                     </SelectItem>
                   ))}
                 </SelectContent>

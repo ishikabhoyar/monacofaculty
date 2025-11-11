@@ -3,6 +3,75 @@ const router = express.Router();
 const pool = require('../db');
 const authMiddleware = require('../authMiddleware');
 
+// Get all questions for the faculty (question bank)
+router.get('/all', authMiddleware, async (req, res) => {
+  try {
+    const faculty_id = req.user.id;
+    
+    const questionsResult = await pool.query(
+      `SELECT q.*, t.title as test_title, t.course_id 
+       FROM questions q
+       JOIN tests t ON q.test_id = t.id
+       WHERE t.faculty_id = $1 
+       ORDER BY q.created_at DESC`,
+      [faculty_id]
+    );
+    
+    // Parse JSON fields and fetch tags for each question
+    const questions = await Promise.all(questionsResult.rows.map(async (question) => {
+      // Fetch tags for this question
+      const tagsResult = await pool.query(
+        `SELECT t.id, t.name, t.color 
+         FROM tags t
+         JOIN question_tags qt ON t.id = qt.tag_id
+         WHERE qt.question_id = $1`,
+        [question.id]
+      );
+      
+      // Safely parse options
+      let options = [];
+      if (question.options) {
+        try {
+          options = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+        } catch (e) {
+          console.error(`Error parsing options for question ${question.id}:`, e);
+          options = [];
+        }
+      }
+      
+      // Safely parse hints
+      let hints = [];
+      if (question.hints) {
+        try {
+          hints = typeof question.hints === 'string' ? JSON.parse(question.hints) : question.hints;
+        } catch (e) {
+          console.error(`Error parsing hints for question ${question.id}:`, e);
+          hints = [];
+        }
+      }
+      
+      return {
+        ...question,
+        options,
+        hints,
+        tags: tagsResult.rows
+      };
+    }));
+    
+    res.json({
+      success: true,
+      questions: questions
+    });
+  } catch (error) {
+    console.error('Error fetching all questions:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching questions',
+      error: error.message
+    });
+  }
+});
+
 // Get all questions for a test
 router.get('/test/:testId', authMiddleware, async (req, res) => {
   try {
@@ -411,6 +480,140 @@ router.post('/bulk', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error creating questions'
+    });
+  }
+});
+
+// Copy question to a test
+router.post('/copy/:questionId', authMiddleware, async (req, res) => {
+  try {
+    const { questionId } = req.params;
+    const { testId } = req.body;
+    const faculty_id = req.user.id;
+    
+    // Verify the target test belongs to the faculty
+    const testCheck = await pool.query(
+      'SELECT id FROM tests WHERE id = $1 AND faculty_id = $2',
+      [testId, faculty_id]
+    );
+    
+    if (testCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Target test not found or access denied'
+      });
+    }
+    
+    // Verify the source question belongs to the faculty
+    const questionCheck = await pool.query(
+      `SELECT q.* FROM questions q
+       JOIN tests t ON q.test_id = t.id
+       WHERE q.id = $1 AND t.faculty_id = $2`,
+      [questionId, faculty_id]
+    );
+    
+    if (questionCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Source question not found or access denied'
+      });
+    }
+    
+    const sourceQuestion = questionCheck.rows[0];
+    
+    // Copy the question to the new test
+    const result = await pool.query(
+      `INSERT INTO questions (test_id, question_text, options, correct_answer, marks,
+                             question_type, difficulty, programming_language, code_template,
+                             time_limit_seconds, memory_limit_mb, hints, explanation)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       RETURNING *`,
+      [testId, sourceQuestion.question_text, sourceQuestion.options, 
+       sourceQuestion.correct_answer, sourceQuestion.marks,
+       sourceQuestion.question_type, sourceQuestion.difficulty, 
+       sourceQuestion.programming_language, sourceQuestion.code_template,
+       sourceQuestion.time_limit_seconds, sourceQuestion.memory_limit_mb, 
+       sourceQuestion.hints, sourceQuestion.explanation]
+    );
+    
+    const newQuestion = result.rows[0];
+    
+    // Copy tags if any
+    const tagsResult = await pool.query(
+      `SELECT tag_id FROM question_tags WHERE question_id = $1`,
+      [questionId]
+    );
+    
+    if (tagsResult.rows.length > 0) {
+      const tagValues = tagsResult.rows.map(row => `(${newQuestion.id}, ${row.tag_id})`).join(', ');
+      await pool.query(`INSERT INTO question_tags (question_id, tag_id) VALUES ${tagValues}`);
+    }
+    
+    // Copy test cases for coding questions
+    if (sourceQuestion.question_type === 'coding') {
+      const testCasesResult = await pool.query(
+        `SELECT input, expected_output, is_sample, is_hidden, time_limit_seconds, memory_limit_mb
+         FROM test_cases WHERE question_id = $1`,
+        [questionId]
+      );
+      
+      if (testCasesResult.rows.length > 0) {
+        for (const testCase of testCasesResult.rows) {
+          await pool.query(
+            `INSERT INTO test_cases (question_id, input, expected_output, is_sample, is_hidden, time_limit_seconds, memory_limit_mb)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [newQuestion.id, testCase.input, testCase.expected_output, 
+             testCase.is_sample, testCase.is_hidden, 
+             testCase.time_limit_seconds, testCase.memory_limit_mb]
+          );
+        }
+      }
+    }
+    
+    // Fetch tags for response
+    const newTagsResult = await pool.query(
+      `SELECT t.id, t.name, t.color 
+       FROM tags t
+       JOIN question_tags qt ON t.id = qt.tag_id
+       WHERE qt.question_id = $1`,
+      [newQuestion.id]
+    );
+    
+    // Safely parse options and hints for response
+    let parsedOptions = [];
+    if (newQuestion.options) {
+      try {
+        parsedOptions = typeof newQuestion.options === 'string' ? JSON.parse(newQuestion.options) : newQuestion.options;
+      } catch (e) {
+        console.error(`Error parsing options for question ${newQuestion.id}:`, e);
+      }
+    }
+    
+    let parsedHints = [];
+    if (newQuestion.hints) {
+      try {
+        parsedHints = typeof newQuestion.hints === 'string' ? JSON.parse(newQuestion.hints) : newQuestion.hints;
+      } catch (e) {
+        console.error(`Error parsing hints for question ${newQuestion.id}:`, e);
+      }
+    }
+    
+    res.status(201).json({
+      success: true,
+      message: 'Question copied successfully',
+      question: {
+        ...newQuestion,
+        options: parsedOptions,
+        hints: parsedHints,
+        tags: newTagsResult.rows
+      }
+    });
+  } catch (error) {
+    console.error('Error copying question:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error copying question',
+      error: error.message
     });
   }
 });

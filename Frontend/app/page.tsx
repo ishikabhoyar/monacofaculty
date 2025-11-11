@@ -117,7 +117,19 @@ const recentSubmissions = [
 ];
 
 export default function FacultyDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+  // Initialize activeTab from URL or sessionStorage
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabFromUrl = params.get('tab');
+      if (tabFromUrl) return tabFromUrl;
+      
+      const savedTab = sessionStorage.getItem('activeTab');
+      if (savedTab) return savedTab;
+    }
+    return "overview";
+  });
+  
   const [batches, setBatches] = useState<any[]>([]);
   const [loadingBatches, setLoadingBatches] = useState(true);
   const [batchError, setBatchError] = useState<string | null>(null);
@@ -134,6 +146,17 @@ export default function FacultyDashboard() {
   const [isSubmissionDialogOpen, setIsSubmissionDialogOpen] = useState(false);
   const [selectedTestForSubmissions, setSelectedTestForSubmissions] = useState<string | null>(null);
   const router = useRouter();
+
+  // Save activeTab to sessionStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('activeTab', activeTab);
+      // Update URL without reload
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', activeTab);
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [activeTab]);
 
   // Fetch batches from backend
   const fetchBatches = async () => {
@@ -398,7 +421,7 @@ export default function FacultyDashboard() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-[#040714] dark:via-[#050a1c] dark:to-[#060b20] pb-8">
       {/* Sidebar */}
-      <div className="hidden w-64 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/40 dark:border-gray-800/20 p-5 md:flex shadow-md">
+      <div className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-white/90 backdrop-blur-xl dark:bg-[#070c1f]/95 border-r border-slate-200/40 dark:border-gray-800/20 p-5 shadow-md overflow-y-auto">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
             <GraduationCap className="h-6 w-6 text-white" />
@@ -469,7 +492,7 @@ export default function FacultyDashboard() {
           </Button>
         </nav>
 
-        <div className="mt-auto pt-4 border-t border-slate-200/60 dark:border-gray-800/30">
+        <div className="mt-auto pt-4 pb-6 border-t border-slate-200/60 dark:border-gray-800/30">
           <Button 
             variant="ghost" 
             className="w-full justify-start h-10 text-left font-normal text-sm transition-colors hover:bg-slate-100/60 dark:hover:bg-gray-800/30" 
@@ -484,7 +507,7 @@ export default function FacultyDashboard() {
       </div>
       
       {/* Main content */}
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-auto p-8 md:ml-64">
         <header className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
@@ -651,7 +674,7 @@ export default function FacultyDashboard() {
                           <div className="flex items-start justify-between mb-4">
                             <div>
                               <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
-                                {batch.batch_name}
+                                {batch.name}
                               </h3>
                               <p className="text-sm text-slate-500 dark:text-gray-400">
                                 {batch.students?.length || 0} students
@@ -720,30 +743,57 @@ export default function FacultyDashboard() {
 
               <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Recent Activity</CardTitle>
+                  <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Quick Stats</CardTitle>
+                  <CardDescription>Overview of your teaching activities</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {batches.slice(0, 3).map((batch) => (
-                      <div key={batch.id} className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
-                          <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                          <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-slate-800 dark:text-white">
-                            Created batch "{batch.batch_name}"
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-gray-400">
-                            {new Date(batch.created_at).toLocaleDateString()}
+                        <div>
+                          <p className="text-sm font-medium text-slate-600 dark:text-gray-400">Total Students</p>
+                          <p className="text-2xl font-bold text-slate-800 dark:text-white">
+                            {batches.reduce((sum, batch) => sum + (batch.student_count || 0), 0)}
                           </p>
                         </div>
                       </div>
-                    ))}
-                    {batches.length === 0 && (
-                      <p className="text-sm text-slate-500 dark:text-gray-400 text-center py-4">
-                        No recent activity
-                      </p>
-                    )}
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
+                          <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-600 dark:text-gray-400">Active Tests</p>
+                          <p className="text-2xl font-bold text-slate-800 dark:text-white">
+                            {tests.filter(test => {
+                              const now = new Date();
+                              const start = new Date(test.start_time);
+                              const end = new Date(test.end_time);
+                              return now >= start && now <= end;
+                            }).length}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center">
+                          <BookOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-600 dark:text-gray-400">Questions Created</p>
+                          <p className="text-2xl font-bold text-slate-800 dark:text-white">
+                            {questions.length}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

@@ -215,7 +215,7 @@ export default function AddQuestionPage() {
         }
 
         alert("Question added successfully!");
-        router.push(`/tests/${questionData.testId}/questions`);
+        router.push("/?tab=questions");
       }
     } catch (error: any) {
       alert(error.response?.data?.message || "Failed to add question");
@@ -256,28 +256,21 @@ export default function AddQuestionPage() {
               {/* Test Selection */}
               <div className="grid gap-3">
                 <Label htmlFor="testId">Select Test <span className="text-red-500">*</span></Label>
-                <Select
+                <select
+                  id="testId"
                   name="testId"
                   value={questionData.testId}
-                  onValueChange={(value) => handleSelectChange("testId", value)}
+                  onChange={(e) => handleSelectChange("testId", e.target.value)}
                   required
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <SelectTrigger id="testId" className="dark:bg-gray-800 dark:border-gray-700">
-                    <SelectValue placeholder="Choose a test to add the question to">
-                      {questionData.testId && tests.find(t => t.id === questionData.testId) ? 
-                        `${tests.find(t => t.id === questionData.testId)?.title} - ${tests.find(t => t.id === questionData.testId)?.batch_name}` : 
-                        "Choose a test to add the question to"
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tests.map((test) => (
-                      <SelectItem key={test.id} value={test.id}>
-                        {test.title} - {test.batch_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <option value="">Choose a test to add the question to</option>
+                  {tests.map((test) => (
+                    <option key={test.id} value={test.id}>
+                      {test.title} - {test.batch_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Question Type Selection */}

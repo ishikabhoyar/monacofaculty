@@ -88,6 +88,15 @@ export const deleteTest = async (id: string, token: string) => {
 };
 
 // Questions API functions
+export const getAllQuestions = async (token: string) => {
+  const response = await axios.get(`${QUESTIONS_URL}/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export const getQuestionsForTest = async (testId: string, token: string) => {
   const response = await axios.get(`${QUESTIONS_URL}/test/${testId}`, {
     headers: {
@@ -130,6 +139,18 @@ export const bulkCreateQuestions = async (data: any, token: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+  return response.data;
+};
+
+export const copyQuestion = async (questionId: string, testId: string, token: string) => {
+  const response = await axios.post(`${QUESTIONS_URL}/copy/${questionId}`, 
+    { testId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
