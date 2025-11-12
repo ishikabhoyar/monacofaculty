@@ -104,7 +104,7 @@ export default function QuestionForm({
   };
 
   const removeOption = (index: number) => {
-    const newOptions = formData.options.filter((_, i) => i !== index);
+    const newOptions = formData.options.filter((_: string, i: number) => i !== index);
     setFormData({ ...formData, options: newOptions });
   };
 
@@ -122,7 +122,7 @@ export default function QuestionForm({
   };
 
   const removeHint = (index: number) => {
-    const newHints = formData.hints.filter((_, i) => i !== index);
+    const newHints = formData.hints.filter((_: string, i: number) => i !== index);
     setFormData({ ...formData, hints: newHints });
   };
 
@@ -165,7 +165,7 @@ export default function QuestionForm({
       return;
     }
 
-    if (formData.question_type === 'multiple_choice' && formData.options.filter(o => o.trim()).length < 2) {
+    if (formData.question_type === 'multiple_choice' && formData.options.filter((o: string) => o.trim()).length < 2) {
       setError('Please provide at least 2 options for multiple choice questions');
       return;
     }
@@ -183,7 +183,7 @@ export default function QuestionForm({
         testId,
         questionText: formData.question_text,
         questionType: formData.question_type,
-        options: formData.options.filter(opt => opt.trim() !== ''),
+        options: formData.options.filter((opt: string) => opt.trim() !== ''),
         correctAnswer: formData.correct_answer,
         marks: formData.marks,
         difficulty: formData.difficulty,
@@ -259,7 +259,7 @@ export default function QuestionForm({
                 <Plus className="h-4 w-4 mr-1" /> Add Option
               </Button>
             </div>
-            {formData.options.map((option, index) => (
+            {formData.options.map((option: string, index: number) => (
               <div key={index} className="flex gap-2">
                 <Input
                   value={option}
@@ -294,7 +294,7 @@ export default function QuestionForm({
                 <SelectValue placeholder="Select correct answer" />
               </SelectTrigger>
               <SelectContent>
-                {formData.options.filter(o => o.trim()).map((option, index) => (
+                {formData.options.filter((o: string) => o.trim()).map((option: string, index: number) => (
                   <SelectItem key={index} value={option}>{option}</SelectItem>
                 ))}
               </SelectContent>
@@ -382,7 +382,7 @@ export default function QuestionForm({
             {/* Hints */}
             <div className="space-y-3">
               <Label>Hints (Optional)</Label>
-              {formData.hints.map((hint, index) => (
+              {formData.hints.map((hint: string, index: number) => (
                 <div key={index} className="flex gap-2 items-center">
                   <Input value={hint} disabled className="dark:bg-gray-800/50 dark:border-gray-700" />
                   <Button
