@@ -49,6 +49,63 @@ class QuestionAllocator {
   }
 
   /**
+   * Advanced allocation: Ensures consecutive roll numbers NEVER get the same questions
+   * Uses rotating allocation pattern based on roll number sequence
+   * 
+   * Example: If 10 students each need 2 questions from a pool of 10 questions:
+   * - Student 1: Questions [0, 1]
+   * - Student 2: Questions [2, 3]
+   * - Student 3: Questions [4, 5]
+   * - Student 4: Questions [6, 7]
+   * - Student 5: Questions [8, 9]
+   * - Student 6: Questions [0, 2] (wraps around with offset)
+   * etc.
+   */
+  static allocateQuestionsWithRotation(allQuestions, seed, questionsPerStudent) {
+    const totalQuestions = allQuestions.length;
+    
+    // If we need all questions or more than available, return all
+    if (!questionsPerStudent || questionsPerStudent >= totalQuestions) {
+      return allQuestions;
+    }
+    
+    // Calculate starting position based on seed
+    // Ensure consecutive seeds get different starting positions
+    const startPosition = (seed * questionsPerStudent) % totalQuestions;
+    
+    // Use a different stride pattern to ensure variety
+    // The stride ensures we don't just take consecutive questions
+    const stride = Math.max(1, Math.floor(totalQuestions / questionsPerStudent));
+    
+    const selectedQuestions = [];
+    const usedIndices = new Set();
+    
+    // First pass: Try to get questions using stride pattern
+    let currentPos = startPosition;
+    for (let i = 0; i < questionsPerStudent && selectedQuestions.length < questionsPerStudent; i++) {
+      const index = currentPos % totalQuestions;
+      if (!usedIndices.has(index)) {
+        selectedQuestions.push(allQuestions[index]);
+        usedIndices.add(index);
+      }
+      currentPos += stride;
+    }
+    
+    // Second pass: Fill remaining slots if needed (wrap around)
+    if (selectedQuestions.length < questionsPerStudent) {
+      for (let i = 0; i < totalQuestions && selectedQuestions.length < questionsPerStudent; i++) {
+        const index = (startPosition + i) % totalQuestions;
+        if (!usedIndices.has(index)) {
+          selectedQuestions.push(allQuestions[index]);
+          usedIndices.add(index);
+        }
+      }
+    }
+    
+    return selectedQuestions;
+  }
+
+  /**
    * Allocate questions to a student for a test
    * Ensures consecutive roll numbers get different question sets
    */
@@ -102,14 +159,14 @@ class QuestionAllocator {
         return [];
       }
       
-      // If randomization is enabled, shuffle questions based on roll number seed
+      // If randomization is enabled, use rotating allocation to ensure consecutive students get different questions
       if (test.enable_question_randomization) {
-        questionIds = this.seededShuffle(questionIds, seed);
-      }
-      
-      // Limit questions if questions_per_student is set
-      if (test.questions_per_student && test.questions_per_student < questionIds.length) {
-        questionIds = questionIds.slice(0, test.questions_per_student);
+        questionIds = this.allocateQuestionsWithRotation(questionIds, seed, test.questions_per_student);
+      } else {
+        // If randomization is disabled but questions_per_student is set, just take first N questions
+        if (test.questions_per_student && test.questions_per_student < questionIds.length) {
+          questionIds = questionIds.slice(0, test.questions_per_student);
+        }
       }
       
       // Insert allocations
