@@ -50,16 +50,19 @@ class QuestionAllocator {
 
   /**
    * Advanced allocation: Ensures consecutive roll numbers NEVER get the same questions
-   * Uses rotating allocation pattern based on roll number sequence
+   * Simple alternating pattern that repeats every 2 students
    * 
    * Example: If 10 students each need 2 questions from a pool of 10 questions:
-   * - Student 1: Questions [0, 1]
-   * - Student 2: Questions [2, 3]
-   * - Student 3: Questions [4, 5]
-   * - Student 4: Questions [6, 7]
-   * - Student 5: Questions [8, 9]
-   * - Student 6: Questions [0, 2] (wraps around with offset)
-   * etc.
+   * - S₁ → (Q₁, Q₂)  - Group A
+   * - S₂ → (Q₃, Q₄)  - Group B
+   * - S₃ → (Q₁, Q₂)  - Group A (same as S₁)
+   * - S₄ → (Q₃, Q₄)  - Group B (same as S₂)
+   * - S₅ → (Q₁, Q₂)  - Group A (same as S₁)
+   * 
+   * This ensures:
+   * - Consecutive students ALWAYS have completely different questions (0% overlap)
+   * - Pattern repeats after every 2 students
+   * - Maximizes question reuse while preventing cheating
    */
   static allocateQuestionsWithRotation(allQuestions, seed, questionsPerStudent) {
     const totalQuestions = allQuestions.length;
@@ -69,37 +72,21 @@ class QuestionAllocator {
       return allQuestions;
     }
     
-    // Calculate starting position based on seed
-    // Ensure consecutive seeds get different starting positions
-    const startPosition = (seed * questionsPerStudent) % totalQuestions;
+    // Use modulo 2 to create alternating pattern (odd/even)
+    // Odd seeds (1,3,5,7...) get Group A (first set of questions)
+    // Even seeds (2,4,6,8...) get Group B (second set of questions)
+    const isGroupA = seed % 2 === 1; // true for odd seeds, false for even seeds
     
-    // Use a different stride pattern to ensure variety
-    // The stride ensures we don't just take consecutive questions
-    const stride = Math.max(1, Math.floor(totalQuestions / questionsPerStudent));
+    // Group A starts at index 0: [Q₁, Q₂, Q₃, ...]
+    // Group B starts at index questionsPerStudent: [Qₙ₊₁, Qₙ₊₂, Qₙ₊₃, ...]
+    const startIndex = isGroupA ? 0 : questionsPerStudent;
     
     const selectedQuestions = [];
-    const usedIndices = new Set();
     
-    // First pass: Try to get questions using stride pattern
-    let currentPos = startPosition;
-    for (let i = 0; i < questionsPerStudent && selectedQuestions.length < questionsPerStudent; i++) {
-      const index = currentPos % totalQuestions;
-      if (!usedIndices.has(index)) {
-        selectedQuestions.push(allQuestions[index]);
-        usedIndices.add(index);
-      }
-      currentPos += stride;
-    }
-    
-    // Second pass: Fill remaining slots if needed (wrap around)
-    if (selectedQuestions.length < questionsPerStudent) {
-      for (let i = 0; i < totalQuestions && selectedQuestions.length < questionsPerStudent; i++) {
-        const index = (startPosition + i) % totalQuestions;
-        if (!usedIndices.has(index)) {
-          selectedQuestions.push(allQuestions[index]);
-          usedIndices.add(index);
-        }
-      }
+    // Select consecutive questions starting from the group's start index
+    for (let i = 0; i < questionsPerStudent; i++) {
+      const index = (startIndex + i) % totalQuestions;
+      selectedQuestions.push(allQuestions[index]);
     }
     
     return selectedQuestions;
