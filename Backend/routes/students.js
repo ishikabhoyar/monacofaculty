@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
+const QuestionAllocator = require('../utils/questionAllocator');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -208,7 +209,7 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
 
     // Verify student has access to this test
     const accessCheck = await pool.query(
-      `SELECT t.id FROM tests t
+      `SELECT t.id, t.enable_question_randomization FROM tests t
        WHERE t.id = $1 AND (
          t.batch_id IN (SELECT batch_id FROM student_batches WHERE student_id = $2)
          OR EXISTS (
@@ -227,24 +228,41 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
       });
     }
 
-    // Get questions without sensitive information
-    const questionsResult = await pool.query(
-      `SELECT
-        id,
-        question_text,
-        options,
-        marks,
-        question_type,
-        difficulty,
-        programming_language,
-        code_template,
-        time_limit_seconds,
-        memory_limit_mb
-      FROM questions
-      WHERE test_id = $1
-      ORDER BY id`,
-      [testId]
-    );
+    const test = accessCheck.rows[0];
+    let questionsResult;
+
+    // Check if question randomization is enabled
+    if (test.enable_question_randomization) {
+      // Allocate personalized questions for this student
+      const allocatedQuestions = await QuestionAllocator.allocateQuestionsToStudent(testId, studentId);
+      
+      // Format allocated questions (remove allocation_seed from response)
+      questionsResult = {
+        rows: allocatedQuestions.map(q => {
+          const { allocation_seed, ...questionWithoutSeed } = q;
+          return questionWithoutSeed;
+        })
+      };
+    } else {
+      // Get all questions in normal order (no randomization)
+      questionsResult = await pool.query(
+        `SELECT
+          id,
+          question_text,
+          options,
+          marks,
+          question_type,
+          difficulty,
+          programming_language,
+          code_template,
+          time_limit_seconds,
+          memory_limit_mb
+        FROM questions
+        WHERE test_id = $1
+        ORDER BY id`,
+        [testId]
+      );
+    }
 
     // Get test cases for each question
     const questions = await Promise.all(questionsResult.rows.map(async (question) => {
@@ -279,7 +297,8 @@ router.get('/tests/:testId/questions', studentAuthMiddleware, async (req, res) =
 
     res.json({
       success: true,
-      questions: questions
+      questions: questions,
+      isRandomized: test.enable_question_randomization || false
     });
   } catch (error) {
     console.error('Error fetching test questions:', error);

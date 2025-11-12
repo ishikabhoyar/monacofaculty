@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const authMiddleware = require('../authMiddleware');
+const QuestionAllocator = require('../utils/questionAllocator');
 
 // Create a new test
 router.post('/', authMiddleware, async (req, res) => {
@@ -17,7 +18,9 @@ router.post('/', authMiddleware, async (req, res) => {
       maxAttempts, 
       password, 
       latePenaltyPercent,
-      batchId
+      batchId,
+      enableQuestionRandomization = false,
+      questionsPerStudent = null
     } = req.body;
     
     const faculty_id = req.user.id;
@@ -35,15 +38,17 @@ router.post('/', authMiddleware, async (req, res) => {
       });
     }
 
-    // Insert the test
+    // Insert the test with randomization settings
     const testResult = await pool.query(
       `INSERT INTO tests (
         title, course_id, description, instructions, start_time, end_time, 
-        duration_minutes, max_attempts, password, late_penalty_percent, faculty_id, batch_id
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+        duration_minutes, max_attempts, password, late_penalty_percent, faculty_id, batch_id,
+        enable_question_randomization, questions_per_student
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id`,
       [
         title, courseId, description, instructions, startTime, endTime, 
-        durationMinutes, maxAttempts, password, latePenaltyPercent, faculty_id, batchId
+        durationMinutes, maxAttempts, password, latePenaltyPercent, faculty_id, batchId,
+        enableQuestionRandomization, questionsPerStudent
       ]
     );
     
@@ -77,6 +82,8 @@ router.get('/', authMiddleware, async (req, res) => {
         t.max_attempts,
         t.password,
         t.late_penalty_percent,
+        t.enable_question_randomization,
+        t.questions_per_student,
         t.created_at,
         t.updated_at,
         b.name as batch_name,
@@ -229,6 +236,8 @@ router.get('/:id', authMiddleware, async (req, res) => {
         t.max_attempts,
         t.password,
         t.late_penalty_percent,
+        t.enable_question_randomization,
+        t.questions_per_student,
         t.created_at,
         t.updated_at,
         b.name as batch_name,
@@ -279,7 +288,9 @@ router.put('/:id', authMiddleware, async (req, res) => {
       durationMinutes,
       maxAttempts,
       password,
-      latePenaltyPercent
+      latePenaltyPercent,
+      enableQuestionRandomization,
+      questionsPerStudent
     } = req.body;
     
     // Check if test exists and belongs to faculty
@@ -300,12 +311,15 @@ router.put('/:id', authMiddleware, async (req, res) => {
       `UPDATE tests SET
         title = $1, course_id = $2, description = $3, instructions = $4,
         start_time = $5, end_time = $6, duration_minutes = $7, max_attempts = $8,
-        password = $9, late_penalty_percent = $10, updated_at = NOW()
-       WHERE id = $11 AND faculty_id = $12
+        password = $9, late_penalty_percent = $10, 
+        enable_question_randomization = $11, questions_per_student = $12,
+        updated_at = NOW()
+       WHERE id = $13 AND faculty_id = $14
        RETURNING *`,
       [
         title, courseId, description, instructions, startTime, endTime,
-        durationMinutes, maxAttempts, password, latePenaltyPercent, id, faculty_id
+        durationMinutes, maxAttempts, password, latePenaltyPercent,
+        enableQuestionRandomization, questionsPerStudent, id, faculty_id
       ]
     );
     
@@ -354,6 +368,165 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error deleting test'
+    });
+  }
+});
+
+// ========== Question Allocation Management Endpoints ==========
+
+// Allocate questions to all students in a batch for a test
+router.post('/:testId/allocate-questions', authMiddleware, async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const faculty_id = req.user.id;
+    
+    // Verify test belongs to faculty and get batch_id
+    const testCheck = await pool.query(
+      'SELECT batch_id, enable_question_randomization FROM tests WHERE id = $1 AND faculty_id = $2',
+      [testId, faculty_id]
+    );
+    
+    if (testCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Test not found or access denied'
+      });
+    }
+    
+    const test = testCheck.rows[0];
+    
+    if (!test.enable_question_randomization) {
+      return res.status(400).json({
+        success: false,
+        message: 'Question randomization is not enabled for this test'
+      });
+    }
+    
+    // Allocate questions to all students
+    const results = await QuestionAllocator.allocateQuestionsToAllStudents(testId, test.batch_id);
+    
+    const successCount = results.filter(r => r.success).length;
+    const failureCount = results.filter(r => !r.success).length;
+    
+    res.json({
+      success: true,
+      message: `Questions allocated to ${successCount} students (${failureCount} failed)`,
+      results: results
+    });
+  } catch (error) {
+    console.error('Error allocating questions:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error allocating questions',
+      error: error.message
+    });
+  }
+});
+
+// Get allocation statistics for a test
+router.get('/:testId/allocation-stats', authMiddleware, async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const faculty_id = req.user.id;
+    
+    // Verify test belongs to faculty
+    const testCheck = await pool.query(
+      'SELECT id FROM tests WHERE id = $1 AND faculty_id = $2',
+      [testId, faculty_id]
+    );
+    
+    if (testCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Test not found or access denied'
+      });
+    }
+    
+    const stats = await QuestionAllocator.getAllocationStats(testId);
+    
+    res.json({
+      success: true,
+      stats: stats
+    });
+  } catch (error) {
+    console.error('Error getting allocation stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error getting allocation statistics',
+      error: error.message
+    });
+  }
+});
+
+// Verify that consecutive roll numbers have different questions
+router.get('/:testId/verify-allocation', authMiddleware, async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const faculty_id = req.user.id;
+    
+    // Verify test belongs to faculty and get batch_id
+    const testCheck = await pool.query(
+      'SELECT batch_id FROM tests WHERE id = $1 AND faculty_id = $2',
+      [testId, faculty_id]
+    );
+    
+    if (testCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Test not found or access denied'
+      });
+    }
+    
+    const verification = await QuestionAllocator.verifyConsecutiveRollNumbersDifferent(
+      testId, 
+      testCheck.rows[0].batch_id
+    );
+    
+    res.json({
+      success: true,
+      verification: verification
+    });
+  } catch (error) {
+    console.error('Error verifying allocation:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error verifying allocation',
+      error: error.message
+    });
+  }
+});
+
+// Get allocated questions for a specific student (faculty view)
+router.get('/:testId/student/:studentId/allocated-questions', authMiddleware, async (req, res) => {
+  try {
+    const { testId, studentId } = req.params;
+    const faculty_id = req.user.id;
+    
+    // Verify test belongs to faculty
+    const testCheck = await pool.query(
+      'SELECT id FROM tests WHERE id = $1 AND faculty_id = $2',
+      [testId, faculty_id]
+    );
+    
+    if (testCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Test not found or access denied'
+      });
+    }
+    
+    const questions = await QuestionAllocator.getStudentQuestions(testId, studentId);
+    
+    res.json({
+      success: true,
+      questions: questions
+    });
+  } catch (error) {
+    console.error('Error getting student allocated questions:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error getting allocated questions',
+      error: error.message
     });
   }
 });
