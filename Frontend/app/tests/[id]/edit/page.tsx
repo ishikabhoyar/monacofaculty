@@ -82,6 +82,8 @@ function EditTestPage() {
   const [fetchingTest, setFetchingTest] = useState(true);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
   const [allowLateSubmission, setAllowLateSubmission] = useState(false);
+  const [enableQuestionRandomization, setEnableQuestionRandomization] = useState(false);
+  const [limitQuestionsPerStudent, setLimitQuestionsPerStudent] = useState(false);
   const [testData, setTestData] = useState({
     title: "",
     courseId: "",
@@ -94,6 +96,7 @@ function EditTestPage() {
     password: "",
     latePenaltyPercent: "0",
     batchId: "",
+    questionsPerStudent: "",
   });
 
   // Fetch test data on component mount
@@ -136,11 +139,14 @@ function EditTestPage() {
           password: test.password || "",
           latePenaltyPercent: test.late_penalty_percent?.toString() || "0",
           batchId: test.batch_id?.toString() || "",
+          questionsPerStudent: test.questions_per_student?.toString() || "",
         });
         
         // Set checkboxes
         setIsPasswordProtected(!!test.password);
         setAllowLateSubmission(test.late_penalty_percent > 0);
+        setEnableQuestionRandomization(test.enable_question_randomization || false);
+        setLimitQuestionsPerStudent(!!test.questions_per_student);
       } else {
         console.error('Failed to fetch test:', data.message);
         alert('Failed to load test data');
@@ -227,6 +233,11 @@ function EditTestPage() {
         latePenaltyPercent: parseInt(testData.latePenaltyPercent),
         // Only include password if protection is enabled
         password: isPasswordProtected ? testData.password : "",
+        // Add question randomization settings
+        enableQuestionRandomization: enableQuestionRandomization,
+        questionsPerStudent: limitQuestionsPerStudent && testData.questionsPerStudent 
+          ? parseInt(testData.questionsPerStudent) 
+          : null,
       };
       
       // Send data to your API endpoint with PUT method
@@ -548,6 +559,160 @@ function EditTestPage() {
                         min="0"
                         max="100"
                       />
+                    </div>
+                  )}
+                </div>
+
+                {/* Question Randomization Settings */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Question Randomization</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Enable this to ensure consecutive students get different questions, preventing cheating
+                  </p>
+
+                  {/* Enable Question Randomization */}
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="enableQuestionRandomization"
+                      checked={enableQuestionRandomization}
+                      onCheckedChange={(checked) => {
+                        setEnableQuestionRandomization(checked === true);
+                        // Reset limit when randomization is disabled
+                        if (!checked) {
+                          setLimitQuestionsPerStudent(false);
+                        }
+                      }}
+                      className="border-gray-400 dark:border-gray-600 mt-0.5"
+                    />
+                    <div className="flex flex-col">
+                      <Label htmlFor="enableQuestionRandomization" className="cursor-pointer">
+                        Enable Question Randomization
+                      </Label>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Consecutive roll numbers (e.g., 16010125001, 16010125002) will receive different question sets
+                      </p>
+                    </div>
+                  </div>
+
+                  {enableQuestionRandomization && (
+                    <div className="ml-6 space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      {/* Limit Questions Per Student */}
+                      <div className="flex items-start space-x-2">
+                        <Checkbox
+                          id="limitQuestionsPerStudent"
+                          checked={limitQuestionsPerStudent}
+                          onCheckedChange={(checked) => {
+                            setLimitQuestionsPerStudent(checked === true);
+                            if (!checked) {
+                              setTestData(prev => ({ ...prev, questionsPerStudent: "" }));
+                            }
+                          }}
+                          className="border-gray-400 dark:border-gray-600 mt-0.5"
+                        />
+                        <div className="flex flex-col">
+                          <Label htmlFor="limitQuestionsPerStudent" className="cursor-pointer">
+                            Limit Questions Per Student
+                          </Label>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            If disabled, all students get all questions (in different order)
+                          </p>
+                        </div>
+                      </div>
+
+                      {limitQuestionsPerStudent && (
+                        <div className="grid gap-3">
+                          <Label htmlFor="questionsPerStudent" className="text-sm">
+                            Number of Questions Per Student
+                          </Label>
+                          <Input
+                            id="questionsPerStudent"
+                            name="questionsPerStudent"
+                            type="number"
+                            value={testData.questionsPerStudent}
+                            onChange={handleChange}
+                            placeholder="e.g., 10"
+                            className="dark:bg-gray-800 dark:border-gray-700"
+                            min="1"
+                          />
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            Each student will receive this many questions randomly selected from your question bank
+                          </p>
+                          
+                          {/* Question Bank Recommendation with Pattern Example */}
+                          {testData.questionsPerStudent && selectedBatch && (
+                            <div className="mt-2 space-y-3">
+                              {/* Calculator */}
+                              <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                                <p className="text-sm font-medium text-green-900 dark:text-green-100 mb-2">
+                                  📊 Question Bank Calculator
+                                </p>
+                                <div className="text-xs text-green-800 dark:text-green-200 space-y-1">
+                                  <div className="flex justify-between">
+                                    <span>Students in batch:</span>
+                                    <span className="font-semibold">{selectedBatch.students?.length || 0}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span>Questions per student:</span>
+                                    <span className="font-semibold">{testData.questionsPerStudent}</span>
+                                  </div>
+                                  <div className="border-t border-green-300 dark:border-green-700 my-1"></div>
+                                  <div className="flex justify-between font-semibold">
+                                    <span>Minimum needed (2 variants):</span>
+                                    <span className="text-green-700 dark:text-green-300">
+                                      {parseInt(testData.questionsPerStudent) * 2} questions
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between font-semibold">
+                                    <span>Better (3-4 variants):</span>
+                                    <span className="text-green-700 dark:text-green-300">
+                                      {parseInt(testData.questionsPerStudent) * 3}-{parseInt(testData.questionsPerStudent) * 4}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between font-semibold">
+                                    <span>Best (5+ variants):</span>
+                                    <span className="text-green-700 dark:text-green-300">
+                                      {parseInt(testData.questionsPerStudent) * 5}+
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Pattern Example */}
+                              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
+                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
+                                  🔄 How Allocation Works (Pattern Example)
+                                </p>
+                                <div className="text-xs font-mono text-blue-800 dark:text-blue-200 space-y-1 bg-white dark:bg-gray-800 p-2 rounded">
+                                  <div>S₁ (Roll ...001) → (Q₁, Q₂, Q₃, ..., Q₁₀)</div>
+                                  <div>S₂ (Roll ...002) → (Q₁₁, Q₁₂, Q₁₃, ..., Q₂₀)</div>
+                                  <div>S₃ (Roll ...003) → (Q₂₁, Q₂₂, Q₂₃, ..., Q₃₀)</div>
+                                  <div>S₄ (Roll ...004) → (Q₃₁, Q₃₂, Q₃₃, ..., Q₄₀)</div>
+                                  <div>S₅ (Roll ...005) → (Q₁, Q₂, Q₃, ..., Q₁₀) <span className="text-blue-600 dark:text-blue-400">← Pattern repeats</span></div>
+                                </div>
+                                <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
+                                  <strong>Consecutive students get completely different questions!</strong>
+                                  <br />
+                                  With {parseInt(testData.questionsPerStudent) * 2} questions, you get 2 variants.
+                                  <br />
+                                  With {parseInt(testData.questionsPerStudent) * 4} questions, you get 4 variants (even better!).
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="bg-blue-100 dark:bg-blue-900/40 p-3 rounded border border-blue-300 dark:border-blue-700">
+                        <p className="text-xs text-blue-900 dark:text-blue-100 font-medium mb-1">
+                          💡 How it works:
+                        </p>
+                        <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-1 ml-4 list-disc">
+                          <li>Questions are allocated based on student roll numbers</li>
+                          <li>Consecutive students get different question sets</li>
+                          <li>Same student always sees the same questions</li>
+                          <li>All students draw from the same question pool (fair assessment)</li>
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </div>
