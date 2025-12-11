@@ -94,12 +94,12 @@ export default function Login() {
           alt="Login Background"
           fill
           sizes="100vw"
-          className="object-cover brightness-[0.95] dark:brightness-[0.85]"
+          className="object-cover"
         />
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-1/2 flex items-center justify-center p-8 bg-background">
+      <div className="w-1/2 flex items-center justify-center p-8 bg-white dark:bg-background">
         <div className="w-full max-w-md">
           {/* Logos */}
           <div className="flex justify-center gap-4 mb-8">
@@ -122,10 +122,10 @@ export default function Login() {
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-semibold text-center text-foreground mb-2" style={{ fontFamily: 'var(--font-ibm-plex-mono)' }}>
+          <h1 className="text-xl font-semibold text-center text-[#111A4A] dark:text-foreground mb-2">
             Welcome To Monaco Faculty
           </h1>
-          <p className="text-center text-sm text-muted-foreground mb-8">
+          <p className="text-center text-sm text-[#7C7F88] dark:text-muted-foreground mb-8">
             Please sign in with your Google account to continue.
           </p>
 
