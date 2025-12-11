@@ -117,18 +117,9 @@ const recentSubmissions = [
 ];
 
 export default function FacultyDashboard() {
-  // Initialize activeTab from URL or sessionStorage
-  const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const tabFromUrl = params.get('tab');
-      if (tabFromUrl) return tabFromUrl;
-      
-      const savedTab = sessionStorage.getItem('activeTab');
-      if (savedTab) return savedTab;
-    }
-    return "overview";
-  });
+  // Initialize activeTab with default value to avoid hydration mismatch
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isHydrated, setIsHydrated] = useState(false);
   
   const [batches, setBatches] = useState<any[]>([]);
   const [loadingBatches, setLoadingBatches] = useState(true);
@@ -147,16 +138,31 @@ export default function FacultyDashboard() {
   const [selectedTestForSubmissions, setSelectedTestForSubmissions] = useState<string | null>(null);
   const router = useRouter();
 
-  // Save activeTab to sessionStorage whenever it changes
+  // Read activeTab from URL or sessionStorage after hydration
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const tabFromUrl = params.get('tab');
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    } else {
+      const savedTab = sessionStorage.getItem('activeTab');
+      if (savedTab) {
+        setActiveTab(savedTab);
+      }
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save activeTab to sessionStorage whenever it changes (after hydration)
+  useEffect(() => {
+    if (isHydrated) {
       sessionStorage.setItem('activeTab', activeTab);
       // Update URL without reload
       const url = new URL(window.location.href);
       url.searchParams.set('tab', activeTab);
       window.history.replaceState({}, '', url.toString());
     }
-  }, [activeTab]);
+  }, [activeTab, isHydrated]);
 
   // Fetch batches from backend
   const fetchBatches = async () => {
