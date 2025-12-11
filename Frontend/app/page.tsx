@@ -427,17 +427,17 @@ export default function FacultyDashboard() {
   return (
     <div className="flex min-h-screen bg-[#fafafa] dark:bg-background pb-8">
       {/* Sidebar */}
-      <div className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-white dark:bg-card border-r border-[#e5e5e5] dark:border-border p-5 overflow-y-auto"
+      <div className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-card border-r border-border p-5 overflow-y-auto"
         style={{
           boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px"
         }}
       >
         <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-[#146e96] rounded-xl">
-            <GraduationCap className="h-6 w-6 text-white" />
+          <div className="p-2 bg-primary rounded-xl">
+            <GraduationCap className="h-6 w-6 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-[#111A4A] dark:text-foreground">
+            <h2 className="text-xl font-semibold text-foreground">
               Faculty Portal
             </h2>
           </div>
@@ -448,13 +448,13 @@ export default function FacultyDashboard() {
             variant={activeTab === "overview" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "overview" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("overview")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "overview" ? "bg-white/20" : "bg-[#146e96]/10 dark:bg-primary/20"}`}>
-              <BarChart3 className={`h-4 w-4 ${activeTab === "overview" ? "text-white" : "text-[#146e96] dark:text-primary"}`} />
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "overview" ? "bg-white/20" : "bg-primary/10"}`}>
+              <BarChart3 className={`h-4 w-4 ${activeTab === "overview" ? "text-primary-foreground" : "text-primary"}`} />
             </div>
             Overview
           </Button>
@@ -463,13 +463,13 @@ export default function FacultyDashboard() {
             variant={activeTab === "batches" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "batches" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("batches")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "batches" ? "bg-white/20" : "bg-[#8b5cf6]/10 dark:bg-chart-3/20"}`}>
-              <Users className={`h-4 w-4 ${activeTab === "batches" ? "text-white" : "text-[#8b5cf6] dark:text-chart-3"}`} />
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "batches" ? "bg-white/20" : "bg-chart-3/10"}`}>
+              <Users className={`h-4 w-4 ${activeTab === "batches" ? "text-primary-foreground" : "text-chart-3"}`} />
             </div>
             Manage Batches
           </Button>
@@ -478,13 +478,13 @@ export default function FacultyDashboard() {
             variant={activeTab === "tests" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "tests" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("tests")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "tests" ? "bg-white/20" : "bg-[#10b981]/10 dark:bg-chart-2/20"}`}>
-              <FileText className={`h-4 w-4 ${activeTab === "tests" ? "text-white" : "text-[#10b981] dark:text-chart-2"}`} />
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "tests" ? "bg-white/20" : "bg-chart-2/10"}`}>
+              <FileText className={`h-4 w-4 ${activeTab === "tests" ? "text-primary-foreground" : "text-chart-2"}`} />
             </div>
             Manage Tests
           </Button>
@@ -493,13 +493,13 @@ export default function FacultyDashboard() {
             variant={activeTab === "questions" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "questions" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("questions")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "questions" ? "bg-white/20" : "bg-[#f59e0b]/10 dark:bg-chart-4/20"}`}>
-              <svg className={`h-4 w-4 ${activeTab === "questions" ? "text-white" : "text-[#f59e0b] dark:text-chart-4"}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "questions" ? "bg-white/20" : "bg-chart-4/10"}`}>
+              <svg className={`h-4 w-4 ${activeTab === "questions" ? "text-primary-foreground" : "text-chart-4"}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -510,13 +510,13 @@ export default function FacultyDashboard() {
             variant={activeTab === "submissions" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "submissions" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("submissions")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "submissions" ? "bg-white/20" : "bg-[#0ea5e9]/10 dark:bg-chart-5/20"}`}>
-              <TrendingUp className={`h-4 w-4 ${activeTab === "submissions" ? "text-white" : "text-[#0ea5e9] dark:text-chart-5"}`} />
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "submissions" ? "bg-white/20" : "bg-chart-5/10"}`}>
+              <TrendingUp className={`h-4 w-4 ${activeTab === "submissions" ? "text-primary-foreground" : "text-chart-5"}`} />
             </div>
             Submissions
           </Button>
@@ -525,22 +525,22 @@ export default function FacultyDashboard() {
             variant={activeTab === "settings" ? "default" : "ghost"} 
             className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
               activeTab === "settings" 
-                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
-                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             }`}
             onClick={() => setActiveTab("settings")}
           >
-            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "settings" ? "bg-white/20" : "bg-[#666666]/10 dark:bg-muted"}`}>
-              <Settings className={`h-4 w-4 ${activeTab === "settings" ? "text-white" : "text-[#666666] dark:text-muted-foreground"}`} />
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "settings" ? "bg-white/20" : "bg-muted"}`}>
+              <Settings className={`h-4 w-4 ${activeTab === "settings" ? "text-primary-foreground" : "text-muted-foreground"}`} />
             </div>
             Settings
           </Button>
         </nav>
 
-        <div className="mt-auto pt-4 pb-6 border-t border-[#e5e5e5] dark:border-border">
+        <div className="mt-auto pt-4 pb-6 border-t border-border">
           <Button 
             variant="ghost" 
-            className="w-full justify-start h-10 text-left font-normal text-sm text-[#666666] hover:text-[#111A4A] hover:bg-[#fafafa] dark:text-muted-foreground dark:hover:bg-accent rounded-xl" 
+            className="w-full justify-start h-10 text-left font-normal text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-xl" 
             onClick={() => router.push("/logout")}
           >
             <div className="mr-3 p-1 rounded-md">
@@ -555,10 +555,10 @@ export default function FacultyDashboard() {
       <div className="flex-1 overflow-auto p-8 md:ml-64">
         <header className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-[32px] font-normal text-[#111A4A] dark:text-foreground tracking-tight">
+            <h1 className="text-[32px] font-normal text-foreground tracking-tight">
               Faculty Dashboard
             </h1>
-            <p className="text-[#7C7F88] dark:text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1">
               Welcome back! Manage your academic content with ease.
             </p>
           </div>
@@ -567,7 +567,7 @@ export default function FacultyDashboard() {
             <Button 
               size="sm" 
               onClick={() => router.push("/create-batch")}
-              className="bg-[#10b981] hover:bg-[#059669] text-white rounded-lg"
+              className="bg-chart-2 hover:bg-chart-2/80 text-white rounded-lg"
             >
               <Users className="mr-2 h-4 w-4" />
               New Batch
@@ -575,7 +575,7 @@ export default function FacultyDashboard() {
             <Button 
               size="sm" 
               onClick={() => router.push("/create-test")}
-              className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
             >
               <PlusCircle className="mr-2 h-4 w-4" />
               New Test
@@ -607,7 +607,7 @@ export default function FacultyDashboard() {
                     <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Batches</p>
                     <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground mt-1">{batches.length}</p>
                   </div>
-                  <div className="p-3 bg-[#146e96]/10 dark:bg-primary/20 rounded-xl">
+                  <div className="p-3 bg-primary/10 rounded-xl">
                     <Users className="h-6 w-6 text-[#146e96] dark:text-primary" />
                   </div>
                 </div>
@@ -694,13 +694,13 @@ export default function FacultyDashboard() {
                 ) : batchError ? (
                   <div className="text-center py-8">
                     <p className="text-destructive">{batchError}</p>
-                    <Button onClick={fetchBatches} className="mt-4 bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg">
+                    <Button onClick={fetchBatches} className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg">
                       Try Again
                     </Button>
                   </div>
                 ) : batches.length === 0 ? (
                   <div className="text-center py-12">
-                    <div className="mx-auto w-24 h-24 bg-[#f0f9ff] dark:bg-accent rounded-full flex items-center justify-center mb-4">
+                    <div className="mx-auto w-24 h-24 bg-accent rounded-full flex items-center justify-center mb-4">
                       <Users className="w-12 h-12 text-[#146e96] dark:text-primary" />
                     </div>
                     <h3 className="text-xl font-medium mb-2 text-[#111A4A] dark:text-foreground">No batches found</h3>
@@ -709,7 +709,7 @@ export default function FacultyDashboard() {
                     </p>
                     <Button 
                       onClick={() => router.push("/create-batch")}
-                      className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+                      className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
                     >
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Create Your First Batch
@@ -732,7 +732,7 @@ export default function FacultyDashboard() {
                               {batch.students?.length || 0} students
                             </p>
                           </div>
-                          <div className="w-10 h-10 bg-[#f0f9ff] dark:bg-accent rounded-lg flex items-center justify-center group-hover:bg-[#146e96]/10 transition-colors">
+                          <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                             <Users className="h-5 w-5 text-[#146e96] dark:text-primary" />
                           </div>
                         </div>
@@ -806,9 +806,9 @@ export default function FacultyDashboard() {
                   <p className="text-sm text-[#7C7F88] dark:text-muted-foreground">Overview of your teaching activities</p>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-[#f0f9ff] dark:bg-accent rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-accent rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-[#146e96]/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+                      <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
                         <Users className="h-5 w-5 text-[#146e96] dark:text-primary" />
                       </div>
                       <div>
@@ -871,7 +871,7 @@ export default function FacultyDashboard() {
             ) : testsError ? (
               <div className="text-center py-8">
                 <p className="text-destructive">{testsError}</p>
-                <Button onClick={fetchTests} className="mt-4 bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg">
+                <Button onClick={fetchTests} className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg">
                   Try Again
                 </Button>
               </div>
@@ -905,7 +905,7 @@ export default function FacultyDashboard() {
             ) : questionsError ? (
               <div className="text-center py-8">
                 <p className="text-destructive">{questionsError}</p>
-                <Button onClick={fetchQuestions} className="mt-4 bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg">
+                <Button onClick={fetchQuestions} className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg">
                   Try Again
                 </Button>
               </div>
@@ -1082,7 +1082,7 @@ export default function FacultyDashboard() {
                           </div>
 
                           <Button 
-                            className="w-full mt-4 bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+                            className="w-full mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleTestSelectForSubmissions(test.id);
@@ -1172,7 +1172,7 @@ export default function FacultyDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Faculty Settings</h2>
               <Button 
-                className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+                className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
               >
                 Save Changes
               </Button>
@@ -1272,7 +1272,7 @@ export default function FacultyDashboard() {
                     <div className="pt-4">
                       <p className="text-xs text-[#7C7F88] dark:text-muted-foreground mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
                       <Button 
-                        className="w-full bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+                        className="w-full bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
                       >
                         Update Password
                       </Button>

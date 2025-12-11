@@ -6,7 +6,7 @@ export default function Navbar() {
   const pathname = usePathname();
   
   const isActive = (path: string) => {
-    return pathname === path ? 'bg-blue-700' : '';
+    return pathname === path ? 'bg-primary/80' : '';
   };
   
   const handleLogout = () => {
@@ -18,26 +18,26 @@ export default function Navbar() {
   };
   
   return (
-    <nav className="bg-blue-600 text-white">
+    <nav className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
         <div className="flex justify-between">
           <div className="flex space-x-4">
-            <Link href="/" className={`flex items-center px-3 py-4 hover:bg-blue-700 ${isActive('/')}`}>
+            <Link href="/" className={`flex items-center px-3 py-4 hover:bg-primary/80 transition-colors ${isActive('/')}`}>
               <Home className="h-5 w-5 mr-2" />
               <span>Dashboard</span>
             </Link>
             
-            <Link href="/batches" className={`flex items-center px-3 py-4 hover:bg-blue-700 ${isActive('/batches')}`}>
+            <Link href="/batches" className={`flex items-center px-3 py-4 hover:bg-primary/80 transition-colors ${isActive('/batches')}`}>
               <Users className="h-5 w-5 mr-2" />
               <span>Batches</span>
             </Link>
             
-            <Link href="/tests" className={`flex items-center px-3 py-4 hover:bg-blue-700 ${isActive('/tests')}`}>
+            <Link href="/tests" className={`flex items-center px-3 py-4 hover:bg-primary/80 transition-colors ${isActive('/tests')}`}>
               <FileText className="h-5 w-5 mr-2" />
               <span>Tests</span>
             </Link>
             
-            <Link href="/lectures" className={`flex items-center px-3 py-4 hover:bg-blue-700 ${isActive('/lectures')}`}>
+            <Link href="/lectures" className={`flex items-center px-3 py-4 hover:bg-primary/80 transition-colors ${isActive('/lectures')}`}>
               <BookOpen className="h-5 w-5 mr-2" />
               <span>Lectures</span>
             </Link>
@@ -46,7 +46,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <button 
               onClick={handleLogout}
-              className="flex items-center px-3 py-4 hover:bg-blue-700"
+              className="flex items-center px-3 py-4 hover:bg-primary/80 transition-colors"
             >
               <LogOut className="h-5 w-5 mr-2" />
               <span>Logout</span>

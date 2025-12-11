@@ -173,19 +173,19 @@ export default function TestsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Tests</h1>
+        <h1 className="text-2xl font-bold text-foreground">Manage Tests</h1>
         <Link
           href="/create-test"
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center"
+          className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md flex items-center transition-colors"
         >
           <PlusCircle className="h-5 w-5 mr-2" /> Create Test
         </Link>
       </div>
 
       {/* Filtering options */}
-      <div className="mb-6 flex flex-wrap gap-4 bg-white p-4 rounded-lg shadow">
+      <div className="mb-6 flex flex-wrap gap-4 bg-card p-4 rounded-lg shadow border border-border">
         <select
-          className="border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-input rounded-md px-3 py-2 text-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           onChange={(e) => setSelectedBatch(e.target.value)}
           value={selectedBatch}
         >
@@ -196,7 +196,7 @@ export default function TestsPage() {
         </select>
 
         <select
-          className="border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-input rounded-md px-3 py-2 text-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           onChange={(e) => setStatusFilter(e.target.value)}
           value={statusFilter}
         >
@@ -209,11 +209,11 @@ export default function TestsPage() {
 
       {/* Tests list */}
       {filteredTests.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow">
-          <p className="text-gray-500 mb-4">No tests found.</p>
+        <div className="text-center py-12 bg-card rounded-lg shadow border border-border">
+          <p className="text-muted-foreground mb-4">No tests found.</p>
           <Link
             href="/create-test"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-primary hover:text-primary/80 underline"
           >
             Create your first test
           </Link>
@@ -227,12 +227,12 @@ export default function TestsPage() {
             const isLoadingSubmissions = loadingSubmissions[test.id];
             
             return (
-              <div key={test.id} className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
+              <div key={test.id} className="bg-card p-6 rounded-lg shadow border border-border hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold mb-2">{test.title}</h3>
-                    <p className="text-gray-600 mb-2">Batch: {test.batch_name}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">{test.title}</h3>
+                    <p className="text-muted-foreground mb-2">Batch: {test.batch_name}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       <span>Duration: {test.duration_minutes} minutes</span>
                       <span>Max Attempts: {test.max_attempts}</span>
                       <span className={`px-2 py-1 rounded-full text-xs ${color}`}>
@@ -243,32 +243,32 @@ export default function TestsPage() {
                   <div className="flex gap-2">
                     <Link
                       href={`/tests/${test.id}`}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md flex items-center text-sm"
+                      className="bg-primary hover:bg-primary/80 text-primary-foreground px-3 py-2 rounded-md flex items-center text-sm transition-colors"
                     >
                       <Eye className="h-4 w-4 mr-1" /> View
                     </Link>
                     <Link
                       href={`/tests/${test.id}/edit`}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md flex items-center text-sm"
+                      className="bg-accent text-accent-foreground hover:bg-accent/80 px-3 py-2 rounded-md flex items-center text-sm transition-colors"
                     >
                       <Edit className="h-4 w-4 mr-1" /> Edit
                     </Link>
                     <Link
                       href={`/tests/${test.id}/questions`}
-                      className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-2 rounded-md flex items-center text-sm"
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 rounded-md flex items-center text-sm transition-colors"
                     >
                       <BookOpen className="h-4 w-4 mr-1" /> Questions
                     </Link>
                     <button
                       onClick={() => toggleSubmissions(test.id)}
-                      className="bg-teal-500 hover:bg-teal-600 text-white px-3 py-2 rounded-md flex items-center text-sm"
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 rounded-md flex items-center text-sm transition-colors"
                     >
                       <FileText className="h-4 w-4 mr-1" /> Submissions
                       {isExpanded ? <ChevronUp className="h-4 w-4 ml-1" /> : <ChevronDown className="h-4 w-4 ml-1" />}
                     </button>
                     <button
                       onClick={() => handleDeleteTest(test.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md flex items-center text-sm"
+                      className="bg-destructive hover:bg-destructive/80 text-destructive-foreground px-3 py-2 rounded-md flex items-center text-sm transition-colors"
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> Delete
                     </button>
