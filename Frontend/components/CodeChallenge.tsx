@@ -368,7 +368,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
             </button>
             
             <button 
-              className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               onClick={submitCode}
               disabled={isRunning}
             >
@@ -429,16 +429,16 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
       
       <div className="flex-none border-t bg-background" style={{ height: '200px' }}>
         <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted">
-          <span className="text-sm font-medium">Terminal</span>
+          <span className="text-sm font-medium text-foreground">Terminal</span>
         </div>
-        <div className="p-2 h-full overflow-auto font-mono text-sm bg-black text-white" style={{ height: 'calc(100% - 33px)' }}>
+        <div className="p-2 h-full overflow-auto font-mono text-sm bg-background text-foreground" style={{ height: 'calc(100% - 33px)' }}>
           {terminalOutput.map((line, index) => (
             <div 
               key={index} 
               className={`${
                 line.type === 'error' ? 'text-red-400' : 
-                line.type === 'system' ? 'text-blue-400' : 
-                'text-white'
+                line.type === 'system' ? 'text-primary' : 
+                'text-foreground'
               }`}
             >
               {line.content}

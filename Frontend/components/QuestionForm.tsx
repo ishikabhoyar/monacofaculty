@@ -227,7 +227,7 @@ export default function QuestionForm({
             value={formData.question_type}
             onValueChange={(value) => setFormData({ ...formData, question_type: value })}
           >
-            <SelectTrigger className="dark:bg-gray-800/50 dark:border-gray-700">
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -246,7 +246,6 @@ export default function QuestionForm({
             onChange={(e) => setFormData({ ...formData, question_text: e.target.value })}
             placeholder="Enter your question here"
             rows={4}
-            className="dark:bg-gray-800/50 dark:border-gray-700"
           />
         </div>
 
@@ -265,7 +264,6 @@ export default function QuestionForm({
                   value={option}
                   onChange={(e) => updateOption(index, e.target.value)}
                   placeholder={`Option ${index + 1}`}
-                  className="dark:bg-gray-800/50 dark:border-gray-700"
                 />
                 {formData.options.length > 2 && (
                   <Button
@@ -290,7 +288,7 @@ export default function QuestionForm({
               value={formData.correct_answer}
               onValueChange={(value) => setFormData({ ...formData, correct_answer: value })}
             >
-              <SelectTrigger className="dark:bg-gray-800/50 dark:border-gray-700">
+              <SelectTrigger>
                 <SelectValue placeholder="Select correct answer" />
               </SelectTrigger>
               <SelectContent>
@@ -305,7 +303,6 @@ export default function QuestionForm({
               onChange={(e) => setFormData({ ...formData, correct_answer: e.target.value })}
               placeholder="Enter the correct answer"
               rows={3}
-              className="dark:bg-gray-800/50 dark:border-gray-700"
             />
           )}
         </div>

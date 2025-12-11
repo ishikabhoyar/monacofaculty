@@ -29,22 +29,22 @@ export default function TestsTab({ tests = dummyTests, onTestUpdate }: TestsTabP
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Manage Tests</h2>
-          <p className="text-[#7C7F88] dark:text-muted-foreground mt-1">Create, edit, and manage all your tests</p>
+          <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Tests</h2>
+          <p className="text-muted-foreground dark:text-muted-foreground mt-1">Create, edit, and manage all your tests</p>
         </div>
         <button
           onClick={() => router.push("/create-test")}
-          className="bg-[#146e96] hover:bg-[#0f5a7a] text-white transition-all duration-200 px-4 py-2 rounded-lg font-medium"
+          className="bg-primary hover:bg-primary/80 text-primary-foreground transition-all duration-200 px-4 py-2 rounded-lg font-medium"
         >
           Create Test
         </button>
       </div>
 
-      <div className="rounded-[16px] overflow-hidden bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
+      <div className="rounded-[16px] overflow-hidden bg-card border border-border dark:border-border">
         <div className="p-6">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#e5e5e5] dark:border-border">
+              <tr className="border-b border-border dark:border-border">
                 <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Test ID</th>
                 <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Title</th>
                 <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Course</th>
@@ -56,10 +56,10 @@ export default function TestsTab({ tests = dummyTests, onTestUpdate }: TestsTabP
               {localTests.map((test, index) => (
                 <tr
                   key={test.id}
-                  className="border-b border-[#e5e5e5] dark:border-border hover:bg-[#fafafa] dark:hover:bg-muted/50"
+                  className="border-b border-border dark:border-border hover:bg-[#fafafa] dark:hover:bg-muted/50"
                 >
-                  <td className="py-3 font-mono text-sm text-[#7C7F88] dark:text-muted-foreground">{test.id}</td>
-                  <td className="py-3 font-medium text-[#111A4A] dark:text-foreground">{test.title}</td>
+                  <td className="py-3 font-mono text-sm text-muted-foreground dark:text-muted-foreground">{test.id}</td>
+                  <td className="py-3 font-medium text-foreground dark:text-foreground">{test.title}</td>
                   <td className="py-3">
                     <span className="px-2 py-1 bg-[#f0f9ff] text-[#146e96] dark:bg-primary/20 dark:text-primary rounded-full text-sm">
                       {test.course}
