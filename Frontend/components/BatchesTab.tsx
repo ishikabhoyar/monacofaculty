@@ -318,25 +318,25 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Manage Batches</h2>
-            <p className="text-[#7C7F88] dark:text-muted-foreground mt-1">Loading your batches...</p>
+            <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
+            <p className="text-muted-foreground dark:text-muted-foreground mt-1">Loading your batches...</p>
           </div>
         </div>
         
         <div className="grid gap-4 md:grid-cols-4 mb-6">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="animate-pulse rounded-[16px] border border-[#e5e5e5] dark:border-border bg-white dark:bg-card p-4">
-              <div className="h-4 bg-[#f5f5f5] dark:bg-muted rounded mb-2"></div>
-              <div className="h-8 bg-[#f5f5f5] dark:bg-muted rounded"></div>
+            <div key={i} className="animate-pulse rounded-[16px] border border-border dark:border-border bg-white dark:bg-card p-4">
+              <div className="h-4 bg-muted dark:bg-muted rounded mb-2"></div>
+              <div className="h-8 bg-muted dark:bg-muted rounded"></div>
             </div>
           ))}
         </div>
         
-        <div className="animate-pulse rounded-[16px] border border-[#e5e5e5] dark:border-border bg-white dark:bg-card p-6">
-          <div className="h-6 bg-[#f5f5f5] dark:bg-muted rounded mb-4"></div>
+        <div className="animate-pulse rounded-[16px] border border-border dark:border-border bg-white dark:bg-card p-6">
+          <div className="h-6 bg-muted dark:bg-muted rounded mb-4"></div>
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-12 bg-[#f5f5f5] dark:bg-muted rounded"></div>
+              <div key={i} className="h-12 bg-muted dark:bg-muted rounded"></div>
             ))}
           </div>
         </div>
@@ -349,10 +349,10 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Manage Batches</h2>
-            <p className="text-[#7C7F88] dark:text-muted-foreground mt-1">Error loading batches</p>
+            <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
+            <p className="text-muted-foreground dark:text-muted-foreground mt-1">Error loading batches</p>
           </div>
-          <Button onClick={handleRefresh} variant="outline" className="border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg">
+          <Button onClick={handleRefresh} variant="outline" className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg">
             Try Again
           </Button>
         </div>
@@ -374,21 +374,21 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Manage Batches</h2>
-          <p className="text-[#7C7F88] dark:text-muted-foreground mt-1">Create, edit, and manage all your student batches</p>
+          <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
+          <p className="text-muted-foreground dark:text-muted-foreground mt-1">Create, edit, and manage all your student batches</p>
         </div>
         <div className="flex gap-2">
           <Button 
             variant="outline"
             onClick={handleRefresh}
-            className="border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
           >
             Refresh
           </Button>
           <Button 
             variant="outline"
             onClick={() => setShowImportDialog(true)}
-            className="border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
           >
             <Upload className="mr-2 h-4 w-4" />
             Import Students
@@ -396,14 +396,14 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           <Button 
             variant="outline"
             onClick={() => {/* Handle export all batches */}}
-            className="border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
           >
             <Download className="mr-2 h-4 w-4" />
             Export All
           </Button>
           <Button 
             onClick={() => router.push("/create-batch")}
-            className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg font-medium"
+            className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-medium"
           >
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Batch
@@ -413,67 +413,67 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       
       {/* Batch Statistics */}
       <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border"
+        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
           style={{
             boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Batches</p>
-              <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">{localBatches.length}</p>
+              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Total Batches</p>
+              <p className="text-2xl font-semibold text-foreground dark:text-foreground">{localBatches.length}</p>
             </div>
-            <div className="p-2 bg-[#f0f9ff] dark:bg-primary/20 rounded-lg">
-              <Users className="h-6 w-6 text-[#146e96] dark:text-primary" />
+            <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
+              <Users className="h-6 w-6 text-primary dark:text-primary" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border"
+        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
           style={{
             boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Active Batches</p>
-              <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Active Batches</p>
+              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
                 {localBatches.filter(b => b.status === 'Active').length}
               </p>
             </div>
-            <div className="p-2 bg-[#f0fdf4] dark:bg-chart-2/20 rounded-lg">
-              <BookOpen className="h-6 w-6 text-[#10b981] dark:text-chart-2" />
+            <div className="p-2 bg-chart-2/10 dark:bg-chart-2/20 rounded-lg">
+              <BookOpen className="h-6 w-6 text-chart-2 dark:text-chart-2" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border"
+        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
           style={{
             boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Students</p>
-              <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Total Students</p>
+              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
                 {localBatches.reduce((total, batch) => total + (batch.student_count || 0), 0)}
               </p>
             </div>
-            <div className="p-2 bg-[#faf5ff] dark:bg-chart-3/20 rounded-lg">
+            <div className="p-2 bg-chart-3/10 dark:bg-chart-3/20 rounded-lg">
               <GraduationCap className="h-6 w-6 text-[#8b5cf6] dark:text-chart-3" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border"
+        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
           style={{
             boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">This Month</p>
-              <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">This Month</p>
+              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
                 {localBatches.filter(b => {
                   const createdDate = new Date(b.created_at);
                   const now = new Date();
@@ -481,7 +481,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                 }).length}
               </p>
             </div>
-            <div className="p-2 bg-[#fffbeb] dark:bg-chart-4/20 rounded-lg">
+            <div className="p-2 bg-chart-4/10 dark:bg-chart-4/20 rounded-lg">
               <Calendar className="h-6 w-6 text-[#f59e0b] dark:text-chart-4" />
             </div>
           </div>
@@ -489,27 +489,27 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       </div>
       
       {/* Batches Table */}
-      <div className="rounded-[16px] overflow-hidden bg-white dark:bg-card border border-[#e5e5e5] dark:border-border"
+      <div className="rounded-[16px] overflow-hidden bg-white dark:bg-card border border-border dark:border-border"
         style={{
           boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
         }}
       >
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-[#111A4A] dark:text-foreground mb-1">All Batches</h3>
-          <p className="text-[#7C7F88] dark:text-muted-foreground text-sm mb-6">Manage your student batches and their information</p>
+          <h3 className="text-xl font-semibold text-foreground dark:text-foreground mb-1">All Batches</h3>
+          <p className="text-muted-foreground dark:text-muted-foreground text-sm mb-6">Manage your student batches and their information</p>
         
           {localBatches.length === 0 ? (
             <div className="text-center py-12">
-              <div className="mx-auto w-24 h-24 bg-[#f0f9ff] dark:bg-primary/20 rounded-full flex items-center justify-center mb-4">
-                <Users className="w-12 h-12 text-[#146e96] dark:text-primary" />
+              <div className="mx-auto w-24 h-24 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-4">
+                <Users className="w-12 h-12 text-primary dark:text-primary" />
               </div>
-              <h3 className="text-xl font-medium mb-2 text-[#111A4A] dark:text-foreground">No batches found</h3>
-              <p className="text-[#7C7F88] dark:text-muted-foreground mb-6 max-w-md mx-auto">
+              <h3 className="text-xl font-medium mb-2 text-foreground dark:text-foreground">No batches found</h3>
+              <p className="text-muted-foreground dark:text-muted-foreground mb-6 max-w-md mx-auto">
                 You haven't created any batches yet. Create your first batch to get started.
               </p>
               <Button 
                 onClick={() => router.push("/create-batch")}
-                className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg font-medium"
+                className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-medium"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Create Your First Batch
@@ -518,46 +518,46 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-[#e5e5e5] dark:border-border">
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Batch ID</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Batch Name</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Year</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Semester</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Students</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Status</TableHead>
-                  <TableHead className="font-semibold text-[#666666] dark:text-muted-foreground">Created</TableHead>
-                  <TableHead className="text-right font-semibold text-[#666666] dark:text-muted-foreground">Actions</TableHead>
+                <TableRow className="border-border dark:border-border">
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Batch ID</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Batch Name</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Year</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Semester</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Students</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Status</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Created</TableHead>
+                  <TableHead className="text-right font-semibold text-muted-foreground dark:text-muted-foreground">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {localBatches.map((batch, index) => (
                   <TableRow 
                     key={batch.id} 
-                    className="border-[#e5e5e5] dark:border-border hover:bg-[#fafafa] dark:hover:bg-muted/50 transition-colors duration-200"
+                    className="border-border dark:border-border hover:bg-muted dark:hover:bg-muted/50 transition-colors duration-200"
                   >
-                    <TableCell className="font-mono text-sm text-[#7C7F88] dark:text-muted-foreground">{batch.id}</TableCell>
-                    <TableCell className="font-medium text-[#111A4A] dark:text-foreground">{batch.name}</TableCell>
+                    <TableCell className="font-mono text-sm text-muted-foreground dark:text-muted-foreground">{batch.id}</TableCell>
+                    <TableCell className="font-medium text-foreground dark:text-foreground">{batch.name}</TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 bg-[#f0f9ff] dark:bg-primary/20 text-[#146e96] dark:text-primary rounded-full text-sm">
+                      <span className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary rounded-full text-sm">
                         {batch.academic_year}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 bg-[#f0fdf4] dark:bg-chart-2/20 text-[#10b981] dark:text-chart-2 rounded-full text-sm">
+                      <span className="px-2 py-1 bg-chart-2/10 dark:bg-chart-2/20 text-chart-2 dark:text-chart-2 rounded-full text-sm">
                         {batch.semester}
                       </span>
                     </TableCell>
-                    <TableCell className="font-medium text-[#111A4A] dark:text-foreground">{batch.student_count || 0}</TableCell>
+                    <TableCell className="font-medium text-foreground dark:text-foreground">{batch.student_count || 0}</TableCell>
                     <TableCell>
                       <div className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                         batch.status === 'Active' 
-                          ? 'bg-[#f0fdf4] text-[#10b981] border border-[#10b981]/20 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/20' 
-                          : 'bg-[#f5f5f5] text-[#7C7F88] border border-[#e5e5e5] dark:bg-muted dark:text-muted-foreground dark:border-border'
+                          ? 'bg-chart-2/10 text-chart-2 border border-chart-2/20 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/20' 
+                          : 'bg-muted text-muted-foreground border border-border dark:bg-muted dark:text-muted-foreground dark:border-border'
                       }`}>
                         {batch.status || 'Inactive'}
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-[#7C7F88] dark:text-muted-foreground">
+                    <TableCell className="text-sm text-muted-foreground dark:text-muted-foreground">
                       {new Date(batch.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
@@ -565,7 +565,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                         <DropdownMenuTrigger asChild>
                           <Button 
                             variant="ghost" 
-                            className="h-8 w-8 p-0 hover:bg-[#f5f5f5] dark:hover:bg-muted"
+                            className="h-8 w-8 p-0 hover:bg-muted dark:hover:bg-muted"
                             disabled={deletingBatch === batch.id}
                           >
                             <span className="sr-only">Open menu</span>
@@ -576,16 +576,16 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                             )}
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border rounded-lg">
-                          <DropdownMenuItem onClick={() => handleViewBatch(batch.id)} className="text-[#666666] dark:text-muted-foreground hover:text-[#111A4A] dark:hover:text-foreground">
+                        <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-card border border-border dark:border-border rounded-lg">
+                          <DropdownMenuItem onClick={() => handleViewBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditBatch(batch.id)} className="text-[#666666] dark:text-muted-foreground hover:text-[#111A4A] dark:hover:text-foreground">
+                          <DropdownMenuItem onClick={() => handleEditBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
                             <Edit className="mr-2 h-4 w-4" />
                             Edit Batch
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleExportBatch(batch.id)} className="text-[#666666] dark:text-muted-foreground hover:text-[#111A4A] dark:hover:text-foreground">
+                          <DropdownMenuItem onClick={() => handleExportBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
                             <Download className="mr-2 h-4 w-4" />
                             Export Students
                           </DropdownMenuItem>
@@ -610,10 +610,10 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
 
       {/* Import Students Dialog */}
       <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
-        <DialogContent className="max-w-md bg-white dark:bg-card border border-[#e5e5e5] dark:border-border rounded-[16px]">
+        <DialogContent className="max-w-md bg-white dark:bg-card border border-border dark:border-border rounded-[16px]">
           <DialogHeader>
-            <DialogTitle className="text-[#111A4A] dark:text-foreground">Import Students</DialogTitle>
-            <DialogDescription className="text-[#7C7F88] dark:text-muted-foreground">
+            <DialogTitle className="text-foreground dark:text-foreground">Import Students</DialogTitle>
+            <DialogDescription className="text-muted-foreground dark:text-muted-foreground">
               Upload a CSV or Excel file to add students to a batch. Download the template first if needed.
             </DialogDescription>
           </DialogHeader>
@@ -621,7 +621,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           <div className="space-y-4">
             {/* File Selection */}
             <div className="space-y-2">
-              <Label htmlFor="file-upload" className="text-[#666666] dark:text-muted-foreground">Select File</Label>
+              <Label htmlFor="file-upload" className="text-muted-foreground dark:text-muted-foreground">Select File</Label>
               <div className="flex items-center gap-2">
                 <input
                   id="file-upload"
@@ -633,25 +633,25 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                 <Button
                   variant="outline"
                   onClick={() => document.getElementById('file-upload')?.click()}
-                  className="flex-1 border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+                  className="flex-1 border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   {importFile ? importFile.name : 'Choose File'}
                 </Button>
               </div>
-              <p className="text-xs text-[#7C7F88] dark:text-muted-foreground">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                 Supported formats: CSV, XLS, XLSX (Max 5MB)
               </p>
             </div>
 
             {/* Batch Selection */}
             <div className="space-y-2">
-              <Label className="text-[#666666] dark:text-muted-foreground">Select Batch</Label>
+              <Label className="text-muted-foreground dark:text-muted-foreground">Select Batch</Label>
               <Select onValueChange={(value) => setSelectedBatchForImport(value)}>
-                <SelectTrigger className="border-[#e5e5e5] dark:border-border text-[#111A4A] dark:text-foreground rounded-lg">
+                <SelectTrigger className="border-border dark:border-border text-foreground dark:text-foreground rounded-lg">
                   <SelectValue placeholder="Choose a batch" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-card border border-[#e5e5e5] dark:border-border rounded-lg">
+                <SelectContent className="bg-white dark:bg-card border border-border dark:border-border rounded-lg">
                   {localBatches.map((batch) => (
                     <SelectItem key={batch.id} value={batch.id}>
                       {batch.name} ({batch.academic_year} - {batch.semester})
@@ -665,11 +665,11 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
             {importStatus !== 'idle' && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  {importStatus === 'uploading' && <Upload className="h-4 w-4 animate-pulse text-[#146e96]" />}
+                  {importStatus === 'uploading' && <Upload className="h-4 w-4 animate-pulse text-primary" />}
                   {importStatus === 'processing' && <FileText className="h-4 w-4 animate-pulse text-[#8b5cf6]" />}
-                  {importStatus === 'success' && <CheckCircle className="h-4 w-4 text-[#10b981]" />}
+                  {importStatus === 'success' && <CheckCircle className="h-4 w-4 text-chart-2" />}
                   {importStatus === 'error' && <XCircle className="h-4 w-4 text-destructive" />}
-                  <span className="text-sm font-medium text-[#111A4A] dark:text-foreground">
+                  <span className="text-sm font-medium text-foreground dark:text-foreground">
                     {importStatus === 'uploading' && 'Uploading file...'}
                     {importStatus === 'processing' && 'Processing data...'}
                     {importStatus === 'success' && 'Import completed successfully!'}
@@ -684,13 +684,13 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
             {importResults && (
               <div className="space-y-2">
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-[#f0f9ff] dark:bg-primary/20 p-2 rounded-lg">
-                    <div className="text-lg font-bold text-[#146e96] dark:text-primary">{importResults.total}</div>
-                    <div className="text-xs text-[#146e96] dark:text-primary">Total</div>
+                  <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-lg">
+                    <div className="text-lg font-bold text-primary dark:text-primary">{importResults.total}</div>
+                    <div className="text-xs text-primary dark:text-primary">Total</div>
                   </div>
-                  <div className="bg-[#f0fdf4] dark:bg-chart-2/20 p-2 rounded-lg">
-                    <div className="text-lg font-bold text-[#10b981] dark:text-chart-2">{importResults.successful}</div>
-                    <div className="text-xs text-[#10b981] dark:text-chart-2">Success</div>
+                  <div className="bg-chart-2/10 dark:bg-chart-2/20 p-2 rounded-lg">
+                    <div className="text-lg font-bold text-chart-2 dark:text-chart-2">{importResults.successful}</div>
+                    <div className="text-xs text-chart-2 dark:text-chart-2">Success</div>
                   </div>
                   <div className="bg-destructive/10 dark:bg-destructive/20 p-2 rounded-lg">
                     <div className="text-lg font-bold text-destructive">{importResults.failed}</div>
@@ -729,14 +729,14 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                 setImportResults(null);
               }}
               disabled={importStatus === 'uploading' || importStatus === 'processing'}
-              className="border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+              className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
             >
               Cancel
             </Button>
             <Button
               onClick={() => selectedBatchForImport && handleImportStudents(selectedBatchForImport)}
               disabled={!importFile || !selectedBatchForImport || importStatus === 'uploading' || importStatus === 'processing'}
-              className="bg-[#146e96] hover:bg-[#0f5a7a] text-white rounded-lg"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
             >
               {importStatus === 'uploading' || importStatus === 'processing' ? 'Importing...' : 'Import Students'}
             </Button>

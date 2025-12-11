@@ -103,12 +103,12 @@ export default function Settings() {
               value={facultyData.name}
               onChange={handleChange}
               placeholder="Dr. John Doe"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-foreground">
               Email Address
             </label>
             <input
@@ -117,12 +117,12 @@ export default function Settings() {
               value={facultyData.email}
               onChange={handleChange}
               placeholder="john.doe@somaiya.edu"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-foreground">
               Department
             </label>
             <input
@@ -131,12 +131,12 @@ export default function Settings() {
               value={facultyData.department}
               onChange={handleChange}
               placeholder="Computer Engineering"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-foreground">
               Faculty ID
             </label>
             <input
@@ -144,57 +144,57 @@ export default function Settings() {
               name="faculty_id"
               value={facultyData.faculty_id}
               disabled
-              className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
-            <p className="text-xs text-slate-500 dark:text-gray-400">Faculty ID cannot be changed</p>
+            <p className="text-xs text-muted-foreground">Faculty ID cannot be changed</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Password Settings */}
-      <Card className="dark:bg-[#070c1f] dark:border-gray-800/40">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-xl text-slate-800 dark:text-white">Change Password</CardTitle>
+          <CardTitle className="text-xl text-foreground">Change Password</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-foreground">
                 Current Password
               </label>
               <input
                 type="password"
                 placeholder="••••••••••••"
-                className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-foreground">
                 New Password
               </label>
               <input
                 type="password"
                 placeholder="••••••••••••"
-                className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-foreground">
                 Confirm New Password
               </label>
               <input
                 type="password"
                 placeholder="••••••••••••"
-                className="w-full px-3 py-2 border border-slate-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div className="pt-4">
-              <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
+              <p className="text-xs text-muted-foreground mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
               >
                 Update Password
               </Button>

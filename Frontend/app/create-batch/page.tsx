@@ -285,7 +285,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-black dark:via-gray-950 dark:to-slate-950 p-4 pb-10">
+    <div className="flex min-h-screen flex-col bg-background p-4 pb-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 max-w-6xl mx-auto w-full">
         <Button
@@ -301,20 +301,20 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
 
       <div className="w-full max-w-6xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3">
+          <h1 className="text-4xl font-bold text-foreground mb-3">
             Create New Batch
           </h1>
-          <p className="text-slate-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Set up a new batch by providing batch details and uploading student information
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Batch Details */}
-          <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-            <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+          <Card className="shadow-lg border-border bg-card">
+            <CardHeader className="border-b border-border">
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-600" />
+                <Users className="h-5 w-5 text-primary" />
                 Batch Information
               </CardTitle>
               <CardDescription>
@@ -422,10 +422,10 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
           </Card>
 
           {/* File Upload */}
-          <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-            <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+          <Card className="shadow-lg border-border bg-card">
+            <CardHeader className="border-b border-border">
               <CardTitle className="flex items-center gap-2">
-                <FileSpreadsheet className="h-5 w-5 text-green-600" />
+                <FileSpreadsheet className="h-5 w-5 text-chart-2" />
                 Student Information
               </CardTitle>
               <CardDescription>
@@ -435,18 +435,18 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
             <CardContent className="pt-6">
               <div className="space-y-6">
                 {/* Download Template */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+                <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
+                  <h4 className="font-medium text-foreground mb-2">
                     Need a template?
                   </h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                  <p className="text-sm text-muted-foreground mb-3">
                     Download our template to ensure your file has the correct format.
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={downloadTemplate}
-                    className="border-blue-300 text-blue-700 hover:bg-blue-100 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900/30"
+                    className="border-primary/30 text-primary hover:bg-primary/10"
                   >
                     <Download className="mr-2 h-4 w-4" />
                     Download Template
@@ -454,7 +454,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                 </div>
 
                 {/* File Upload */}
-                <div className="border-2 border-dashed border-slate-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -464,12 +464,12 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                   />
                   <div className="space-y-4">
                     {uploadedFile ? (
-                      <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
+                      <div className="flex items-center justify-center gap-2 text-chart-2">
                         <FileSpreadsheet className="h-8 w-8" />
                         <span className="font-medium">{uploadedFile.name}</span>
                       </div>
                     ) : (
-                      <Upload className="h-12 w-12 text-slate-400 mx-auto" />
+                      <Upload className="h-12 w-12 text-muted-foreground mx-auto" />
                     )}
                     
                     <div>
@@ -481,7 +481,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
                       >
                         {isProcessing ? "Processing..." : "Choose File"}
                       </Button>
-                      <p className="text-sm text-slate-500 dark:text-gray-400">
+                      <p className="text-sm text-muted-foreground">
                         Supports CSV, XLS, and XLSX files
                       </p>
                     </div>
@@ -490,12 +490,12 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
 
                 {/* Errors */}
                 {errors.length > 0 && (
-                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
-                    <div className="flex items-center gap-2 text-red-700 dark:text-red-300 mb-2">
+                  <div className="bg-destructive/10 p-4 rounded-lg border border-destructive/20">
+                    <div className="flex items-center gap-2 text-destructive mb-2">
                       <AlertCircle className="h-4 w-4" />
                       <span className="font-medium">Validation Errors</span>
                     </div>
-                    <ul className="text-sm text-red-600 dark:text-red-400 space-y-1">
+                    <ul className="text-sm text-destructive/80 space-y-1">
                       {errors.map((error, index) => (
                         <li key={index}>• {error}</li>
                       ))}
@@ -505,8 +505,8 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
 
                 {/* Student Count */}
                 {students.length > 0 && (
-                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                    <p className="text-green-700 dark:text-green-300 font-medium">
+                  <div className="bg-chart-2/10 p-4 rounded-lg border border-chart-2/20">
+                    <p className="text-chart-2 font-medium">
                       ✓ {students.length} students loaded successfully
                     </p>
                   </div>
@@ -518,8 +518,8 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
 
         {/* Student Preview Table */}
         {students.length > 0 && (
-          <Card className="mt-6 shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
-            <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+          <Card className="mt-6 shadow-lg border-border bg-card">
+            <CardHeader className="border-b border-border">
               <CardTitle>Student Preview</CardTitle>
               <CardDescription>
                 Review the student information before creating the batch
@@ -553,7 +553,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
         )}
 
         {/* Action Buttons */}
-        <Card className="mt-6 shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+        <Card className="mt-6 shadow-lg border-border bg-card">
           <CardFooter className="flex justify-between pt-6">
             <Button
               variant="outline"
@@ -566,7 +566,7 @@ CS2024005,David Brown,david.brown@example.com,+1234567894`;
               onClick={handleSubmit} 
               type="submit"
               disabled={!batchData.batchName || !batchData.academic_year || !batchData.semester || !batchData.course || students.length === 0}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground"
             >
               Create Batch ({students.length} students)
             </Button>
