@@ -291,19 +291,19 @@ export default function BatchDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (error || !batch) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-semibold mb-2">Error Loading Batch</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <h2 className="text-xl font-semibold mb-2 text-foreground">Error Loading Batch</h2>
+            <p className="text-muted-foreground mb-4">{error}</p>
             <Button onClick={() => router.back()}>Go Back</Button>
           </CardContent>
         </Card>
@@ -312,7 +312,7 @@ export default function BatchDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-gray-900 dark:to-black p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -326,10 +326,10 @@ export default function BatchDetailsPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold text-foreground">
                 {batch.batch_name}
               </h1>
-              <p className="text-slate-600 dark:text-gray-400">
+              <p className="text-muted-foreground">
                 {batch.academic_year} • {batch.semester} • {batch.students?.length || 0} students
               </p>
             </div>
@@ -348,57 +348,59 @@ export default function BatchDetailsPage() {
 
         {/* Batch Statistics */}
         <div className="grid gap-4 md:grid-cols-4 mb-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
+          <Card className="bg-card border-border hover-lift transition-all duration-200">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Students</p>
-                  <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">{batch.students?.length || 0}</p>
+                  <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                  <p className="text-2xl font-bold text-foreground">{batch.students?.length || 0}</p>
                 </div>
-                <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-green-700 dark:text-green-300">Active Students</p>
-                  <p className="text-2xl font-bold text-green-800 dark:text-green-200">{batch.students?.length || 0}</p>
-                </div>
-                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                  <div className="h-4 w-4 bg-green-600 dark:bg-green-400 rounded"></div>
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Users className="h-5 w-5 text-primary" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800">
+          <Card className="bg-card border-border hover-lift transition-all duration-200">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Created</p>
-                  <p className="text-lg font-bold text-purple-800 dark:text-purple-200">
+                  <p className="text-sm font-medium text-muted-foreground">Active Students</p>
+                  <p className="text-2xl font-bold text-foreground">{batch.students?.length || 0}</p>
+                </div>
+                <div className="p-2 bg-chart-2/10 rounded-lg">
+                  <div className="h-4 w-4 bg-chart-2 rounded"></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-border hover-lift transition-all duration-200">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Created</p>
+                  <p className="text-lg font-bold text-foreground">
                     {new Date(batch.created_at).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                  <div className="h-4 w-4 bg-purple-600 dark:bg-purple-400 rounded"></div>
+                <div className="p-2 bg-chart-4/10 rounded-lg">
+                  <div className="h-4 w-4 bg-chart-4 rounded"></div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800">
+          <Card className="bg-card border-border hover-lift transition-all duration-200">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-orange-700 dark:text-orange-300">Batch ID</p>
-                  <p className="text-lg font-bold text-orange-800 dark:text-orange-200 font-mono">{batch.id}</p>
+                  <p className="text-sm font-medium text-muted-foreground">Batch ID</p>
+                  <p className="text-lg font-bold text-foreground font-mono">{batch.id}</p>
                 </div>
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
-                  <div className="h-4 w-4 bg-orange-600 dark:bg-orange-400 rounded"></div>
+                <div className="p-2 bg-chart-5/10 rounded-lg">
+                  <div className="h-4 w-4 bg-chart-5 rounded"></div>
                 </div>
               </div>
             </CardContent>
@@ -406,11 +408,11 @@ export default function BatchDetailsPage() {
         </div>
 
         {/* Students Management */}
-        <Card className="shadow-lg border-slate-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
+        <Card className="shadow-lg border-border bg-card">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">Students</CardTitle>
+                <CardTitle className="text-xl font-bold text-foreground">Students</CardTitle>
                 <CardDescription>Manage students in this batch</CardDescription>
               </div>
               <div className="flex items-center gap-2">
@@ -432,7 +434,7 @@ export default function BatchDetailsPage() {
                 </Button>
                 <Dialog open={showAddStudent} onOpenChange={setShowAddStudent}>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                    <Button className="bg-primary hover:bg-primary/90">
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Add Student
                     </Button>
@@ -500,7 +502,7 @@ export default function BatchDetailsPage() {
             {/* Search */}
             <div className="flex items-center gap-4 mb-6">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search students by name, roll number, or email..."
                   value={searchTerm}
@@ -560,9 +562,9 @@ export default function BatchDetailsPage() {
 
             {filteredStudents.length === 0 && (
               <div className="text-center py-12">
-                <Users className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No students found</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <Users className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                <h3 className="mt-2 text-sm font-medium text-foreground">No students found</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding your first student.'}
                 </p>
               </div>
