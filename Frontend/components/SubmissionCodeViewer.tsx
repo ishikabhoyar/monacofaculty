@@ -641,7 +641,7 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
             <div className="flex gap-2">
               <Button 
                 size="sm"
-                className="flex items-center gap-1 bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                className="flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
                 onClick={runCode}
                 disabled={isRunning}
               >
@@ -681,7 +681,7 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
           <div className="flex items-center justify-between px-2 py-1 border-b bg-muted">
             <span className="text-[11px] font-medium text-foreground">Output</span>
             {waitingForInput && (
-              <span className="text-[10px] text-green-500 animate-pulse">● Waiting for input...</span>
+              <span className="text-[10px] text-primary animate-pulse">● Waiting for input...</span>
             )}
           </div>
           <div 
@@ -690,16 +690,16 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
             onClick={() => terminalInputRef.current?.focus()}
           >
             {terminalOutput.length === 0 ? (
-              <div className="text-gray-500">Run the code to see output...</div>
+              <div className="text-muted-foreground">Run the code to see output...</div>
             ) : (
               <>
                 {terminalOutput.map((line, index) => (
                   <div 
                     key={index} 
                     className={`${
-                      line.type === 'error' ? 'text-red-400' : 
-                      line.type === 'system' ? 'text-blue-400' : 
-                      'text-white'
+                      line.type === 'error' ? 'text-destructive' : 
+                      line.type === 'system' ? 'text-primary' : 
+                      'text-foreground'
                     }`}
                   >
                     {line.content}
@@ -709,13 +709,13 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
                 {waitingForInput && activeSocket && (
                   <form onSubmit={handleInputSubmit} className="inline-block w-full">
                     <div className="flex items-start">
-                      <span className="text-green-400 mr-1">{'>'}</span>
+                      <span className="text-primary mr-1">{'>'}</span>
                       <input
                         ref={terminalInputRef}
                         type="text"
                         value={terminalInput}
                         onChange={(e) => setTerminalInput(e.target.value)}
-                        className="flex-1 bg-transparent text-white outline-none border-none"
+                        className="flex-1 bg-transparent text-foreground outline-none border-none"
                         placeholder="Type input and press Enter..."
                         disabled={!activeSocket || activeSocket.readyState !== WebSocket.OPEN}
                         autoFocus
@@ -751,7 +751,7 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
           onClick={handleGrade}
           disabled={isSaving}
           size="sm"
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-8"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 h-8"
         >
           {isSaving ? (
             <>Saving...</>

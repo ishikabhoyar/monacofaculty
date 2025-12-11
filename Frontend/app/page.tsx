@@ -1287,10 +1287,10 @@ export default function FacultyDashboard() {
 
       {/* Submission Details Dialog */}
       <Dialog open={isSubmissionDialogOpen} onOpenChange={setIsSubmissionDialogOpen}>
-        <DialogContent className="!max-w-[98vw] w-[98vw] !max-h-[98vh] h-[98vh] bg-white dark:bg-card border border-[#e5e5e5] dark:border-border p-3 sm:!max-w-[98vw] rounded-[16px]">
+        <DialogContent className="!max-w-[98vw] w-[98vw] !max-h-[98vh] h-[98vh] bg-card border border-border p-3 sm:!max-w-[98vw] rounded-[16px]">
           <DialogHeader className="pb-1">
-            <DialogTitle className="text-[#111A4A] dark:text-foreground text-base">Review Student Submission</DialogTitle>
-            <DialogDescription className="text-[#7C7F88] dark:text-muted-foreground text-xs">
+            <DialogTitle className="text-foreground text-base">Review Student Submission</DialogTitle>
+            <DialogDescription className="text-muted-foreground text-xs">
               View, run, and grade student&apos;s code submission
             </DialogDescription>
           </DialogHeader>
