@@ -297,7 +297,7 @@ export default function QuestionsPage() {
                 setShowQuestionBank(true);
                 fetchQuestionBank();
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md flex items-center"
             >
               <Library className="h-5 w-5 mr-2" /> Browse Question Bank
             </button>
@@ -505,7 +505,7 @@ export default function QuestionsPage() {
             <div className="flex gap-2">
               <button
                 onClick={editingQuestion ? handleUpdateQuestion : handleAddQuestion}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
+                className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md flex items-center"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {editingQuestion ? 'Update' : 'Add'} Question
@@ -829,7 +829,7 @@ export default function QuestionsPage() {
                         </div>
                         <button
                           onClick={() => handleCopyQuestion(question.id)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center text-sm whitespace-nowrap"
+                          className="bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md flex items-center text-sm whitespace-nowrap"
                         >
                           <Copy className="h-4 w-4 mr-1" /> Copy to Test
                         </button>

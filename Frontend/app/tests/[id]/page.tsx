@@ -100,9 +100,9 @@ export default function TestDetailPage() {
     const startTime = new Date(test.start_time);
     const endTime = new Date(test.end_time);
 
-    if (startTime > now) return { status: 'Upcoming', color: 'text-blue-600 bg-blue-100' };
-    if (startTime <= now && endTime > now) return { status: 'Active', color: 'text-green-600 bg-green-100' };
-    return { status: 'Completed', color: 'text-gray-600 bg-gray-100' };
+    if (startTime > now) return { status: 'Upcoming', color: 'text-primary bg-primary/10' };
+    if (startTime <= now && endTime > now) return { status: 'Active', color: 'text-green-600 bg-green-100 dark:bg-green-900/30' };
+    return { status: 'Completed', color: 'text-muted-foreground bg-muted' };
   };
 
   const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
@@ -121,7 +121,7 @@ export default function TestDetailPage() {
         <div className="text-center text-red-600">{error || 'Test not found'}</div>
         <button
           onClick={() => router.back()}
-          className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+          className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md"
         >
           Go Back
         </button>
@@ -136,30 +136,30 @@ export default function TestDetailPage() {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
+          className="flex items-center text-primary hover:text-primary/80 mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to Tests
         </button>
-        <h1 className="text-3xl font-bold">{test.title}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{test.title}</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Test Details */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Test Information</h2>
+          <div className="bg-card p-6 rounded-lg shadow border border-border">
+            <h2 className="text-xl font-semibold mb-4 text-foreground">Test Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center">
-                <Users className="h-5 w-5 text-gray-500 mr-2" />
-                <span className="text-gray-600">Batch: {test.batch_name}</span>
+                <Users className="h-5 w-5 text-muted-foreground mr-2" />
+                <span className="text-muted-foreground">Batch: {test.batch_name}</span>
               </div>
               <div className="flex items-center">
-                <Clock className="h-5 w-5 text-gray-500 mr-2" />
-                <span className="text-gray-600">Duration: {test.duration_minutes} minutes</span>
+                <Clock className="h-5 w-5 text-muted-foreground mr-2" />
+                <span className="text-muted-foreground">Duration: {test.duration_minutes} minutes</span>
               </div>
               <div className="flex items-center">
-                <Calendar className="h-5 w-5 text-gray-500 mr-2" />
-                <span className="text-gray-600">Max Attempts: {test.max_attempts}</span>
+                <Calendar className="h-5 w-5 text-muted-foreground mr-2" />
+                <span className="text-muted-foreground">Max Attempts: {test.max_attempts}</span>
               </div>
               <div className="flex items-center">
                 <span className={`px-2 py-1 rounded-full text-sm ${color}`}>
@@ -170,21 +170,21 @@ export default function TestDetailPage() {
 
             {test.description && (
               <div className="mt-4">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-gray-700">{test.description}</p>
+                <h3 className="font-semibold mb-2 text-foreground">Description</h3>
+                <p className="text-muted-foreground">{test.description}</p>
               </div>
             )}
 
             {test.instructions && (
               <div className="mt-4">
-                <h3 className="font-semibold mb-2">Instructions</h3>
-                <p className="text-gray-700">{test.instructions}</p>
+                <h3 className="font-semibold mb-2 text-foreground">Instructions</h3>
+                <p className="text-muted-foreground">{test.instructions}</p>
               </div>
             )}
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Schedule</h2>
+          <div className="bg-card p-6 rounded-lg shadow border border-border">
+            <h2 className="text-xl font-semibold mb-4 text-foreground">Schedule</h2>
             <div className="space-y-2">
               <p><strong>Start Time:</strong> {formatDateTime(test.start_time)}</p>
               <p><strong>End Time:</strong> {formatDateTime(test.end_time)}</p>
@@ -209,7 +209,7 @@ export default function TestDetailPage() {
             <div className="mt-4">
               <Link
                 href={`/tests/${testId}/questions`}
-                className="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md flex items-center justify-center"
+                className="w-full bg-primary hover:bg-primary/80 text-primary-foreground px-4 py-2 rounded-md flex items-center justify-center transition-colors"
               >
                 <BookOpen className="h-4 w-4 mr-2" />
                 Manage Questions
@@ -217,18 +217,18 @@ export default function TestDetailPage() {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Actions</h2>
+          <div className="bg-card p-6 rounded-lg shadow border border-border">
+            <h2 className="text-xl font-semibold mb-4 text-foreground">Actions</h2>
             <div className="space-y-2">
               <Link
                 href={`/tests/${testId}/edit`}
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md flex items-center justify-center"
+                className="w-full bg-accent hover:bg-accent/80 text-accent-foreground px-4 py-2 rounded-md flex items-center justify-center transition-colors"
               >
                 Edit Test
               </Link>
               <button
                 onClick={() => {/* Add edit functionality */}}
-                className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                className="w-full bg-destructive hover:bg-destructive/80 text-destructive-foreground px-4 py-2 rounded-md transition-colors"
               >
                 Delete Test
               </button>
@@ -239,22 +239,22 @@ export default function TestDetailPage() {
 
       {/* Questions Preview */}
       {questions.length > 0 && (
-        <div className="mt-6 bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Questions Preview</h2>
+        <div className="mt-6 bg-card p-6 rounded-lg shadow border border-border">
+          <h2 className="text-xl font-semibold mb-4 text-foreground">Questions Preview</h2>
           <div className="space-y-4">
             {questions.slice(0, 5).map((question, index) => (
-              <div key={question.id} className="border rounded-lg p-4">
+              <div key={question.id} className="border border-border rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold">Q{index + 1}: {question.question_text}</h3>
-                  <span className="text-sm text-gray-500">{question.marks} marks</span>
+                  <h3 className="font-semibold text-foreground">Q{index + 1}: {question.question_text}</h3>
+                  <span className="text-sm text-muted-foreground">{question.marks} marks</span>
                 </div>
                 <div className="ml-4">
                   {question.options.map((option, optIndex) => (
                     <div key={optIndex} className="flex items-center mb-1">
-                      <span className="w-6 text-sm text-gray-500">{String.fromCharCode(65 + optIndex)}.</span>
-                      <span className="text-sm">{option}</span>
+                      <span className="w-6 text-sm text-muted-foreground">{String.fromCharCode(65 + optIndex)}.</span>
+                      <span className="text-sm text-foreground">{option}</span>
                       {option === question.correct_answer && (
-                        <span className="ml-2 text-green-600 text-xs">(Correct)</span>
+                        <span className="ml-2 text-green-600 dark:text-green-400 text-xs">(Correct)</span>
                       )}
                     </div>
                   ))}
@@ -262,7 +262,7 @@ export default function TestDetailPage() {
               </div>
             ))}
             {questions.length > 5 && (
-              <p className="text-center text-gray-500">
+              <p className="text-center text-muted-foreground">
                 ... and {questions.length - 5} more questions
               </p>
             )}
@@ -271,9 +271,9 @@ export default function TestDetailPage() {
       )}
 
       {/* Submissions Section */}
-      <div className="mt-6 bg-white p-6 rounded-lg shadow">
+      <div className="mt-6 bg-card p-6 rounded-lg shadow border border-border">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold flex items-center">
+          <h2 className="text-xl font-semibold flex items-center text-foreground">
             <FileText className="h-5 w-5 mr-2" />
             Submissions ({submissions.length})
           </h2>
@@ -281,33 +281,33 @@ export default function TestDetailPage() {
 
         {loadingSubmissions ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">Loading submissions...</p>
+            <p className="text-muted-foreground">Loading submissions...</p>
           </div>
         ) : submissions.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">No submissions yet for this test.</p>
+            <p className="text-muted-foreground">No submissions yet for this test.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-border">
+              <thead className="bg-muted">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Student
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Roll Number
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Question
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Marks
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Submitted At
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

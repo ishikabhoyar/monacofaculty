@@ -600,41 +600,41 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
   return (
     <div className="flex flex-col h-full space-y-1.5">
       {/* Student Info Header - Ultra Compact */}
-      <div className="grid grid-cols-5 gap-2 px-2 py-1.5 bg-slate-50 dark:bg-gray-900/50 rounded border border-slate-200 dark:border-gray-800">
+      <div className="grid grid-cols-5 gap-2 px-2 py-1.5 bg-secondary rounded border border-border">
         <div>
-          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Student</p>
-          <p className="text-[11px] font-semibold dark:text-white leading-tight">{submission.student_name}</p>
-          <p className="text-[9px] text-gray-500 dark:text-gray-500 leading-tight">{submission.student_roll}</p>
+          <p className="text-[9px] font-medium text-muted-foreground uppercase leading-tight">Student</p>
+          <p className="text-[11px] font-semibold text-foreground leading-tight">{submission.student_name}</p>
+          <p className="text-[9px] text-muted-foreground leading-tight">{submission.student_roll}</p>
         </div>
         <div>
-          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Test</p>
-          <p className="text-[11px] font-semibold dark:text-white leading-tight">{submission.test_title}</p>
+          <p className="text-[9px] font-medium text-muted-foreground uppercase leading-tight">Test</p>
+          <p className="text-[11px] font-semibold text-foreground leading-tight">{submission.test_title}</p>
         </div>
         <div>
-          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Batch</p>
-          <p className="text-[11px] dark:text-white leading-tight">{submission.batch_name}</p>
+          <p className="text-[9px] font-medium text-muted-foreground uppercase leading-tight">Batch</p>
+          <p className="text-[11px] text-foreground leading-tight">{submission.batch_name}</p>
         </div>
         <div>
-          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Submitted</p>
-          <p className="text-[11px] dark:text-white leading-tight">
+          <p className="text-[9px] font-medium text-muted-foreground uppercase leading-tight">Submitted</p>
+          <p className="text-[11px] text-foreground leading-tight">
             {submission.submitted_at 
               ? new Date(submission.submitted_at).toLocaleString('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
               : 'N/A'}
           </p>
         </div>
         <div>
-          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400 uppercase leading-tight">Question</p>
-          <p className="text-[11px] dark:text-white line-clamp-1 leading-tight">{submission.question_text}</p>
+          <p className="text-[9px] font-medium text-muted-foreground uppercase leading-tight">Question</p>
+          <p className="text-[11px] text-foreground line-clamp-1 leading-tight">{submission.question_text}</p>
         </div>
       </div>
 
       {/* Editor Section */}
-      <div className="flex-grow flex flex-col border border-slate-200 dark:border-gray-800 rounded-lg overflow-hidden">
-        <div className="flex-none border-b bg-background dark:bg-gray-900/50">
+      <div className="flex-grow flex flex-col border border-border rounded-lg overflow-hidden">
+        <div className="flex-none border-b bg-background">
           <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                Language: <span className="text-blue-600 dark:text-blue-400">{language}</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                Language: <span className="text-primary">{language}</span>
               </span>
             </div>
             
@@ -677,15 +677,15 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
         </div>
         
         {/* Terminal Output */}
-        <div className="flex-none border-t bg-background dark:bg-gray-900/50" style={{ height: '200px' }}>
-          <div className="flex items-center justify-between px-2 py-1 border-b bg-muted dark:bg-gray-800/50">
-            <span className="text-[11px] font-medium">Output</span>
+        <div className="flex-none border-t bg-background" style={{ height: '200px' }}>
+          <div className="flex items-center justify-between px-2 py-1 border-b bg-muted">
+            <span className="text-[11px] font-medium text-foreground">Output</span>
             {waitingForInput && (
               <span className="text-[10px] text-green-500 animate-pulse">● Waiting for input...</span>
             )}
           </div>
           <div 
-            className="p-2 overflow-auto font-mono text-[11px] bg-black text-white" 
+            className="p-2 overflow-auto font-mono text-[11px] bg-background text-foreground" 
             style={{ height: 'calc(100% - 29px)' }}
             onClick={() => terminalInputRef.current?.focus()}
           >
@@ -730,9 +730,9 @@ const SubmissionCodeViewer: React.FC<SubmissionCodeViewerProps> = ({ submission,
       </div>
 
       {/* Grading Section - Compact */}
-      <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-gray-900/50 rounded-lg border border-slate-200 dark:border-gray-800">
+      <div className="flex items-center gap-3 p-2 bg-secondary rounded-lg border border-border">
         <div className="flex-1 flex items-center gap-2">
-          <Label htmlFor="marks" className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+          <Label htmlFor="marks" className="text-xs font-medium text-foreground whitespace-nowrap">
             Award Marks (out of {submission.total_marks}):
           </Label>
           <Input
