@@ -514,6 +514,21 @@ export default function FacultyDashboard() {
             </div>
             Submissions
           </Button>
+
+          <Button 
+            variant={activeTab === "settings" ? "default" : "ghost"} 
+            className={`w-full justify-start h-11 text-left font-medium transition-all duration-200 rounded-xl ${
+              activeTab === "settings" 
+                ? "bg-[#146e96] text-white hover:bg-[#0f5a7a]" 
+                : "text-[#666666] hover:text-[#111A4A] hover:bg-[#f0f9ff] dark:text-muted-foreground dark:hover:bg-accent"
+            }`}
+            onClick={() => setActiveTab("settings")}
+          >
+            <div className={`mr-3 p-1.5 rounded-lg ${activeTab === "settings" ? "bg-white/20" : "bg-[#666666]/10 dark:bg-muted"}`}>
+              <Settings className={`h-4 w-4 ${activeTab === "settings" ? "text-white" : "text-[#666666] dark:text-muted-foreground"}`} />
+            </div>
+            Settings
+          </Button>
         </nav>
 
         <div className="mt-auto pt-4 pb-6 border-t border-[#e5e5e5] dark:border-border">
@@ -543,15 +558,6 @@ export default function FacultyDashboard() {
           </div>
           <div className="flex gap-3 items-center">
             <ThemeToggle />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="border-[#e5e5e5] text-[#666666] hover:text-[#111A4A] hover:border-[#146e96] dark:border-border dark:text-muted-foreground rounded-lg"
-              onClick={() => setActiveTab("settings")}
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Button>
             <Button 
               size="sm" 
               onClick={() => router.push("/create-batch")}
