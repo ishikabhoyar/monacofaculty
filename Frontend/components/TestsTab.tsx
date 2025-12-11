@@ -29,47 +29,47 @@ export default function TestsTab({ tests = dummyTests, onTestUpdate }: TestsTabP
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Tests</h2>
-          <p className="text-muted-foreground dark:text-muted-foreground mt-1">Create, edit, and manage all your tests</p>
+          <h2 className="text-2xl font-semibold text-foreground">Manage Tests</h2>
+          <p className="text-muted-foreground mt-1">Create, edit, and manage all your tests</p>
         </div>
         <button
           onClick={() => router.push("/create-test")}
-          className="bg-primary hover:bg-primary/80 text-primary-foreground transition-all duration-200 px-4 py-2 rounded-lg font-medium"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 px-4 py-2 rounded-lg font-medium active:scale-[0.98]"
         >
           Create Test
         </button>
       </div>
 
-      <div className="rounded-[16px] overflow-hidden bg-card border border-border dark:border-border">
+      <div className="rounded-[16px] overflow-hidden bg-card border border-border shadow-sm animate-fadeIn">
         <div className="p-6">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border dark:border-border">
-                <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Test ID</th>
-                <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Title</th>
-                <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Course</th>
-                <th className="text-left font-semibold py-2 text-[#666666] dark:text-muted-foreground">Status</th>
-                <th className="text-right font-semibold py-2 text-[#666666] dark:text-muted-foreground">Actions</th>
+              <tr className="border-b border-border">
+                <th className="text-left font-semibold py-2 text-muted-foreground">Test ID</th>
+                <th className="text-left font-semibold py-2 text-muted-foreground">Title</th>
+                <th className="text-left font-semibold py-2 text-muted-foreground">Course</th>
+                <th className="text-left font-semibold py-2 text-muted-foreground">Status</th>
+                <th className="text-right font-semibold py-2 text-muted-foreground">Actions</th>
               </tr>
             </thead>
             <tbody>
               {localTests.map((test, index) => (
                 <tr
                   key={test.id}
-                  className="border-b border-border dark:border-border hover:bg-[#fafafa] dark:hover:bg-muted/50"
+                  className="border-b border-border hover:bg-muted/50 transition-colors duration-150"
                 >
-                  <td className="py-3 font-mono text-sm text-muted-foreground dark:text-muted-foreground">{test.id}</td>
-                  <td className="py-3 font-medium text-foreground dark:text-foreground">{test.title}</td>
+                  <td className="py-3 font-mono text-sm text-muted-foreground">{test.id}</td>
+                  <td className="py-3 font-medium text-foreground">{test.title}</td>
                   <td className="py-3">
-                    <span className="px-2 py-1 bg-[#f0f9ff] text-[#146e96] dark:bg-primary/20 dark:text-primary rounded-full text-sm">
+                    <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm">
                       {test.course}
                     </span>
                   </td>
                   <td className="py-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                       test.status === 'Published'
-                        ? 'bg-[#f0fdf4] text-[#10b981] dark:bg-chart-2/20 dark:text-chart-2'
-                        : 'bg-[#fffbeb] text-[#f59e0b] dark:bg-chart-4/20 dark:text-chart-4'
+                        ? 'bg-chart-2/10 text-chart-2'
+                        : 'bg-chart-4/10 text-chart-4'
                     }`}>
                       {test.status}
                     </span>
@@ -77,7 +77,7 @@ export default function TestsTab({ tests = dummyTests, onTestUpdate }: TestsTabP
                   <td className="py-3 text-right">
                     <button
                       onClick={() => router.push(`/tests/${test.id}`)}
-                      className="text-[#146e96] hover:text-[#0f5a7a] dark:text-primary dark:hover:text-primary/80 px-3 py-1 rounded font-medium"
+                      className="text-primary hover:bg-primary/10 px-3 py-1 rounded font-medium transition-colors duration-150"
                     >
                       View
                     </button>

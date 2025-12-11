@@ -318,25 +318,25 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
-            <p className="text-muted-foreground dark:text-muted-foreground mt-1">Loading your batches...</p>
+            <h2 className="text-2xl font-semibold text-foreground">Manage Batches</h2>
+            <p className="text-muted-foreground mt-1">Loading your batches...</p>
           </div>
         </div>
         
         <div className="grid gap-4 md:grid-cols-4 mb-6">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="animate-pulse rounded-[16px] border border-border dark:border-border bg-white dark:bg-card p-4">
-              <div className="h-4 bg-muted dark:bg-muted rounded mb-2"></div>
-              <div className="h-8 bg-muted dark:bg-muted rounded"></div>
+            <div key={i} className="rounded-[16px] border border-border bg-card p-4">
+              <div className="h-4 bg-muted rounded mb-2 skeleton"></div>
+              <div className="h-8 bg-muted rounded skeleton"></div>
             </div>
           ))}
         </div>
         
-        <div className="animate-pulse rounded-[16px] border border-border dark:border-border bg-white dark:bg-card p-6">
-          <div className="h-6 bg-muted dark:bg-muted rounded mb-4"></div>
+        <div className="rounded-[16px] border border-border bg-card p-6">
+          <div className="h-6 bg-muted rounded mb-4 skeleton w-48"></div>
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-12 bg-muted dark:bg-muted rounded"></div>
+              <div key={i} className="h-12 bg-muted rounded skeleton"></div>
             ))}
           </div>
         </div>
@@ -349,15 +349,15 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
-            <p className="text-muted-foreground dark:text-muted-foreground mt-1">Error loading batches</p>
+            <h2 className="text-2xl font-semibold text-foreground">Manage Batches</h2>
+            <p className="text-muted-foreground mt-1">Error loading batches</p>
           </div>
-          <Button onClick={handleRefresh} variant="outline" className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg">
+          <Button onClick={handleRefresh} variant="outline" className="border-border text-muted-foreground hover:bg-muted rounded-lg">
             Try Again
           </Button>
         </div>
         
-        <div className="rounded-[16px] border border-destructive/50 bg-destructive/10 dark:bg-destructive/20 p-6">
+        <div className="rounded-[16px] border border-destructive/50 bg-destructive/10 p-6">
           <div className="flex items-center">
             <AlertCircle className="h-5 w-5 text-destructive mr-3" />
             <div>
@@ -374,21 +374,21 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-foreground dark:text-foreground">Manage Batches</h2>
-          <p className="text-muted-foreground dark:text-muted-foreground mt-1">Create, edit, and manage all your student batches</p>
+          <h2 className="text-2xl font-semibold text-foreground">Manage Batches</h2>
+          <p className="text-muted-foreground mt-1">Create, edit, and manage all your student batches</p>
         </div>
         <div className="flex gap-2">
           <Button 
             variant="outline"
             onClick={handleRefresh}
-            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
+            className="border-border text-muted-foreground hover:bg-muted rounded-lg"
           >
             Refresh
           </Button>
           <Button 
             variant="outline"
             onClick={() => setShowImportDialog(true)}
-            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
+            className="border-border text-muted-foreground hover:bg-muted rounded-lg"
           >
             <Upload className="mr-2 h-4 w-4" />
             Import Students
@@ -396,7 +396,7 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           <Button 
             variant="outline"
             onClick={() => {/* Handle export all batches */}}
-            className="border-border dark:border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg"
+            className="border-border text-muted-foreground hover:bg-muted rounded-lg"
           >
             <Download className="mr-2 h-4 w-4" />
             Export All
@@ -413,67 +413,51 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
       
       {/* Batch Statistics */}
       <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-          }}
-        >
+        <div className="rounded-[16px] p-4 bg-card border border-border shadow-sm hover-lift stagger-item">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Total Batches</p>
-              <p className="text-2xl font-semibold text-foreground dark:text-foreground">{localBatches.length}</p>
+              <p className="text-sm font-medium text-muted-foreground">Total Batches</p>
+              <p className="text-2xl font-semibold text-foreground">{localBatches.length}</p>
             </div>
-            <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
-              <Users className="h-6 w-6 text-primary dark:text-primary" />
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Users className="h-6 w-6 text-primary" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-          }}
-        >
+        <div className="rounded-[16px] p-4 bg-card border border-border shadow-sm hover-lift stagger-item">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Active Batches</p>
-              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground">Active Batches</p>
+              <p className="text-2xl font-semibold text-foreground">
                 {localBatches.filter(b => b.status === 'Active').length}
               </p>
             </div>
-            <div className="p-2 bg-chart-2/10 dark:bg-chart-2/20 rounded-lg">
-              <BookOpen className="h-6 w-6 text-chart-2 dark:text-chart-2" />
+            <div className="p-2 bg-chart-2/10 rounded-lg">
+              <BookOpen className="h-6 w-6 text-chart-2" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-          }}
-        >
+        <div className="rounded-[16px] p-4 bg-card border border-border shadow-sm hover-lift stagger-item">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Total Students</p>
-              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+              <p className="text-2xl font-semibold text-foreground">
                 {localBatches.reduce((total, batch) => total + (batch.student_count || 0), 0)}
               </p>
             </div>
-            <div className="p-2 bg-chart-3/10 dark:bg-chart-3/20 rounded-lg">
-              <GraduationCap className="h-6 w-6 text-[#8b5cf6] dark:text-chart-3" />
+            <div className="p-2 bg-chart-3/10 rounded-lg">
+              <GraduationCap className="h-6 w-6 text-chart-3" />
             </div>
           </div>
         </div>
         
-        <div className="rounded-[16px] p-4 bg-white dark:bg-card border border-border dark:border-border"
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-          }}
-        >
+        <div className="rounded-[16px] p-4 bg-card border border-border shadow-sm hover-lift stagger-item">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">This Month</p>
-              <p className="text-2xl font-semibold text-foreground dark:text-foreground">
+              <p className="text-sm font-medium text-muted-foreground">This Month</p>
+              <p className="text-2xl font-semibold text-foreground">
                 {localBatches.filter(b => {
                   const createdDate = new Date(b.created_at);
                   const now = new Date();
@@ -481,35 +465,31 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                 }).length}
               </p>
             </div>
-            <div className="p-2 bg-chart-4/10 dark:bg-chart-4/20 rounded-lg">
-              <Calendar className="h-6 w-6 text-[#f59e0b] dark:text-chart-4" />
+            <div className="p-2 bg-chart-4/10 rounded-lg">
+              <Calendar className="h-6 w-6 text-chart-4" />
             </div>
           </div>
         </div>
       </div>
       
       {/* Batches Table */}
-      <div className="rounded-[16px] overflow-hidden bg-white dark:bg-card border border-border dark:border-border"
-        style={{
-          boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-        }}
-      >
+      <div className="rounded-[16px] overflow-hidden bg-card border border-border shadow-sm animate-fadeIn">
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-foreground dark:text-foreground mb-1">All Batches</h3>
-          <p className="text-muted-foreground dark:text-muted-foreground text-sm mb-6">Manage your student batches and their information</p>
+          <h3 className="text-xl font-semibold text-foreground mb-1">All Batches</h3>
+          <p className="text-muted-foreground text-sm mb-6">Manage your student batches and their information</p>
         
           {localBatches.length === 0 ? (
             <div className="text-center py-12">
-              <div className="mx-auto w-24 h-24 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-4">
-                <Users className="w-12 h-12 text-primary dark:text-primary" />
+              <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <Users className="w-12 h-12 text-primary" />
               </div>
-              <h3 className="text-xl font-medium mb-2 text-foreground dark:text-foreground">No batches found</h3>
-              <p className="text-muted-foreground dark:text-muted-foreground mb-6 max-w-md mx-auto">
+              <h3 className="text-xl font-medium mb-2 text-foreground">No batches found</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 You haven't created any batches yet. Create your first batch to get started.
               </p>
               <Button 
                 onClick={() => router.push("/create-batch")}
-                className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-medium"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Create Your First Batch
@@ -518,46 +498,46 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-border dark:border-border">
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Batch ID</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Batch Name</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Year</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Semester</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Students</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Status</TableHead>
-                  <TableHead className="font-semibold text-muted-foreground dark:text-muted-foreground">Created</TableHead>
-                  <TableHead className="text-right font-semibold text-muted-foreground dark:text-muted-foreground">Actions</TableHead>
+                <TableRow className="border-border">
+                  <TableHead className="font-semibold text-muted-foreground">Batch ID</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Batch Name</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Year</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Semester</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Students</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Status</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Created</TableHead>
+                  <TableHead className="text-right font-semibold text-muted-foreground">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {localBatches.map((batch, index) => (
                   <TableRow 
                     key={batch.id} 
-                    className="border-border dark:border-border hover:bg-muted dark:hover:bg-muted/50 transition-colors duration-200"
+                    className="border-border hover:bg-muted/50 transition-colors duration-200"
                   >
-                    <TableCell className="font-mono text-sm text-muted-foreground dark:text-muted-foreground">{batch.id}</TableCell>
-                    <TableCell className="font-medium text-foreground dark:text-foreground">{batch.name}</TableCell>
+                    <TableCell className="font-mono text-sm text-muted-foreground">{batch.id}</TableCell>
+                    <TableCell className="font-medium text-foreground">{batch.name}</TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary rounded-full text-sm">
+                      <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm">
                         {batch.academic_year}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 bg-chart-2/10 dark:bg-chart-2/20 text-chart-2 dark:text-chart-2 rounded-full text-sm">
+                      <span className="px-2 py-1 bg-chart-2/10 text-chart-2 rounded-full text-sm">
                         {batch.semester}
                       </span>
                     </TableCell>
-                    <TableCell className="font-medium text-foreground dark:text-foreground">{batch.student_count || 0}</TableCell>
+                    <TableCell className="font-medium text-foreground">{batch.student_count || 0}</TableCell>
                     <TableCell>
                       <div className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                         batch.status === 'Active' 
-                          ? 'bg-chart-2/10 text-chart-2 border border-chart-2/20 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/20' 
-                          : 'bg-muted text-muted-foreground border border-border dark:bg-muted dark:text-muted-foreground dark:border-border'
+                          ? 'bg-chart-2/10 text-chart-2 border border-chart-2/20' 
+                          : 'bg-muted text-muted-foreground border border-border'
                       }`}>
                         {batch.status || 'Inactive'}
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground dark:text-muted-foreground">
+                    <TableCell className="text-sm text-muted-foreground">
                       {new Date(batch.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
@@ -565,27 +545,27 @@ export default function BatchesTab({ batches = [], onBatchUpdate }: BatchesTabPr
                         <DropdownMenuTrigger asChild>
                           <Button 
                             variant="ghost" 
-                            className="h-8 w-8 p-0 hover:bg-muted dark:hover:bg-muted"
+                            className="h-8 w-8 p-0 hover:bg-muted"
                             disabled={deletingBatch === batch.id}
                           >
                             <span className="sr-only">Open menu</span>
                             {deletingBatch === batch.id ? (
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#146e96] dark:border-primary"></div>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
                             ) : (
                               <MoreHorizontal className="h-4 w-4" />
                             )}
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-card border border-border dark:border-border rounded-lg">
-                          <DropdownMenuItem onClick={() => handleViewBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
+                        <DropdownMenuContent align="end" className="w-48 bg-card border border-border rounded-lg">
+                          <DropdownMenuItem onClick={() => handleViewBatch(batch.id)} className="text-muted-foreground hover:text-foreground">
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
+                          <DropdownMenuItem onClick={() => handleEditBatch(batch.id)} className="text-muted-foreground hover:text-foreground">
                             <Edit className="mr-2 h-4 w-4" />
                             Edit Batch
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleExportBatch(batch.id)} className="text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground">
+                          <DropdownMenuItem onClick={() => handleExportBatch(batch.id)} className="text-muted-foreground hover:text-foreground">
                             <Download className="mr-2 h-4 w-4" />
                             Export Students
                           </DropdownMenuItem>

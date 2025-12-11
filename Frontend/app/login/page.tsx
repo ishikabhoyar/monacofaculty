@@ -99,8 +99,8 @@ export default function Login() {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-1/2 flex items-center justify-center p-8 bg-white dark:bg-background">
-        <div className="w-full max-w-md">
+      <div className="w-1/2 flex items-center justify-center p-8 bg-card">
+        <div className="w-full max-w-md animate-fadeIn">
           {/* Logos */}
           <div className="flex justify-center gap-4 mb-8">
             {/* Logo images with correct height and width properties */}
@@ -122,10 +122,10 @@ export default function Login() {
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-semibold text-center text-[#111A4A] dark:text-foreground mb-2">
+          <h1 className="text-xl font-semibold text-center text-foreground mb-2">
             Welcome To Monaco Faculty
           </h1>
-          <p className="text-center text-sm text-[#7C7F88] dark:text-muted-foreground mb-8">
+          <p className="text-center text-sm text-muted-foreground mb-8">
             Please sign in with your Google account to continue.
           </p>
 

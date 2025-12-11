@@ -425,7 +425,7 @@ export default function FacultyDashboard() {
   };
   
   return (
-    <div className="flex min-h-screen bg-[#fafafa] dark:bg-background pb-8">
+    <div className="flex min-h-screen bg-background pb-8">
       {/* Sidebar */}
       <div className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-card border-r border-border p-5 overflow-y-auto"
         style={{
@@ -596,71 +596,51 @@ export default function FacultyDashboard() {
           <TabsContent value="overview" className="space-y-6">
             {/* Batch Statistics */}
             <div className="grid gap-5 md:grid-cols-4 mb-6">
-              <div className="rounded-[20px] p-5 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[20px] p-5 bg-card border border-border shadow-sm hover-lift stagger-item">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Batches</p>
-                    <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground mt-1">{batches.length}</p>
+                    <p className="text-sm font-medium text-muted-foreground">Total Batches</p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">{batches.length}</p>
                   </div>
                   <div className="p-3 bg-primary/10 rounded-xl">
-                    <Users className="h-6 w-6 text-[#146e96] dark:text-primary" />
+                    <Users className="h-6 w-6 text-primary" />
                   </div>
                 </div>
               </div>
               
-              <div className="rounded-[20px] p-5 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[20px] p-5 bg-card border border-border shadow-sm hover-lift stagger-item">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Students</p>
-                    <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground mt-1">
+                    <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
                       {batches.reduce((total, batch) => total + (batch.students?.length || 0), 0)}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#10b981]/10 dark:bg-chart-2/20 rounded-xl">
-                    <GraduationCap className="h-6 w-6 text-[#10b981] dark:text-chart-2" />
+                  <div className="p-3 bg-chart-2/10 rounded-xl">
+                    <GraduationCap className="h-6 w-6 text-chart-2" />
                   </div>
                 </div>
               </div>
               
-              <div className="rounded-[20px] p-5 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[20px] p-5 bg-card border border-border shadow-sm hover-lift stagger-item">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Active Batches</p>
-                    <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground mt-1">
+                    <p className="text-sm font-medium text-muted-foreground">Active Batches</p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
                       {batches.filter(b => b.students?.length > 0).length}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#8b5cf6]/10 dark:bg-chart-3/20 rounded-xl">
-                    <BookOpen className="h-6 w-6 text-[#8b5cf6] dark:text-chart-3" />
+                  <div className="p-3 bg-chart-3/10 rounded-xl">
+                    <BookOpen className="h-6 w-6 text-chart-3" />
                   </div>
                 </div>
               </div>
               
-              <div className="rounded-[20px] p-5 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[20px] p-5 bg-card border border-border shadow-sm hover-lift stagger-item">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">This Month</p>
-                    <p className="text-2xl font-semibold text-[#111A4A] dark:text-foreground mt-1">
+                    <p className="text-sm font-medium text-muted-foreground">This Month</p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
                       {batches.filter(b => {
                         const createdDate = new Date(b.created_at);
                         const now = new Date();
@@ -668,48 +648,43 @@ export default function FacultyDashboard() {
                       }).length}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#f59e0b]/10 dark:bg-chart-4/20 rounded-xl">
-                    <Calendar className="h-6 w-6 text-[#f59e0b] dark:text-chart-4" />
+                  <div className="p-3 bg-chart-4/10 rounded-xl">
+                    <Calendar className="h-6 w-6 text-chart-4" />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Recent Batches */}
-            <div className="rounded-[24px] p-6 bg-white dark:bg-card"
-              style={{
-                backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px"
-              }}
-            >
+            <div className="rounded-[24px] p-6 bg-card border border-border shadow-sm animate-fadeIn">
               <div className="mb-6">
-                <h3 className="text-xl font-semibold text-[#111A4A] dark:text-foreground">Your Batches</h3>
-                <p className="text-[#7C7F88] dark:text-muted-foreground text-sm mt-1">Manage your student batches and view recent activity</p>
+                <h3 className="text-xl font-semibold text-foreground">Your Batches</h3>
+                <p className="text-muted-foreground text-sm mt-1">Manage your student batches and view recent activity</p>
               </div>
               <div>
                 {loadingBatches ? (
                   <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#146e96] dark:border-primary"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   </div>
                 ) : batchError ? (
                   <div className="text-center py-8">
                     <p className="text-destructive">{batchError}</p>
-                    <Button onClick={fetchBatches} className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg">
+                    <Button onClick={fetchBatches} className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg btn-press">
                       Try Again
                     </Button>
                   </div>
                 ) : batches.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="mx-auto w-24 h-24 bg-accent rounded-full flex items-center justify-center mb-4">
-                      <Users className="w-12 h-12 text-[#146e96] dark:text-primary" />
+                      <Users className="w-12 h-12 text-primary" />
                     </div>
-                    <h3 className="text-xl font-medium mb-2 text-[#111A4A] dark:text-foreground">No batches found</h3>
-                    <p className="text-[#7C7F88] dark:text-muted-foreground mb-6 max-w-md mx-auto">
+                    <h3 className="text-xl font-medium mb-2 text-foreground">No batches found</h3>
+                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                       You haven't created any batches yet. Create your first batch to get started.
                     </p>
                     <Button 
                       onClick={() => router.push("/create-batch")}
-                      className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg btn-press"
                     >
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Create Your First Batch
@@ -720,34 +695,34 @@ export default function FacultyDashboard() {
                     {batches.slice(0, 6).map((batch, index) => (
                       <div 
                         key={batch.id} 
-                        className="cursor-pointer group rounded-[16px] p-5 border border-[#e5e5e5] dark:border-border hover:border-[#146e96] dark:hover:border-primary transition-all duration-200 bg-white dark:bg-card"
+                        className="cursor-pointer group rounded-[16px] p-5 border border-border hover:border-primary transition-all duration-200 bg-card hover:shadow-md stagger-item"
                         onClick={() => router.push(`/batches/${batch.id}`)}
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h3 className="text-lg font-semibold text-[#111A4A] dark:text-foreground mb-1">
+                            <h3 className="text-lg font-semibold text-foreground mb-1">
                               {batch.name}
                             </h3>
-                            <p className="text-sm text-[#7C7F88] dark:text-muted-foreground">
+                            <p className="text-sm text-muted-foreground">
                               {batch.students?.length || 0} students
                             </p>
                           </div>
                           <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                            <Users className="h-5 w-5 text-[#146e96] dark:text-primary" />
+                            <Users className="h-5 w-5 text-primary" />
                           </div>
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-[#7C7F88] dark:text-muted-foreground">Year:</span>
-                            <span className="font-medium text-[#111A4A] dark:text-foreground">{batch.academic_year}</span>
+                            <span className="text-muted-foreground">Year:</span>
+                            <span className="font-medium text-foreground">{batch.academic_year}</span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-[#7C7F88] dark:text-muted-foreground">Semester:</span>
-                            <span className="font-medium text-[#111A4A] dark:text-foreground">{batch.semester}</span>
+                            <span className="text-muted-foreground">Semester:</span>
+                            <span className="font-medium text-foreground">{batch.semester}</span>
                           </div>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-[#7C7F88] dark:text-muted-foreground">Created:</span>
-                            <span className="font-medium text-[#111A4A] dark:text-foreground">
+                            <span className="text-muted-foreground">Created:</span>
+                            <span className="font-medium text-foreground">
                               {new Date(batch.created_at).toLocaleDateString()}
                             </span>
                           </div>
@@ -761,17 +736,12 @@ export default function FacultyDashboard() {
 
             {/* Quick Actions */}
             <div className="grid gap-5 md:grid-cols-2">
-              <div className="rounded-[24px] p-6 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
-                <h3 className="text-lg font-semibold text-[#111A4A] dark:text-foreground mb-4">Quick Actions</h3>
+              <div className="rounded-[24px] p-6 bg-card border border-border shadow-sm animate-fadeIn">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
                 <div className="space-y-3">
                   <Button 
                     onClick={() => router.push("/create-batch")}
-                    className="w-full justify-start bg-[#10b981] hover:bg-[#059669] text-white rounded-xl h-11"
+                    className="w-full justify-start bg-chart-2 hover:bg-chart-2/90 text-white rounded-xl h-11 btn-press"
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Create New Batch
@@ -779,7 +749,7 @@ export default function FacultyDashboard() {
                   <Button 
                     onClick={() => setActiveTab("batches")}
                     variant="outline"
-                    className="w-full justify-start border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:border-[#146e96] hover:text-[#146e96] dark:hover:border-primary dark:hover:text-primary rounded-xl h-11"
+                    className="w-full justify-start border-border text-muted-foreground hover:border-primary hover:text-primary rounded-xl h-11 btn-press"
                   >
                     <Users className="mr-2 h-4 w-4" />
                     Manage All Batches
@@ -787,7 +757,7 @@ export default function FacultyDashboard() {
                   <Button 
                     onClick={() => router.push("/create-test")}
                     variant="outline"
-                    className="w-full justify-start border-[#e5e5e5] dark:border-border text-[#666666] dark:text-muted-foreground hover:border-[#146e96] hover:text-[#146e96] dark:hover:border-primary dark:hover:text-primary rounded-xl h-11"
+                    className="w-full justify-start border-border text-muted-foreground hover:border-primary hover:text-primary rounded-xl h-11 btn-press"
                   >
                     <FileText className="mr-2 h-4 w-4" />
                     Create New Test
@@ -795,39 +765,34 @@ export default function FacultyDashboard() {
                 </div>
               </div>
 
-              <div className="rounded-[24px] p-6 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[24px] p-6 bg-card border border-border shadow-sm animate-fadeIn">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-[#111A4A] dark:text-foreground">Quick Stats</h3>
-                  <p className="text-sm text-[#7C7F88] dark:text-muted-foreground">Overview of your teaching activities</p>
+                  <h3 className="text-lg font-semibold text-foreground">Quick Stats</h3>
+                  <p className="text-sm text-muted-foreground">Overview of your teaching activities</p>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-3 bg-accent rounded-xl">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                        <Users className="h-5 w-5 text-[#146e96] dark:text-primary" />
+                        <Users className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Total Students</p>
-                        <p className="text-xl font-semibold text-[#111A4A] dark:text-foreground">
+                        <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                        <p className="text-xl font-semibold text-foreground">
                           {batches.reduce((sum, batch) => sum + (batch.student_count || 0), 0)}
                         </p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 bg-[#f0fdf4] dark:bg-chart-2/10 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-chart-2/10 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-[#10b981]/20 dark:bg-chart-2/30 rounded-full flex items-center justify-center">
-                        <FileText className="h-5 w-5 text-[#10b981] dark:text-chart-2" />
+                      <div className="w-10 h-10 bg-chart-2/30 rounded-full flex items-center justify-center">
+                        <FileText className="h-5 w-5 text-chart-2" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Active Tests</p>
-                        <p className="text-xl font-semibold text-[#111A4A] dark:text-foreground">
+                        <p className="text-sm font-medium text-muted-foreground">Active Tests</p>
+                        <p className="text-xl font-semibold text-foreground">
                           {tests.filter(test => {
                             const now = new Date();
                             const start = new Date(test.start_time);
@@ -839,14 +804,14 @@ export default function FacultyDashboard() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 bg-[#faf5ff] dark:bg-chart-3/10 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-chart-3/10 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-[#8b5cf6]/20 dark:bg-chart-3/30 rounded-full flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 text-[#8b5cf6] dark:text-chart-3" />
+                      <div className="w-10 h-10 bg-chart-3/30 rounded-full flex items-center justify-center">
+                        <BookOpen className="h-5 w-5 text-chart-3" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#7C7F88] dark:text-muted-foreground">Questions Created</p>
-                        <p className="text-xl font-semibold text-[#111A4A] dark:text-foreground">
+                        <p className="text-sm font-medium text-muted-foreground">Questions Created</p>
+                        <p className="text-xl font-semibold text-foreground">
                           {questions.length}
                         </p>
                       </div>
@@ -866,7 +831,7 @@ export default function FacultyDashboard() {
           <TabsContent value="tests" className="space-y-6">
             {loadingTests ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#146e96] dark:border-primary"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : testsError ? (
               <div className="text-center py-8">
@@ -888,10 +853,10 @@ export default function FacultyDashboard() {
           {/* Questions Tab */}
           <TabsContent value="questions">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Questions Bank</h2>
+              <h2 className="text-2xl font-semibold text-foreground">Questions Bank</h2>
               <Button 
                 onClick={() => router.push("/add-question")}
-                className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-lg"
+                className="bg-chart-3 hover:bg-chart-3/90 text-white rounded-lg btn-press"
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
@@ -900,7 +865,7 @@ export default function FacultyDashboard() {
             
             {loadingQuestions ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8b5cf6] dark:border-chart-3"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-3"></div>
               </div>
             ) : questionsError ? (
               <div className="text-center py-8">
@@ -910,25 +875,20 @@ export default function FacultyDashboard() {
                 </Button>
               </div>
             ) : questions.length === 0 ? (
-              <div className="rounded-[24px] p-6 bg-white dark:bg-card"
-                style={{
-                  backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                  boxShadow: "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px"
-                }}
-              >
+              <div className="rounded-[24px] p-6 bg-card border border-border shadow-sm">
                 <div className="text-center py-12">
-                  <div className="mx-auto w-24 h-24 bg-[#faf5ff] dark:bg-chart-3/20 rounded-full flex items-center justify-center mb-4">
-                    <svg className="w-12 h-12 text-[#8b5cf6] dark:text-chart-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="mx-auto w-24 h-24 bg-chart-3/20 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-12 h-12 text-chart-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-medium mb-2 text-[#111A4A] dark:text-foreground">No questions found</h3>
-                  <p className="text-[#7C7F88] dark:text-muted-foreground mb-6 max-w-md mx-auto">
+                  <h3 className="text-xl font-medium mb-2 text-foreground">No questions found</h3>
+                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                     You haven't created any questions yet. Create your first question to get started.
                   </p>
                   <Button 
                     onClick={() => router.push("/add-question")}
-                    className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-lg"
+                    className="bg-chart-3 hover:bg-chart-3/90 text-white rounded-lg btn-press"
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Create Your First Question
@@ -940,36 +900,36 @@ export default function FacultyDashboard() {
                 {questions.map((question, index) => (
                   <div 
                     key={question.id} 
-                    className="cursor-pointer group rounded-[16px] p-5 border border-[#e5e5e5] dark:border-border hover:border-[#8b5cf6] dark:hover:border-chart-3 transition-all duration-200 bg-white dark:bg-card"
+                    className="cursor-pointer group rounded-[16px] p-5 border border-border hover:border-chart-3 transition-all duration-200 bg-card hover:shadow-md stagger-item"
                     onClick={() => router.push(`/tests/${question.test_id || 'unknown'}/questions`)}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          {question.question_type === 'coding' && <Code className="h-5 w-5 text-[#146e96] dark:text-primary" />}
-                          {question.question_type === 'multiple_choice' && <FileText className="h-5 w-5 text-[#10b981] dark:text-chart-2" />}
-                          {question.question_type === 'short_answer' && <HelpCircle className="h-5 w-5 text-[#f59e0b] dark:text-chart-4" />}
-                          <h3 className="text-lg font-semibold text-[#111A4A] dark:text-foreground">
+                          {question.question_type === 'coding' && <Code className="h-5 w-5 text-primary" />}
+                          {question.question_type === 'multiple_choice' && <FileText className="h-5 w-5 text-chart-2" />}
+                          {question.question_type === 'short_answer' && <HelpCircle className="h-5 w-5 text-chart-4" />}
+                          <h3 className="text-lg font-semibold text-foreground">
                             Q{index + 1}
                           </h3>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            question.difficulty === 'easy' ? 'bg-[#f0fdf4] text-[#10b981] dark:bg-chart-2/20 dark:text-chart-2' :
-                            question.difficulty === 'medium' ? 'bg-[#fffbeb] text-[#f59e0b] dark:bg-chart-4/20 dark:text-chart-4' :
-                            'bg-[#fef2f2] text-[#ef4444] dark:bg-destructive/20 dark:text-destructive'
+                            question.difficulty === 'easy' ? 'bg-chart-2/20 text-chart-2' :
+                            question.difficulty === 'medium' ? 'bg-chart-4/20 text-chart-4' :
+                            'bg-destructive/20 text-destructive'
                           }`}>
                             {question.difficulty}
                           </span>
                         </div>
                         
-                        <p className="text-sm text-[#7C7F88] dark:text-muted-foreground mb-3 line-clamp-3">
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
                           {question.question_text.length > 100 
                             ? question.question_text.substring(0, 100) + '...' 
                             : question.question_text}
                         </p>
                         
-                        <div className="flex items-center justify-between text-xs text-[#7C7F88] dark:text-muted-foreground">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
                           <span>{question.test_title} - {question.test_batch_name}</span>
-                          <span className="font-medium text-[#111A4A] dark:text-foreground">{question.marks} marks</span>
+                          <span className="font-medium text-foreground">{question.marks} marks</span>
                         </div>
                       </div>
                     </div>
@@ -987,7 +947,7 @@ export default function FacultyDashboard() {
                 {selectedTestForSubmissions && (
                   <Button 
                     variant="outline" 
-                    className="border-[#e5e5e5] dark:border-border bg-white dark:bg-card text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+                    className="border-border bg-card text-muted-foreground hover:bg-muted rounded-lg btn-press"
                     onClick={() => fetchSubmissions(selectedTestForSubmissions)}
                   >
                     Refresh
@@ -996,7 +956,7 @@ export default function FacultyDashboard() {
                 {selectedTestForSubmissions && (
                   <Button 
                     variant="outline" 
-                    className="border-[#e5e5e5] dark:border-border bg-white dark:bg-card text-[#666666] dark:text-muted-foreground hover:bg-[#fafafa] dark:hover:bg-muted rounded-lg"
+                    className="border-border bg-card text-muted-foreground hover:bg-muted rounded-lg btn-press"
                     onClick={() => handleTestSelectForSubmissions(null)}
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" /> Back to Tests
@@ -1021,15 +981,15 @@ export default function FacultyDashboard() {
 
                 {loadingTests ? (
                   <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#146e96] dark:border-primary"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   </div>
                 ) : testsError ? (
-                  <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
+                  <div className="rounded-[16px] p-6 bg-card border border-border">
                     <p className="text-center text-destructive">{testsError}</p>
                   </div>
                 ) : tests.length === 0 ? (
-                  <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
-                    <p className="text-center text-[#7C7F88] dark:text-muted-foreground">No tests found</p>
+                  <div className="rounded-[16px] p-6 bg-card border border-border">
+                    <p className="text-center text-muted-foreground">No tests found</p>
                   </div>
                 ) : (
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -1038,27 +998,27 @@ export default function FacultyDashboard() {
                       const startTime = new Date(test.start_time);
                       const endTime = new Date(test.end_time);
                       let status = 'Draft';
-                      let statusColor = 'bg-[#f5f5f5] text-[#7C7F88] dark:bg-muted dark:text-muted-foreground';
+                      let statusColor = 'bg-muted text-muted-foreground';
                       
                       if (endTime < now) {
                         status = 'Completed';
-                        statusColor = 'bg-[#f5f5f5] text-[#666666] dark:bg-muted dark:text-muted-foreground';
+                        statusColor = 'bg-muted text-muted-foreground';
                       } else if (startTime <= now && endTime >= now) {
                         status = 'Active';
-                        statusColor = 'bg-[#f0fdf4] text-[#10b981] dark:bg-chart-2/20 dark:text-chart-2';
+                        statusColor = 'bg-chart-2/20 text-chart-2';
                       } else if (startTime > now) {
                         status = 'Upcoming';
-                        statusColor = 'bg-[#f0f9ff] text-[#146e96] dark:bg-primary/20 dark:text-primary';
+                        statusColor = 'bg-primary/20 text-primary';
                       }
 
                       return (
                         <div 
                           key={test.id}
-                          className="cursor-pointer rounded-[16px] p-5 border border-[#e5e5e5] dark:border-border hover:border-[#146e96] dark:hover:border-primary transition-all duration-200 bg-white dark:bg-card"
+                          className="cursor-pointer rounded-[16px] p-5 border border-border hover:border-primary transition-all duration-200 bg-card hover:shadow-md stagger-item"
                           onClick={() => handleTestSelectForSubmissions(test.id)}
                         >
                           <div className="flex items-start justify-between mb-3">
-                            <h3 className="text-lg font-semibold text-[#111A4A] dark:text-foreground line-clamp-2">
+                            <h3 className="text-lg font-semibold text-foreground line-clamp-2">
                               {test.title}
                             </h3>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor} whitespace-nowrap ml-2`}>
@@ -1066,7 +1026,7 @@ export default function FacultyDashboard() {
                             </span>
                           </div>
                           
-                          <div className="space-y-2 text-sm text-[#7C7F88] dark:text-muted-foreground">
+                          <div className="space-y-2 text-sm text-muted-foreground">
                             <div className="flex items-center">
                               <Users className="h-4 w-4 mr-2" />
                               <span>{test.batch_name}</span>
@@ -1082,7 +1042,7 @@ export default function FacultyDashboard() {
                           </div>
 
                           <Button 
-                            className="w-full mt-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
+                            className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg btn-press"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleTestSelectForSubmissions(test.id);
@@ -1100,48 +1060,48 @@ export default function FacultyDashboard() {
               /* Show Submissions for Selected Test */
               <div>
                 {loadingSubmissions ? (
-                  <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
-                    <p className="text-center text-[#7C7F88] dark:text-muted-foreground">Loading submissions...</p>
+                  <div className="rounded-[16px] p-6 bg-card border border-border">
+                    <p className="text-center text-muted-foreground">Loading submissions...</p>
                   </div>
                 ) : submissionsError ? (
-                  <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
+                  <div className="rounded-[16px] p-6 bg-card border border-border">
                     <p className="text-center text-destructive">{submissionsError}</p>
                   </div>
                 ) : submissions.length === 0 ? (
-                  <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
-                    <p className="text-center text-[#7C7F88] dark:text-muted-foreground">No submissions yet for this test</p>
+                  <div className="rounded-[16px] p-6 bg-card border border-border">
+                    <p className="text-center text-muted-foreground">No submissions yet for this test</p>
                   </div>
                 ) : (
-                  <div className="rounded-[16px] overflow-hidden bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
+                  <div className="rounded-[16px] overflow-hidden bg-card border border-border animate-fadeIn">
                     <div className="p-6">
                       <Table>
                         <TableHeader>
-                          <TableRow className="border-[#e5e5e5] dark:border-border">
-                            <TableHead className="text-[#666666] dark:text-muted-foreground">Student</TableHead>
-                            <TableHead className="text-[#666666] dark:text-muted-foreground">Question</TableHead>
-                            <TableHead className="text-[#666666] dark:text-muted-foreground">Batch</TableHead>
-                            <TableHead className="text-[#666666] dark:text-muted-foreground">Submitted</TableHead>
-                            <TableHead className="text-[#666666] dark:text-muted-foreground">Score</TableHead>
-                            <TableHead className="text-right text-[#666666] dark:text-muted-foreground">Actions</TableHead>
+                          <TableRow className="border-border">
+                            <TableHead className="text-muted-foreground">Student</TableHead>
+                            <TableHead className="text-muted-foreground">Question</TableHead>
+                            <TableHead className="text-muted-foreground">Batch</TableHead>
+                            <TableHead className="text-muted-foreground">Submitted</TableHead>
+                            <TableHead className="text-muted-foreground">Score</TableHead>
+                            <TableHead className="text-right text-muted-foreground">Actions</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {submissions.map((submission) => (
-                            <TableRow key={submission.submission_id} className="border-[#e5e5e5] dark:border-border hover:bg-[#fafafa] dark:hover:bg-muted/50">
-                              <TableCell className="font-medium text-[#111A4A] dark:text-foreground">
+                            <TableRow key={submission.submission_id} className="border-border hover:bg-muted/50 transition-colors">
+                              <TableCell className="font-medium text-foreground">
                                 <div>
                                   <div>{submission.student_name}</div>
-                                  <div className="text-xs text-[#7C7F88] dark:text-muted-foreground">{submission.student_roll}</div>
+                                  <div className="text-xs text-muted-foreground">{submission.student_roll}</div>
                                 </div>
                               </TableCell>
-                              <TableCell className="text-[#666666] dark:text-muted-foreground">
+                              <TableCell className="text-muted-foreground">
                                 <div className="max-w-xs truncate" title={submission.question_text}>
                                   {submission.question_text}
                                 </div>
                               </TableCell>
-                              <TableCell className="text-[#666666] dark:text-muted-foreground">{submission.batch_name}</TableCell>
-                              <TableCell className="text-[#7C7F88] dark:text-muted-foreground">{formatTimeAgo(submission.submitted_at)}</TableCell>
-                              <TableCell className="text-[#111A4A] dark:text-foreground">
+                              <TableCell className="text-muted-foreground">{submission.batch_name}</TableCell>
+                              <TableCell className="text-muted-foreground">{formatTimeAgo(submission.submitted_at)}</TableCell>
+                              <TableCell className="text-foreground">
                                 {submission.marks_obtained !== null 
                                   ? `${submission.marks_obtained}/${submission.total_marks}` 
                                   : 'Not graded'}
@@ -1150,7 +1110,7 @@ export default function FacultyDashboard() {
                                 <Button 
                                   variant="ghost" 
                                   size="sm"
-                                  className="text-[#146e96] hover:text-[#0f5a7a] dark:text-primary dark:hover:bg-primary/20"
+                                  className="text-primary hover:bg-primary/10"
                                   onClick={() => viewSubmissionDetails(submission)}
                                 >
                                   View Code
@@ -1170,9 +1130,9 @@ export default function FacultyDashboard() {
           {/* Settings Tab */}
           <TabsContent value="settings">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-[#111A4A] dark:text-foreground">Faculty Settings</h2>
+              <h2 className="text-2xl font-semibold text-foreground">Faculty Settings</h2>
               <Button 
-                className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg btn-press"
               >
                 Save Changes
               </Button>
@@ -1180,99 +1140,99 @@ export default function FacultyDashboard() {
             
             <div className="grid gap-6 md:grid-cols-2">
               {/* Account Settings */}
-              <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
-                <h3 className="text-xl font-semibold text-[#111A4A] dark:text-foreground mb-6">Account Settings</h3>
+              <div className="rounded-[16px] p-6 bg-card border border-border shadow-sm animate-fadeIn">
+                <h3 className="text-xl font-semibold text-foreground mb-6">Account Settings</h3>
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Name
                     </label>
                     <input 
                       type="text" 
                       placeholder="Dr. John Doe"
-                      className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Email Address
                     </label>
                     <input 
                       type="email" 
                       placeholder="john.doe@somaiya.edu"
-                      className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Department
                     </label>
                     <input 
                       type="text" 
                       placeholder="Computer Engineering"
-                      className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Faculty ID
                     </label>
                     <input 
                       type="text" 
                       placeholder="FAC12345"
-                      className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-[#fafafa] dark:bg-muted dark:border-border text-[#7C7F88] dark:text-muted-foreground cursor-not-allowed"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-muted text-muted-foreground cursor-not-allowed"
                       disabled
                     />
-                    <p className="text-xs text-[#7C7F88] dark:text-muted-foreground">Faculty ID cannot be changed</p>
+                    <p className="text-xs text-muted-foreground">Faculty ID cannot be changed</p>
                   </div>
                 </div>
               </div>
               
               {/* Password Settings */}
-              <div className="rounded-[16px] p-6 bg-white dark:bg-card border border-[#e5e5e5] dark:border-border">
-                <h3 className="text-xl font-semibold text-[#111A4A] dark:text-foreground mb-6">Change Password</h3>
+              <div className="rounded-[16px] p-6 bg-card border border-border shadow-sm animate-fadeIn">
+                <h3 className="text-xl font-semibold text-foreground mb-6">Change Password</h3>
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Current Password
                       </label>
                       <input 
                         type="password" 
                         placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                      <label className="text-sm font-medium text-muted-foreground">
                         New Password
                       </label>
                       <input 
                         type="password" 
                         placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#666666] dark:text-muted-foreground">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Confirm New Password
                       </label>
                       <input 
                         type="password" 
                         placeholder="••••••••••••"
-                        className="w-full px-3 py-2 border border-[#e5e5e5] rounded-lg bg-white dark:bg-card dark:border-border text-[#111A4A] dark:text-foreground focus:outline-none focus:ring-2 focus:ring-[#146e96] dark:focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
                       />
                     </div>
                     
                     <div className="pt-4">
-                      <p className="text-xs text-[#7C7F88] dark:text-muted-foreground mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
+                      <p className="text-xs text-muted-foreground mb-4">Password must be at least 8 characters long and contain a mix of letters, numbers, and special characters.</p>
                       <Button 
-                        className="w-full bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg btn-press"
                       >
                         Update Password
                       </Button>
