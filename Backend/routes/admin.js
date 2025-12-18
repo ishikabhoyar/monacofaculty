@@ -325,18 +325,15 @@ router.get('/faculty', adminAuthMiddleware, async (req, res) => {
     try {
         const { search } = req.query;
         
+        console.log('Fetching faculty list...');
+        
         let query = `
             SELECT 
                 f.id,
                 f.name,
                 f.email,
-                f.department,
-                f.created_at,
-                COUNT(DISTINCT b.id) as batch_count,
-                COUNT(DISTINCT t.id) as test_count
+                f.department
             FROM faculties f
-            LEFT JOIN batches b ON f.id = b.faculty_id
-            LEFT JOIN tests t ON f.id = t.faculty_id
         `;
         
         let params = [];
@@ -346,9 +343,13 @@ router.get('/faculty', adminAuthMiddleware, async (req, res) => {
             params.push(`%${search}%`);
         }
 
-        query += ' GROUP BY f.id ORDER BY f.created_at DESC';
+        query += ' ORDER BY f.id DESC';
+        
+        console.log('Query:', query);
 
         const result = await pool.query(query, params);
+        
+        console.log('Faculty found:', result.rows.length);
 
         res.json({ 
             success: true, 

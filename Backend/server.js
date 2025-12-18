@@ -7,6 +7,15 @@ const authMiddleware = require('./authMiddleware');
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Handle uncaught exceptions and unhandled rejections to prevent crashes
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev'], // Add your frontend URLs
   credentials: true
