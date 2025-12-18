@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev'], // Add your frontend URLs
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev'], // Add your frontend URLs
   credentials: true
 }));
 app.use(express.json());
@@ -26,12 +26,14 @@ const facultyRoutes = require('./routes/faculty');
 const batchRoutes = require('./routes/batches');
 const questionRoutes = require('./routes/questions');
 const studentRoutes = require('./routes/students');
+const adminRoutes = require('./routes/admin');
 
 app.use('/api/tests', testRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
