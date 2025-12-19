@@ -17,7 +17,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev'], // Add your frontend URLs
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'https://monacofaculty.pages.dev', 'https://monaco-ckg.pages.dev', 'https://admin-mon.pages.dev'], // Add your frontend URLs
   credentials: true
 }));
 app.use(express.json());
